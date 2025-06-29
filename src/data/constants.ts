@@ -33,7 +33,7 @@ export const OG = {
   locale: "zh_TW",
   type: "website",
   url: SITE.url,
-  title: `${SITE.title}: 一個整合了標籤系統以及收藏功能的建中社團線上資料庫`,
+  title: `${SITE.title} : 一個整合了標籤系統以及收藏功能的建中社團線上資料庫`,
   description: "一個整合了標籤系統以及收藏功能的建中社團線上資料庫",
   image: ogImageSrc,
 };
