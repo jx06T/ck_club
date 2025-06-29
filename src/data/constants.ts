@@ -1,11 +1,11 @@
 import ogImageSrc from "@images/branding/icon.svg";
 
 export const SITE = {
-  title: "Club.ck",
+  title: "CKClubHub",
   tagline: "一個整合了標籤系統以及收藏功能的建中社團線上資料庫",
   description: "一個整合了標籤系統以及收藏功能的建中社團線上資料庫",
   description_short: "一個整合了標籤系統以及收藏功能的建中社團線上資料庫",
-  url: "https://club.cksc.tw",
+  url: "https://ck-club-git-dev-jx06ts-projects.vercel.app/",
   author: "https://github.com/jx06T",
 };
 
