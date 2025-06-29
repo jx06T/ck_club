@@ -40,8 +40,8 @@ interface Props {
 
     <script is:inline>
       if (
-        localStorage.getItem("hs_theme") === "dark" ||
-        (!("hs_theme" in localStorage) &&
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) &&
           window.matchMedia("(prefers-color-scheme: dark)").matches)
       ) {
         document.documentElement.classList.add("dark");
@@ -50,8 +50,8 @@ interface Props {
       }
     </script>
   </head>
-  
-  <body class="">
+
+  <body class="bg-primary-100 text-primary-950">
     <div class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
       <Navbar />
       <main>

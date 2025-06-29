@@ -1,1 +1,164 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@theme {
+  /* 品牌主色系 */
+  --color-primary-50: #f0f0f4;
+  --color-primary-100: #e1e2e9;
+  --color-primary-200: #c3c5d3;
+  --color-primary-300: #a5a8bd;
+  --color-primary-400: #878ba7;
+  --color-primary-500: #676f9d;
+  --color-primary-600: #424669;
+  --color-primary-700: #353a56;
+  --color-primary-800: #2d3250;
+  --color-primary-900: #161e31;
+  --color-primary-950: #16182b;
+
+  /* 點綴色系 (橘色系) */
+  --color-accent-50: #fef9f3;
+  --color-accent-100: #fef2e6;
+  --color-accent-200: #fde5cc;
+  --color-accent-300: #fcd8b3;
+  --color-accent-400: #fbcb99;
+  --color-accent-500: #f8b179;
+  --color-accent-600: #f69d5a;
+  --color-accent-700: #f4893b;
+  --color-accent-800: #e6742a;
+  --color-accent-900: #cc5f1c;
+  --color-accent-950: #a64d17;
+
+  /* 中性色系 */
+  --color-neutral-50: #f8f9fa;
+  --color-neutral-100: #f1f3f4;
+  --color-neutral-200: #e3e5e8;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #2d3748;
+  --color-neutral-900: #1f2937;
+  --color-neutral-950: #0f172a;
+
+  /* 品牌快捷別名 */
+  --color-brand: #2d3250;
+  --color-brand-light: #676f9d;
+  --color-brand-dark: #2d3250;
+  --color-brand-accent: #f8b179;
+
+  /* 字體配置 */
+  --font-sans: "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Merriweather", ui-serif, Georgia, serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "Consolas", monospace;
+  --font-chinese: "Noto Sans TC", sans-serif;
+  --font-english: "Merriweather", serif;
+
+  /* 品牌陰影 */
+  --shadow-brand-sm: 0 1px 2px 0 rgba(45, 50, 80, 0.05);
+  --shadow-brand: 0 1px 3px 0 rgba(45, 50, 80, 0.1),
+    0 1px 2px 0 rgba(45, 50, 80, 0.06);
+  --shadow-brand-md: 0 4px 6px -1px rgba(45, 50, 80, 0.1),
+    0 2px 4px -1px rgba(45, 50, 80, 0.06);
+  --shadow-brand-lg: 0 10px 15px -3px rgba(45, 50, 80, 0.1),
+    0 4px 6px -2px rgba(45, 50, 80, 0.05);
+  --shadow-brand-xl: 0 20px 25px -5px rgba(45, 50, 80, 0.1),
+    0 10px 10px -5px rgba(45, 50, 80, 0.04);
+  --shadow-accent: 0 4px 6px -1px rgba(248, 177, 121, 0.2),
+    0 2px 4px -1px rgba(248, 177, 121, 0.1);
+
+  /* 背景漸變 */
+  --gradient-brand: linear-gradient(
+    135deg,
+    #2d3250 0%,
+    #424669 50%,
+    #676f9d 100%
+  );
+  --gradient-accent: linear-gradient(135deg, #f8b179 0%, #f69d5a 100%);
+  --gradient-hero: linear-gradient(
+    135deg,
+    #2d3250 0%,
+    #676f9d 50%,
+    #f8b179 100%
+  );
+}
+
+@layer theme {
+  .dark {
+    /* 品牌主色系（偏亮改成偏暗） */
+    --color-primary-50: #16182b;
+    --color-primary-100: #161e31;
+    --color-primary-200: #2d3250;
+    --color-primary-300: #353a56;
+    --color-primary-400: #424669;
+    --color-primary-500: #676f9d;
+    --color-primary-600: #878ba7;
+    --color-primary-700: #a5a8bd;
+    --color-primary-800: #c3c5d3;
+    --color-primary-900: #e1e2e9;
+    --color-primary-950: #f0f0f4;
+
+    /* 點綴色系（橘色亮色調 → 暗橘/褐橘） */
+    --color-accent-50: #2b1a11;
+    --color-accent-100: #3a2014;
+    --color-accent-200: #4a2617;
+    --color-accent-300: #5a2d1a;
+    --color-accent-400: #6b341e;
+    --color-accent-500: #7c3c22;
+    --color-accent-600: #8c4426;
+    --color-accent-700: #9d4c2a;
+    --color-accent-800: #ae552f;
+    --color-accent-900: #bf5d33;
+    --color-accent-950: #d06538;
+
+    /* 中性色系（反轉亮暗順序） */
+    --color-neutral-50: #0f172a;
+    --color-neutral-100: #1f2937;
+    --color-neutral-200: #2d3748;
+    --color-neutral-300: #374151;
+    --color-neutral-400: #4b5563;
+    --color-neutral-500: #6b7280;
+    --color-neutral-600: #9ca3af;
+    --color-neutral-700: #d1d5db;
+    --color-neutral-800: #e3e5e8;
+    --color-neutral-900: #f1f3f4;
+    --color-neutral-950: #f8f9fa;
+
+    /* 品牌快捷別名 */
+    --color-brand: #f1f3f4;
+    --color-brand-light: #a5a8bd;
+    --color-brand-dark: #2d3250;
+    --color-brand-accent: #f69d5a;
+
+    /* 字體可留原本不變 */
+
+    /* 品牌陰影（微調透明度，增加深度） */
+    --shadow-brand-sm: 0 1px 2px 0 rgba(240, 240, 240, 0.05);
+    --shadow-brand: 0 1px 3px 0 rgba(240, 240, 240, 0.1),
+      0 1px 2px 0 rgba(240, 240, 240, 0.06);
+    --shadow-brand-md: 0 4px 6px -1px rgba(240, 240, 240, 0.1),
+      0 2px 4px -1px rgba(240, 240, 240, 0.06);
+    --shadow-brand-lg: 0 10px 15px -3px rgba(240, 240, 240, 0.1),
+      0 4px 6px -2px rgba(240, 240, 240, 0.05);
+    --shadow-brand-xl: 0 20px 25px -5px rgba(240, 240, 240, 0.1),
+      0 10px 10px -5px rgba(240, 240, 240, 0.04);
+    --shadow-accent: 0 4px 6px -1px rgba(255, 180, 130, 0.2),
+      0 2px 4px -1px rgba(255, 180, 130, 0.1);
+
+    /* 背景漸變（反轉/調暗漸層） */
+    --gradient-brand: linear-gradient(
+      135deg,
+      #f1f3f4 0%,
+      #a5a8bd 50%,
+      #2d3250 100%
+    );
+    --gradient-accent: linear-gradient(135deg, #f69d5a 0%, #7c3c22 100%);
+    --gradient-hero: linear-gradient(
+      135deg,
+      #f8f9fa 0%,
+      #676f9d 50%,
+      #f69d5a 100%
+    );
+  }
+}
