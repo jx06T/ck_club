@@ -1,4 +1,4 @@
-import ogImageSrc from "@images/branding/icon.svg";
+import ogImageSrc from "@images/branding/icon.png";
 
 export const SITE = {
   title: "CKClubHub",
