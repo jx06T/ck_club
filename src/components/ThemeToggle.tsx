@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { Moon } from 'lucide-react';
+import { Snowflake } from 'lucide-react';
 import { Sun } from 'lucide-react';
 
 function ThemeToggle() {
@@ -22,9 +23,18 @@ function ThemeToggle() {
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
     document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    console.log("ssq")
+    window.dispatchEvent(new CustomEvent("theme-change", { detail: newTheme }));
   };
 
-  if (!isMounted) return null;
+  if (!isMounted) return (
+    <button
+      onClick={toggleTheme}
+      className="px-2 py-2"
+    >
+      < Snowflake />
+    </button>
+  )
 
   return (
     <button

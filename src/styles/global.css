@@ -4,17 +4,17 @@
 
 @theme {
   /* 品牌主色系 */
-  --color-primary-50: #f0f0f4;
-  --color-primary-100: #e1e2e9;
-  --color-primary-200: #c3c5d3;
-  --color-primary-300: #a5a8bd;
-  --color-primary-400: #878ba7;
-  --color-primary-500: #676f9d;
-  --color-primary-600: #424669;
-  --color-primary-700: #353a56;
-  --color-primary-800: #2d3250;
-  --color-primary-900: #161e31;
-  --color-primary-950: #16182b;
+  --color-primary-50: #d3d4dd;
+  --color-primary-100: #c0c2d1;
+  --color-primary-200: #a2a6bf;
+  --color-primary-300: #848aae;
+  --color-primary-400: #686f9c;
+  --color-primary-500: #565d86;
+  --color-primary-600: #454b70;
+  --color-primary-700: #343a5a;
+  --color-primary-800: #272d48;
+  --color-primary-900: #1c2339;
+  --color-primary-950: #171e2a;
 
   /* 點綴色系 (橘色系) */
   --color-accent-50: #fef9f3;
@@ -87,17 +87,17 @@
 @layer theme {
   .dark {
     /* 品牌主色系（偏亮改成偏暗） */
-    --color-primary-50: #16182b;
-    --color-primary-100: #161e31;
-    --color-primary-200: #2d3250;
-    --color-primary-300: #353a56;
-    --color-primary-400: #424669;
-    --color-primary-500: #676f9d;
-    --color-primary-600: #878ba7;
-    --color-primary-700: #a5a8bd;
-    --color-primary-800: #c3c5d3;
-    --color-primary-900: #e1e2e9;
-    --color-primary-950: #f0f0f4;
+    --color-primary-50: #171e2a;
+    --color-primary-100: #1c2339;
+    --color-primary-200: #272d48;
+    --color-primary-300: #343a5a;
+    --color-primary-400: #454b70;
+    --color-primary-500: #565d86;
+    --color-primary-600: #686f9c;
+    --color-primary-700: #848aae;
+    --color-primary-800: #a2a6bf;
+    --color-primary-900: #c0c2d1;
+    --color-primary-950: #d3d4dd;
 
     /* 點綴色系（橘色亮色調 → 暗橘/褐橘） */
     --color-accent-50: #2b1a11;

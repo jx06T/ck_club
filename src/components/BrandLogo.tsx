@@ -1,25 +1,31 @@
 import { useEffect, useState } from "react";
-
-import LogoLight from "@images/branding/logo.svg";
-import LogoDark from "@images/branding/logo_dark.svg";
-
-function BrandLogo() {
+import BrightLogo from "@images/branding/logo.svg?url"
+import DarkLogo from "@images/branding/logo_dark.svg?url"
+function BrandLogo({ w }: { w: number }) {
   const [isDark, setIsDark] = useState<boolean>(false);
 
   useEffect(() => {
     setIsDark(document.documentElement.classList.contains("dark"));
 
-    const onThemeChange = (e: CustomEvent) => {
-      setIsDark(e.detail === "dark");
+    const onThemeChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setIsDark(customEvent.detail === "dark");
     };
-    window.addEventListener("on-hs-appearance-change", onThemeChange as EventListener);
 
-    return () => {
-      window.removeEventListener("on-hs-appearance-change", onThemeChange as EventListener);
-    };
+    window.addEventListener("theme-change", onThemeChange);
+    return () => window.removeEventListener("theme-change", onThemeChange);
   }, []);
 
-  return <>{isDark ? <LogoDark /> : <LogoLight />}</>;
-};
+  return (
+    <img
+      src={isDark ? DarkLogo : BrightLogo}
+      alt="Brand Logo"
+      style={{
+        width: w
+      }}
+      className="h-auto"
+    />
+  );
+}
 
 export default BrandLogo;
