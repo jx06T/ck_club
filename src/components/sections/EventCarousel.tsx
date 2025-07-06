@@ -81,22 +81,26 @@ function EventCarousel({ id, slides }: Props) {
     return (
         <div className=' mt-10 mb-20'>
             <h1 id={id} className='block text-balance text-2xl font-bold tracking-tight'>近期活動</h1>
-            <div className="relative w-full mx-auto aspect-video max-h-[80dvh] bg-primary-50 mt-7 ">
+            <div
+                style={{
+                    height: 'min(56.25vw, 80dvh)'
+                }}
+                className="relative w-full mx-auto  bg-primary-50 mt-7 ">
                 <div
-                    className=" pointer-events-none absolute top-0 left-0 bottom-0 right-0 rounded-md bg-transparent z-10"
+                    className=" pointer-events-none absolute top-0 left-0 w-full h-full rounded-md bg-transparent z-10"
                     style={{
                         boxShadow: `
-                    10px 5px 20px 5px ${extendedSlides[currentIndex].gradientStart}55,
-                    -10px -5px 20px 15px ${extendedSlides[currentIndex].gradientEnd}55,
-                    10px 5px 20px 20px ${extendedSlides[currentIndex].gradientStart}55,
-                    -10px -5px 20px 30px ${extendedSlides[currentIndex].gradientEnd}55,
-                    inset 10px 5px 20px 5px ${extendedSlides[currentIndex].gradientEnd}55,
-                    inset -10px -5px 20px 5px ${extendedSlides[currentIndex].gradientStart}55`,
+                    10px 5px 20px 5px ${extendedSlides[currentIndex].gradientStart}40,
+                    -10px -5px 20px 15px ${extendedSlides[currentIndex].gradientEnd}40,
+                    10px 5px 20px 20px ${extendedSlides[currentIndex].gradientStart}40,
+                    -10px -5px 20px 30px ${extendedSlides[currentIndex].gradientEnd}40,
+                    inset 10px 5px 20px 5px ${extendedSlides[currentIndex].gradientEnd}40,
+                    inset -10px -5px 20px 5px ${extendedSlides[currentIndex].gradientStart}40`,
                         transition: "box-shadow 1s ease",
                     }}
                 >
                 </div>
-                <div className="absolute -bottom-4 lg:-bottom-5 left-1/2 -translate-x-1/2 flex space-x-2 z-20">
+                <div className=" absolute -bottom-4 lg:-bottom-5 left-1/2 -translate-x-1/2 flex space-x-2 z-20">
                     {slides.map((_, index) => {
                         const realIndex = index + 1;
                         const isActive = currentIndex === realIndex || (realIndex === 1 && currentIndex === extendedSlides.length - 1) || (realIndex === extendedSlides.length - 2 && currentIndex === 0);
@@ -150,7 +154,7 @@ function EventCarousel({ id, slides }: Props) {
                 <button onClick={goToPrevious} className="text-base md:text-xl lg:text-2xl p-1 md:p-2 pb-2 md:pb-3 absolute top-1/2 -left-2 lg:-left-4 -translate-y-1/2 bg-white/20 rounded-full backdrop-blur-xs ">‹</button>
                 <button onClick={goToNext} className="text-base md:text-xl lg:text-2xl p-1 md:p-2 pb-2 md:pb-3 absolute top-1/2 -right-2 lg:-right-4 -translate-y-1/2 bg-white/20 rounded-full backdrop-blur-xs ">›</button>
             </div >
-        </div>
+        </div >
     );
 };
 

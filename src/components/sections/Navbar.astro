@@ -10,7 +10,8 @@ import { Menu, X } from "lucide-react";
 ---
 
 <header
-  class="sticky inset-x-0 top-4 z-50 flex w-full flex-wrap text-sm md:flex-nowrap md:justify-start"
+  class="sticky inset-x-0 top-4 z-50 flex w-full flex-wrap text-sm md:flex-nowrap md:justify-start transition-transform duration-500"
+  id="site-header"
 >
   <nav
     class="relative mx-2 w-full rounded-[36px] border border-accent-400/40 bg-accent-200/60 px-4 py-3 backdrop-blur-sm dark:border-primary-700 dark:bg-primary-900/80 md:flex md:items-center md:justify-between md:px-6 md:py-0 lg:px-8 xl:mx-auto"
@@ -104,4 +105,25 @@ import { Menu, X } from "lucide-react";
   }
 
   handleResize();
+
+  const header = document.getElementById("site-header");
+  let lastScrollY = window.scrollY;
+  let lastHideY = window.scrollY;
+
+  window.addEventListener("scroll", () => {
+    const currentScrollY = window.scrollY;
+    if (!header) return;
+    console.log(currentScrollY);
+    if (currentScrollY > lastScrollY && currentScrollY > 50) {
+      lastHideY = window.scrollY;
+      header.style.transform = "translateY(-100%)";
+    } else if (
+      (currentScrollY < lastScrollY && currentScrollY < lastHideY - 100) ||
+      currentScrollY < 50
+    ) {
+      header.style.transform = "translateY(0)";
+    }
+
+    lastScrollY = currentScrollY;
+  });
 </script>
