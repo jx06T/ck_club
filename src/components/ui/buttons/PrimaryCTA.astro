@@ -1,0 +1,28 @@
+---
+import { ChevronRight } from "lucide-react";
+
+const { title, url } = Astro.props;
+
+interface Props {
+  title?: string;
+  url?: string;
+}
+
+const baseClasses =
+  "group text-center rounded-lg px-4 py-3 text-base  text-white ring-accent-800 transition duration-300 focus-visible:ring-3 outline-hidden";
+const borderClasses = "border border-transparent";
+const bgColorClasses = "bg-accent-500 hover:bg-accent-600 active:bg-accent-600";
+const disableClasses = "disabled:pointer-events-none disabled:opacity-50";
+---
+
+<a
+  class={`${baseClasses} ${borderClasses} ${bgColorClasses} ${disableClasses} `}
+  href={url}
+>
+  <span class="inline-block align-middle">
+    {title}
+  </span>
+  <span class="inline-block align-middle">
+    <ChevronRight />
+  </span>
+</a>

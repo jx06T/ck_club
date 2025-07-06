@@ -1,11 +1,16 @@
 ---
-
+import Hero from "@components/sections/Hero.astro";
+import CKRed from "@images/home/ck_red.jpg";
 ---
 
-<div id="container">
-  <h1 class="font-english">H12345</h1>
-  <h1 class="font-english">H12345</h1>
-  <h1 class="font-english">H12345</h1>
-  <h1 class="font-english">H12345</h1>
-  <h1 class="font-english">H12345</h1>
-</div>
+<Hero
+  title='建中出才子，才子躍<span class="text-accent-300 ">社團</span>！'
+  subTitle="探索超過 60 個精彩社團"
+  imgAlt="建中紅樓"
+  imgSrc={CKRed}
+  primaryBtn="查看社團資料庫"
+  primaryBtnURL="/clubs"
+  secondaryBtn="近期活動"
+  secondaryBtnURL="#event"
+  SectionId="hero"
+/>

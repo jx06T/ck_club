@@ -1,0 +1,29 @@
+---
+import { SquareArrowOutUpRight } from "lucide-react";
+
+const { title, url } = Astro.props;
+
+interface Props {
+  title?: string;
+  url?: string;
+}
+
+const baseClasses =
+  "group text-center rounded-lg px-4 py-3 text-base text-slate-100 ring-primary-800 transition duration-300 focus-visible:ring-3 outline-hidden";
+const borderClasses = "border border-transparent";
+const bgColorClasses =
+  "bg-primary-200 hover:bg-primary-300 active:bg-primary-300";
+const disableClasses = "disabled:pointer-events-none disabled:opacity-50";
+---
+
+<a
+  class={`${baseClasses} ${borderClasses} ${bgColorClasses} ${disableClasses} `}
+  href={url}
+>
+  <span class="inline-block align-middle">
+    {title}
+  </span>
+  <span class="inline-block align-middle">
+    <SquareArrowOutUpRight />
+  </span>
+</a>

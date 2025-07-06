@@ -1,4 +1,3 @@
-// An array of links for navigation bar
 const navBarLinks = [
   { name: "首頁", url: "/" },
   { name: "社團資料庫", url: "/clubs" },
@@ -7,7 +6,7 @@ const navBarLinks = [
   { name: "關於", url: "/about" },
   // { name: "Dev", url: "/dev" },
 ];
-// An array of links for footer
+
 const footerLinks = [
   {
     section: "網站頁面",
