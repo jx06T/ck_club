@@ -1,39 +1,37 @@
 // An array of links for navigation bar
 const navBarLinks = [
-  { name: "Home", url: "/" },
-  // { name: "Products", url: "/products" },
-  // { name: "Services", url: "/services" },
-  { name: "Blog", url: "/blog" },
-  { name: "Contact", url: "/contact" },
-  { name: "Dev", url: "/dev" },
+  { name: "首頁", url: "/" },
+  { name: "社團資料庫", url: "/clubs" },
+  { name: "社團地圖", url: "/map" },
+  { name: "社團聯展", url: "/map" },
+  { name: "關於", url: "/about" },
+  // { name: "Dev", url: "/dev" },
 ];
 // An array of links for footer
 const footerLinks = [
   {
-    section: "Ecosystem",
+    section: "網站頁面",
     links: [
-      { name: "Documentation", url: "/welcome-to-docs/" },
-      { name: "Tools & Equipment", url: "/products" },
-      { name: "Construction Services", url: "/services" },
+      { name: "關於此網站", url: "/about" },
+      { name: "聯絡我們", url: "/contact" },
+      { name: "隱私權政策", url: "/privacy" },
+      { name: "開發者頁面", url: "/dev" },
     ],
   },
   {
-    section: "Company",
+    section: "相關連結",
     links: [
-      { name: "About us", url: "#" },
-      { name: "Blog", url: "/blog" },
-      { name: "Careers", url: "#" },
-      { name: "Customers", url: "#" },
+      { name: "社團管理平台", url: "https://sites.google.com/gl.ck.tp.edu.tw/ckclub/" },
+      { name: "建中校網", url: "https://www.ck.tp.edu.tw/nss/p/index" },
+      { name: "班聯會會網", url: "https://www.cksc.tw/" },
     ],
   },
 ];
-// An object of links for social icons
+
 const socialLinks = {
-  facebook: "https://www.facebook.com/",
-  x: "https://twitter.com/",
-  github: "https://github.com/mearashadowfax/ScrewFast",
-  google: "https://www.google.com/",
-  slack: "https://slack.com/",
+  github: "https://github.com/jx06T/ck_club",
+  instagram1: "https://www.instagram.com/cksc79th/",
+  instagram2: "https://www.instagram.com/ck_club_exhibition__/",
 };
 
 export default {
