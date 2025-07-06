@@ -1,6 +1,30 @@
 ---
 import Hero from "@components/sections/Hero.astro";
 import CKRed from "@images/home/ck_red.jpg";
+import EventCarousel from "@components/sections/EventCarousel";
+
+import { getCollection } from "astro:content";
+
+import type { Slide } from "@components/sections/EventCarousel.tsx";
+import type { CollectionEntry } from "astro:content";
+
+const allEvents = await getCollection("events");
+
+const sortedEvents = allEvents.sort(
+  (a: CollectionEntry<"events">, b: CollectionEntry<"events">) =>
+    b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const slidesForCarousel: Slide[] = sortedEvents.map((event) => {
+  return {
+    image: event.data.image,
+    gradientStart: event.data.gradientStart,
+    gradientEnd: event.data.gradientEnd,
+    caption: event.data.title,
+    date: event.data.date,
+    link: event.data.link,
+  };
+});
 ---
 
 <Hero
@@ -14,3 +38,5 @@ import CKRed from "@images/home/ck_red.jpg";
   secondaryBtnURL="#event"
   SectionId="hero"
 />
+
+<EventCarousel id="event" slides={slidesForCarousel} client:visible />
