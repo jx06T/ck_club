@@ -39,26 +39,35 @@ interface Props {
     <title>{title}</title>
 
     <script is:inline>
-      if (
+      const isThemeDark =
         localStorage.getItem("theme") === "dark" ||
         (!("theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
+          window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+      if (isThemeDark) {
         document.documentElement.classList.add("dark");
       } else {
         document.documentElement.classList.remove("dark");
+      }
+
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (isThemeDark) {
+        metaThemeColor.setAttribute("content", "#1c2339");
+      } else {
+        metaThemeColor.setAttribute("content", "#c0c2d1");
       }
     </script>
   </head>
 
   <body class="bg-primary-100 text-primary-950">
-    <div class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-16">
       <Navbar />
-      <main>
+      <main class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-[4%]">
         <slot />
       </main>
     </div>
     <Footer />
+
     <script type="module" is:inline>
       import Lenis from "https://esm.sh/@studio-freight/lenis";
 

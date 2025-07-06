@@ -1,70 +1,107 @@
 ---
+// src/components/Header.astro
+
 import NavLink from "@components/ui/links/NavLink.astro";
 import BrandLogo from "@components/BrandLogo.astro";
 import Strings from "@utils/navigation.ts";
-import ThemeToggle from "@components/ThemeToggle";
-import { Menu } from "lucide-react";
+import ThemeToggle from "@components/ThemeToggle.tsx";
 
-const pathname = Astro.url.pathname;
-const homeUrl = Astro.currentLocale === "fr" ? "/fr" : "/";
+import { Menu, X } from "lucide-react";
 ---
 
-<!-- Main header component -->
 <header
   class="sticky inset-x-0 top-4 z-50 flex w-full flex-wrap text-sm md:flex-nowrap md:justify-start"
 >
-  <!-- Navigation container -->
   <nav
-    class="relative mx-2 w-full rounded-[36px] border border-accent-400/40 bg-accent-200/60 px-4 py-3 backdrop-blur-sm md:flex md:items-center md:justify-between md:px-6 md:py-0 lg:px-8 xl:mx-auto"
+    class="relative mx-2 w-full rounded-[36px] border border-accent-400/40 bg-accent-200/60 px-4 py-3 backdrop-blur-sm dark:border-primary-700 dark:bg-primary-900/80 md:flex md:items-center md:justify-between md:px-6 md:py-0 lg:px-8 xl:mx-auto"
     aria-label="Global"
   >
-    <!-- <h1>Header</h1> -->
     <div class="flex items-center justify-between">
       <!-- Brand logo -->
       <a
-        class="ml-1 flex-none rounded-lg text-xl font-bold outline-hidden ring-accent-600 focus-visible:ring-3"
-        href={homeUrl}
+        class="ml-1 flex-none rounded-lg text-xl font-bold outline-hidden ring-accent-600 focus-visible:ring-2"
+        href="/"
         aria-label="Brand"
       >
-        <BrandLogo client:load w={160} />
+        <BrandLogo w={140} />
       </a>
-      <!-- Collapse toggle for smaller screens -->
-      <div class="ml-auto mr-5 md:hidden">
+
+      <!-- 展開菜單按鈕 -->
+      <div class="flex items-center gap-2 md:hidden">
         <button
+          id="hamburger-button"
           type="button"
-          class="hs-collapse-toggle flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition duration-300 hover:bg-neutral-200 disabled:pointer-events-none disabled:opacity-50"
-          data-hs-collapse="#navbar-collapse-with-animation"
-          aria-controls="navbar-collapse-with-animation"
+          class="group flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-primary-700 transition duration-300 hover:bg-accent-200/70 ring-accent-600 outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-primary-300 dark:hover:bg-primary-800"
+          aria-controls="navbar-collapse-container"
+          aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <Menu />
+          <span class="block shrink-0 group-aria-expanded:hidden">
+            <Menu />
+          </span>
+          <span class="hidden shrink-0 group-aria-expanded:block">
+            <X />
+          </span>
         </button>
-      </div>
-      <!-- ThemeIcon component specifically for smaller screens -->
-      <span class="inline-block md:hidden">
         <ThemeToggle client:load />
-      </span>
+      </div>
     </div>
+
+    <!-- 連結們 -->
     <div
-      id="navbar-collapse-with-animation"
-      class="hs-collapse hidden grow basis-full overflow-hidden transition-all duration-300 md:block"
+      id="navbar-collapse-container"
+      class="overflow-hidden transition-[max-height] duration-500 ease-in-out md:max-h-none md:overflow-visible"
+      style=""
     >
-      <!-- Navigation links container -->
       <div
-        class="mt-5 flex flex-col gap-x-0 gap-y-4 py-1 md:mt-0 md:flex-row md:items-center md:justify-end md:gap-x-4 lg:gap-x-7 md:gap-y-0 md:ps-7"
+        class="mt-5 flex flex-col gap-x-0 gap-y-4 py-1 md:mt-0 md:flex-row md:items-center md:justify-end md:gap-x-4 md:ps-7 lg:gap-x-7"
       >
-        <!-- Navigation links and Authentication component -->
         {
           Strings.navBarLinks.map((link) => (
-            <NavLink client:load url={link.url} name={link.name} active={pathname === link.url} />
+            <NavLink url={link.url} name={link.name} />
           ))
         }
-
-        <!-- ThemeIcon component specifically for larger screens -->
-        <span class="hidden md:inline-block">
+        <div class="hidden pt-2 md:block md:ps-2 md:pt-0">
           <ThemeToggle client:load />
-        </span>
+        </div>
       </div>
     </div>
   </nav>
 </header>
+
+<script>
+  const hamburgerButton = document.getElementById("hamburger-button");
+  const navbarContainer = document.getElementById("navbar-collapse-container");
+
+  if (hamburgerButton && navbarContainer) {
+    hamburgerButton.addEventListener("click", () => {
+      const isExpanded =
+        hamburgerButton.getAttribute("aria-expanded") === "true";
+
+      hamburgerButton.setAttribute("aria-expanded", String(!isExpanded));
+
+      if (isExpanded) {
+        navbarContainer.style.maxHeight = "0px";
+      } else {
+        navbarContainer.style.maxHeight = navbarContainer.scrollHeight + "px";
+      }
+    });
+
+    window.addEventListener("resize", handleResize);
+  }
+
+  function handleResize() {
+    if (hamburgerButton && navbarContainer) {
+      if (window.innerWidth >= 768) {
+        navbarContainer.style.removeProperty("max-height");
+        hamburgerButton.setAttribute("aria-expanded", "false");
+      } else {
+        if (hamburgerButton.getAttribute("aria-expanded") !== "true") {
+          navbarContainer.style.maxHeight = "0px";
+        }
+      }
+    }
+  }
+
+  handleResize();
+</script>

@@ -86,7 +86,7 @@
 
 @layer theme {
   .dark {
-    /* 品牌主色系（偏亮改成偏暗） */
+    /* 品牌主色系 */
     --color-primary-50: #171e2a;
     --color-primary-100: #1c2339;
     --color-primary-200: #272d48;
@@ -99,7 +99,7 @@
     --color-primary-900: #c0c2d1;
     --color-primary-950: #d3d4dd;
 
-    /* 點綴色系（橘色亮色調 → 暗橘/褐橘） */
+    /* 點綴色系 */
     --color-accent-50: #a85208;
     --color-accent-100: #af5a16;
     --color-accent-200: #bb6827;
@@ -112,7 +112,7 @@
     --color-accent-900: #fbbc89;
     --color-accent-950: #ffca9e;
 
-    /* 中性色系（反轉亮暗順序） */
+    /* 中性色系 */
     --color-neutral-50: #0f172a;
     --color-neutral-100: #1f2937;
     --color-neutral-200: #2d3748;
@@ -130,8 +130,6 @@
     --color-brand-light: #a5a8bd;
     --color-brand-dark: #2d3250;
     --color-brand-accent: #f69d5a;
-
-    /* 字體可留原本不變 */
 
     /* 品牌陰影（微調透明度，增加深度） */
     --shadow-brand-sm: 0 1px 2px 0 rgba(240, 240, 240, 0.05);

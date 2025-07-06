@@ -1,16 +1,46 @@
 ---
-
+import { SITE } from "@data/constants";
+import BrandLogo from "@components/BrandLogo.astro";
 ---
 
 <footer class="w-full bg-primary-300">
-  <div
-    class="mx-auto w-full max-w-[85rem] px-4 py-10 sm:px-6 lg:px-16 lg:pt-20 2xl:max-w-[var(--breakpoint-2xl)]"
-  >
-    <h1>Footer</h1>
+  <div class="mx-auto w-full px-4 pb-10 sm:px-6 lg:px-16 lg:pt-2">
+    <div class="grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-5 mt-10">
+      <div class="col-span-full lg:col-span-1">
+        <BrandLogo w={200} />
+      </div>
+
+      <div class="col-span-1">連結</div>
+      <div class="col-span-1">連結</div>
+
+      <div class="col-span-2">
+        <div class=" w-full h-14 bg-accent-300 outline-none px-10 p-4 rounded-md">feedback</div>
+      </div>
+    </div>
+
+    <div
+      class="mt-9 grid gap-y-2 sm:mt-12 sm:flex sm:items-center sm:justify-between sm:gap-y-0"
+    >
+      <div class="flex items-center justify-between">
+        <p class="text-sm text-neutral-600 dark:text-neutral-400">
+          © <span id="current-year"></span>
+          {SITE.title}. Crafted by
+          <a
+            class="rounded-lg font-medium underline underline-offset-2 outline-hidden ring-zinc-500 transition duration-300 hover:text-neutral-700 hover:decoration-dashed focus:outline-hidden focus-visible:ring-3 dark:ring-zinc-200 dark:hover:text-neutral-300"
+            href="https://github.com/jx06T"
+            target="_blank"
+            rel="noopener noreferrer">jx06T</a
+          >.
+        </p>
+      </div>
+
+      <div>icon</div>
+    </div>
+
     <script>
       const year = new Date().getFullYear();
       const element = document.getElementById("current-year");
-      element!.innerText = year.toString();
+      if (element) element.innerText = year.toString();
     </script>
   </div>
 </footer>
