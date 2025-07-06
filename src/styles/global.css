@@ -17,17 +17,17 @@
   --color-primary-950: #171e2a;
 
   /* 點綴色系 (橘色系) */
-  --color-accent-50: #ffedda;
-  --color-accent-100: #fde5cb;
-  --color-accent-200: #fcd8b2;
-  --color-accent-300: #fbcb98;
-  --color-accent-400: #f8b178;
-  --color-accent-500: #f69d5a;
-  --color-accent-600: #f4893a;
-  --color-accent-700: #ec7a26;
-  --color-accent-800: #dd6a1e;
-  --color-accent-900: #c85913;
-  --color-accent-950: #ad4504;
+  --color-accent-50: #ffca9e;
+  --color-accent-100: #fbbc89;
+  --color-accent-200: #f8b47c;
+  --color-accent-300: #f5ab71;
+  --color-accent-400: #ec9f65;
+  --color-accent-500: #e09255;
+  --color-accent-600: #d38347;
+  --color-accent-700: #c87638;
+  --color-accent-800: #bb6827;
+  --color-accent-900: #af5a16;
+  --color-accent-950: #a85208;
 
   /* 中性色系 */
   --color-neutral-50: #f8f9fa;
@@ -100,17 +100,17 @@
     --color-primary-950: #d3d4dd;
 
     /* 點綴色系（橘色亮色調 → 暗橘/褐橘） */
-    --color-accent-50: #3a251b;
-    --color-accent-100: #4b2d1f;
-    --color-accent-200: #5d3623;
-    --color-accent-300: #6f3f27;
-    --color-accent-400: #81482c;
-    --color-accent-500: #935230;
-    --color-accent-600: #a55c35;
-    --color-accent-700: #b7663a;
-    --color-accent-800: #c97140;
-    --color-accent-900: #dc7b45;
-    --color-accent-950: #ee874b;
+    --color-accent-50: #a85208;
+    --color-accent-100: #af5a16;
+    --color-accent-200: #bb6827;
+    --color-accent-300: #c87638;
+    --color-accent-400: #d38347;
+    --color-accent-500: #e09255;
+    --color-accent-600: #ec9f65;
+    --color-accent-700: #f5ab71;
+    --color-accent-800: #f8b47c;
+    --color-accent-900: #fbbc89;
+    --color-accent-950: #ffca9e;
 
     /* 中性色系（反轉亮暗順序） */
     --color-neutral-50: #0f172a;
