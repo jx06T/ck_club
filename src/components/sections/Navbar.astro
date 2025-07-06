@@ -1,10 +1,11 @@
 ---
 import NavLink from "@components/ui/links/NavLink.astro";
-import BrandLogo from "@components/BrandLogo.tsx";
+import BrandLogo from "@components/BrandLogo.astro";
 import Strings from "@utils/navigation.ts";
 import ThemeToggle from "@components/ThemeToggle";
-import { Menu } from 'lucide-react';
+import { Menu } from "lucide-react";
 
+const pathname = Astro.url.pathname;
 const homeUrl = Astro.currentLocale === "fr" ? "/fr" : "/";
 ---
 
@@ -21,7 +22,7 @@ const homeUrl = Astro.currentLocale === "fr" ? "/fr" : "/";
     <div class="flex items-center justify-between">
       <!-- Brand logo -->
       <a
-        class=" ml-1 flex-none rounded-lg text-xl font-bold outline-hidden ring-accent-600 focus-visible:ring-3"
+        class="ml-1 flex-none rounded-lg text-xl font-bold outline-hidden ring-accent-600 focus-visible:ring-3"
         href={homeUrl}
         aria-label="Brand"
       >
@@ -55,7 +56,7 @@ const homeUrl = Astro.currentLocale === "fr" ? "/fr" : "/";
         <!-- Navigation links and Authentication component -->
         {
           Strings.navBarLinks.map((link) => (
-            <NavLink url={link.url} name={link.name} />
+            <NavLink client:load url={link.url} name={link.name} active={pathname === link.url} />
           ))
         }
 
