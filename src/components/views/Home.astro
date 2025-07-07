@@ -5,8 +5,10 @@ import EventCarousel from "@components/sections/EventCarousel";
 import News from "@components/sections/News";
 import AutoPlayVideo from "@components/sections/VideoPlayer";
 import FAQ from "@components/sections/FAQ.astro";
+import Tabs from "@components/sections/Tabs.astro";
 
 import { getCollection } from "astro:content";
+import { getImage } from "astro:assets";
 
 import type { Slide } from "@components/sections/EventCarousel.tsx";
 import type { CollectionEntry } from "astro:content";
@@ -18,18 +20,24 @@ const sortedEvents = allEvents.sort(
     b.data.date.valueOf() - a.data.date.valueOf()
 );
 
-const slidesForCarousel: Slide[] = sortedEvents.map((event) => {
-  return {
-    image: event.data.image,
-    gradientStart: event.data.gradientStart,
-    gradientEnd: event.data.gradientEnd,
-    date: event.data.date,
-    link: event.data.link,
-    organizer: event.data.organizer,
-    description: event.body,
-    caption: event.data.title,
-  };
-});
+const slidesForCarousel: Slide[] = await Promise.all(
+  sortedEvents.map(async (event) => {
+    const optimizedImage = await getImage({
+      src: event.data.image,
+      format: "avif",
+    });
+    return {
+      image: optimizedImage,
+      gradientStart: event.data.gradientStart,
+      gradientEnd: event.data.gradientEnd,
+      date: event.data.date,
+      link: event.data.link,
+      organizer: event.data.organizer,
+      description: event.body,
+      caption: event.data.title,
+    };
+  })
+);
 
 const faqs = {
   subTitle: "以下是我們收到最多的提問",
@@ -83,3 +91,5 @@ const faqs = {
 />
 
 <FAQ title="常見問題" faqs={faqs} />
+
+<!-- <Tabs /> -->

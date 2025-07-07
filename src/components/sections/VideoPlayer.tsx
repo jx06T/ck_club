@@ -12,7 +12,7 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [showCTA, setShowCTA] = useState(false);
-
+    
     useEffect(() => {
         const videoElement = videoRef.current;
         if (!videoElement) return;
