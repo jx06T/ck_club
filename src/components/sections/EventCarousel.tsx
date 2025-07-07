@@ -158,7 +158,7 @@ function EventCarousel({ id, slides }: Props) {
 
                                     <div className="">
                                         <h2 onClick={() => toggleExpanded(index)} className=' cursor-pointer text-white font-normal text-xs sm:text-base md:text-lg lg:text-xl'>{slide.caption}</h2>
-                                        <p className='text-primary-50 font-normal text-[0.625rem] sm:text-sm md:text-base lg:text-lg mt-1'>
+                                        <p className='text-slate-300 font-normal text-[0.625rem] sm:text-sm md:text-base lg:text-lg mt-1'>
                                             <Calendar className='inline-block mb-0.5 mr-1 w-3 md:w-4 md:mb-1' />
                                             {slide.date.toISOString().split('T')[0]}
                                         </p>
@@ -169,11 +169,11 @@ function EventCarousel({ id, slides }: Props) {
                                             <div className="space-y-3">
                                                 <div>
                                                     <p className="text-white/90 font-medium text-xs md:text-base mb-0 md:mb-1">主辦單位</p>
-                                                    <p className="text-primary-50 text-[0.625rem] md:text-sm">{slide.organizer}</p>
+                                                    <p className="text-slate-300 text-[0.625rem] md:text-sm">{slide.organizer}</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-white/90 font-medium text-xs md:text-base mb-0 md:mb-1">活動說明</p>
-                                                    <p className="text-primary-50 text-[0.625rem] md:text-sm leading-relaxed">{slide.description}</p>
+                                                    <p className="text-slate-300 text-[0.625rem] md:text-sm leading-relaxed">{slide.description}</p>
                                                 </div>
                                                 <div className="pt-2">
                                                     <a
