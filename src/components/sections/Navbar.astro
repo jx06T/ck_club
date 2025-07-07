@@ -1,120 +1,126 @@
 ---
+import NavLink from "@components/ui/links/NavLink.astro";
+import BrandLogo from "@components/BrandLogo.astro";
+import Strings from "@utils/navigation.ts";
+import ThemeToggle from "@components/ThemeToggle.tsx";
 
+import { Menu, X } from "lucide-react";
 ---
 
-<!-- Main header component -->
 <header
-  class="sticky inset-x-0 top-4 z-50 flex w-full flex-wrap text-sm md:flex-nowrap md:justify-start"
+  class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-16 sticky inset-x-0 top-4 z-50 flex w-full flex-wrap text-sm md:flex-nowrap md:justify-start transition-transform duration-500"
+  id="site-header"
 >
-  <!-- Navigation container -->
   <nav
-    class="relative mx-2 w-full rounded-[36px] border border-yellow-100/40 bg-yellow-50/60 px-4 py-3 backdrop-blur-md dark:border-neutral-700/40 dark:bg-neutral-800/80 dark:backdrop-blur-md md:flex md:items-center md:justify-between md:px-6 md:py-0 lg:px-8 xl:mx-auto"
+    class="relative mx-2 w-full rounded-[36px] border border-accent-400/40 bg-accent-200/60 px-4 py-3 backdrop-blur-sm  md:flex md:items-center md:justify-between md:px-6 md:py-0 lg:px-8 xl:mx-auto"
     aria-label="Global"
   >
+    <div class="flex items-center justify-between">
+      <!-- Brand logo -->
+      <a
+        class="ml-1 flex-none rounded-lg text-xl font-bold outline-hidden ring-accent-600 focus-visible:ring-2"
+        href="/"
+        aria-label="Brand"
+      >
+        <BrandLogo w={140} />
+      </a>
+
+      <!-- 展開菜單按鈕 -->
+      <div class="flex items-center gap-2 md:hidden">
+        <button
+          id="hamburger-button"
+          type="button"
+          class="group flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-primary-700 transition duration-300 hover:bg-accent-200/70 ring-accent-600 outline-none disabled:pointer-events-none disabled:opacity-50 "
+          aria-controls="navbar-collapse-container"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="block shrink-0 group-aria-expanded:hidden">
+            <Menu />
+          </span>
+          <span class="hidden shrink-0 group-aria-expanded:block">
+            <X />
+          </span>
+        </button>
+        <ThemeToggle client:load />
+      </div>
+    </div>
+
+    <!-- 連結們 -->
+    <div
+      id="navbar-collapse-container"
+      class="overflow-hidden transition-[max-height] duration-500 ease-in-out md:max-h-none md:overflow-visible"
+      style=""
+    >
+      <div
+        class="mt-5 flex flex-col gap-x-0 gap-y-4 py-1 md:mt-0 md:flex-row md:items-center md:justify-end md:gap-x-4 md:ps-7 lg:gap-x-7"
+      >
+        {
+          Strings.navBarLinks.map((link) => (
+            <NavLink url={link.url} name={link.name} />
+          ))
+        }
+        <div class="hidden pt-2 md:block md:ps-2 md:pt-0">
+          <ThemeToggle client:load />
+        </div>
+      </div>
+    </div>
   </nav>
 </header>
-<!-- Theme Appearance script to manage light/dark modes -->
-<script is:inline>
-  const HSThemeAppearance = {
-    init() {
-      const defaultTheme = "default";
-      let theme = localStorage.getItem("hs_theme") || defaultTheme;
 
-      if (document.querySelector("html").classList.contains("dark")) return;
-      this.setAppearance(theme);
-    },
-    _resetStylesOnLoad() {
-      const $resetStyles = document.createElement("style");
-      $resetStyles.innerText = `*{transition: unset !important;}`;
-      $resetStyles.setAttribute("data-hs-appearance-onload-styles", "");
-      document.head.appendChild($resetStyles);
-      return $resetStyles;
-    },
-    setAppearance(theme, saveInStore = true, dispatchEvent = true) {
-      const $resetStylesEl = this._resetStylesOnLoad();
+<script>
+  const hamburgerButton = document.getElementById("hamburger-button");
+  const navbarContainer = document.getElementById("navbar-collapse-container");
 
-      if (saveInStore) {
-        localStorage.setItem("hs_theme", theme);
-      }
+  if (hamburgerButton && navbarContainer) {
+    hamburgerButton.addEventListener("click", () => {
+      const isExpanded =
+        hamburgerButton.getAttribute("aria-expanded") === "true";
 
-      if (theme === "auto") {
-        theme = window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "default";
-      }
+      hamburgerButton.setAttribute("aria-expanded", String(!isExpanded));
 
-      document.querySelector("html").classList.remove("dark");
-      document.querySelector("html").classList.remove("default");
-      document.querySelector("html").classList.remove("auto");
-
-      document
-        .querySelector("html")
-        .classList.add(this.getOriginalAppearance());
-
-      setTimeout(() => {
-        $resetStylesEl.remove();
-      });
-
-      if (dispatchEvent) {
-        window.dispatchEvent(
-          new CustomEvent("on-hs-appearance-change", { detail: theme })
-        );
-      }
-    },
-    getAppearance() {
-      let theme = this.getOriginalAppearance();
-      if (theme === "auto") {
-        theme = window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "default";
-      }
-      return theme;
-    },
-    getOriginalAppearance() {
-      const defaultTheme = "default";
-      return localStorage.getItem("hs_theme") || defaultTheme;
-    },
-  };
-  HSThemeAppearance.init();
-
-  window
-    .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", () => {
-      if (HSThemeAppearance.getOriginalAppearance() === "auto") {
-        HSThemeAppearance.setAppearance("auto", false);
+      if (isExpanded) {
+        navbarContainer.style.maxHeight = "0px";
+      } else {
+        navbarContainer.style.maxHeight = navbarContainer.scrollHeight + "px";
       }
     });
 
-  window.addEventListener("load", () => {
-    const $clickableThemes = document.querySelectorAll(
-      "[data-hs-theme-click-value]"
-    );
-    const $switchableThemes = document.querySelectorAll(
-      "[data-hs-theme-switch]"
-    );
+    window.addEventListener("resize", handleResize);
+  }
 
-    $clickableThemes.forEach(($item) => {
-      $item.addEventListener("click", () =>
-        HSThemeAppearance.setAppearance(
-          $item.getAttribute("data-hs-theme-click-value"),
-          true,
-          $item
-        )
-      );
-    });
+  function handleResize() {
+    if (hamburgerButton && navbarContainer) {
+      if (window.innerWidth >= 768) {
+        navbarContainer.style.removeProperty("max-height");
+        hamburgerButton.setAttribute("aria-expanded", "false");
+      } else {
+        if (hamburgerButton.getAttribute("aria-expanded") !== "true") {
+          navbarContainer.style.maxHeight = "0px";
+        }
+      }
+    }
+  }
 
-    $switchableThemes.forEach(($item) => {
-      $item.addEventListener("change", (e) => {
-        HSThemeAppearance.setAppearance(e.target.checked ? "dark" : "default");
-      });
+  handleResize();
 
-      $item.checked = HSThemeAppearance.getAppearance() === "dark";
-    });
+  const header = document.getElementById("site-header");
+  let lastScrollY = window.scrollY;
+  let lastHideY = window.scrollY;
 
-    window.addEventListener("on-hs-appearance-change", (e) => {
-      $switchableThemes.forEach(($item) => {
-        $item.checked = e.detail === "dark";
-      });
-    });
+  window.addEventListener("scroll", () => {
+    const currentScrollY = window.scrollY;
+    if (!header) return;
+    if (currentScrollY > lastScrollY && currentScrollY > 50) {
+      lastHideY = window.scrollY;
+      header.style.transform = "translateY(-100%)";
+    } else if (
+      (currentScrollY < lastScrollY && currentScrollY < lastHideY - 100) ||
+      currentScrollY < 50
+    ) {
+      header.style.transform = "translateY(0)";
+    }
+
+    lastScrollY = currentScrollY;
   });
 </script>

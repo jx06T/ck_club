@@ -1,0 +1,31 @@
+---
+// NavLink.astro
+
+interface Props {
+  url: string;
+  name: string;
+}
+
+const { url, name } = Astro.props;
+
+const currentPath = Astro.url.pathname;
+
+const isActive =
+  url === currentPath || (url !== "/" && currentPath.startsWith(url));
+
+const baseClass =
+  "rounded-lg text-base font-medium outline-hidden  focus-visible:ring-2 md:py-3 md:text-sm 2xl:text-base";
+const inactiveText = "text-primary-800 hover:text-primary-600";
+const activeText = "text-accent-700 hover:text-accent-500";
+
+const className = [baseClass, isActive ? activeText : inactiveText].join(" ");
+---
+
+<a
+  href={url}
+  class={className}
+  aria-current={isActive ? "page" : undefined}
+  data-astro-prefetch
+>
+  {name}
+</a>

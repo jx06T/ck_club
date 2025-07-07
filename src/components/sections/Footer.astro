@@ -1,15 +1,83 @@
 ---
+import { SITE } from "@data/constants";
+import BrandLogo from "@components/BrandLogo.astro";
+import Strings from "@utils/navigation.ts";
+import FooterSocialLink from "@components/ui/links/FooterSocialLink.astro";
 
+import { MdiGithub, MdiInstagram } from "@components/ui/Icons.tsx";
 ---
 
-<footer class="w-full bg-neutral-300 dark:bg-neutral-900">
-  <div
-    class="mx-auto w-full max-w-[85rem] px-4 py-10 sm:px-6 lg:px-16 lg:pt-20 2xl:max-w-(--breakpoint-2xl)"
-  >
+<footer class="w-full bg-primary-300">
+  <div class="mx-auto w-full px-5 pt-0.5 pb-10 sm:px-6 lg:px-16 lg:pt-2">
+    <div
+      class="grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-[1.6fr_1fr_1fr_1fr_1fr] mt-10"
+    >
+      <div class="col-span-full lg:col-span-1 mb-1">
+        <BrandLogo w={200} />
+      </div>
+
+      {
+        Strings.footerLinks.map((section) => (
+          <div class="col-span-1">
+            <h3 class=" text-neutral-900 font-bold"> {section.section}</h3>
+            <ul class="mt-3 grid space-y-3">
+              {section.links.map((link, index) => (
+                <li>
+                  <a
+                    href={link.url}
+                    class="inline-flex gap-x-2 rounded-lg text-primary-800 outline-hidden ring-zinc-500 transition duration-300 hover:text-primary-600 focus-visible:ring-3 "
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+
+      <div class="col-span-2">
+        <div
+          class="w-full h-14 bg-accent-300 outline-none px-10 p-4 rounded-md"
+        >
+          feedback
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="mt-9 grid gap-y-2 sm:mt-12 sm:flex sm:items-center sm:justify-between sm:gap-y-0"
+    >
+      <div class="flex items-center justify-between">
+        <p class="text-sm text-neutral-600">
+          © <span id="current-year"></span>
+          {SITE.title}. Crafted by
+          <a
+            class="rounded-lg font-medium underline underline-offset-2 outline-hidden ring-zinc-500 transition duration-300 hover:text-neutral-700 hover:decoration-dashed focus:outline-hidden focus-visible:ring-3"
+            href="https://github.com/jx06T"
+            target="_blank"
+            rel="noopener noreferrer">jx06T</a
+          >.
+        </p>
+      </div>
+
+      <div>
+        <FooterSocialLink url={Strings.socialLinks.github}>
+          <MdiGithub />
+        </FooterSocialLink>
+        <FooterSocialLink url={Strings.socialLinks.instagram1}>
+          <MdiInstagram />
+        </FooterSocialLink>
+        <FooterSocialLink url={Strings.socialLinks.instagram2}>
+          <MdiInstagram />
+        </FooterSocialLink>
+      </div>
+    </div>
+
     <script>
       const year = new Date().getFullYear();
       const element = document.getElementById("current-year");
-      element!.innerText = year.toString();
+      if (element) element.innerText = year.toString();
     </script>
   </div>
 </footer>

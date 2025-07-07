@@ -1,0 +1,180 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@theme {
+  /* 品牌主色系 */
+  --color-primary-50: #d3d4dd;
+  --color-primary-100: #c0c2d1;
+  --color-primary-200: #a2a6bf;
+  --color-primary-300: #848aae;
+  --color-primary-400: #686f9c;
+  --color-primary-500: #5a618c;
+  --color-primary-600: #4e5580;
+  --color-primary-700: #3e456d;
+  --color-primary-800: #272d48;
+  --color-primary-900: #1c2339;
+  --color-primary-950: #171e2a;
+
+  /* 點綴色系 (橘色系) */
+  --color-accent-50: #ffedda;
+  --color-accent-100: #fde5cb;
+  --color-accent-200: #fcd8b2;
+  --color-accent-300: #fbcb98;
+  --color-accent-400: #f8b178;
+  --color-accent-500: #f69d5a;
+  --color-accent-600: #f4893a;
+  --color-accent-700: #ec7a26;
+  --color-accent-800: #dd6a1e;
+  --color-accent-900: #c85913;
+  --color-accent-950: #ad4504;
+
+  /* 中性色系 */
+  --color-neutral-50: #f8f9fa;
+  --color-neutral-100: #f1f3f4;
+  --color-neutral-200: #e3e5e8;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #2d3748;
+  --color-neutral-900: #1f2937;
+  --color-neutral-950: #0f172a;
+
+  /* 品牌快捷別名 */
+  --color-brand: #2d3250;
+  --color-brand-light: #676f9d;
+  --color-brand-dark: #2d3250;
+  --color-brand-accent: #f8b179;
+
+  /* 字體配置 */
+  --font-sans: "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Merriweather", ui-serif, Georgia, serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "Consolas", monospace;
+  --font-chinese: "Noto Sans TC", sans-serif;
+  --font-english: "Merriweather", serif;
+
+  /* 品牌陰影 */
+  --shadow-brand-sm: 0 1px 2px 0 rgba(45, 50, 80, 0.05);
+  --shadow-brand: 0 1px 3px 0 rgba(45, 50, 80, 0.1),
+    0 1px 2px 0 rgba(45, 50, 80, 0.06);
+  --shadow-brand-md: 0 4px 6px -1px rgba(45, 50, 80, 0.1),
+    0 2px 4px -1px rgba(45, 50, 80, 0.06);
+  --shadow-brand-lg: 0 10px 15px -3px rgba(45, 50, 80, 0.1),
+    0 4px 6px -2px rgba(45, 50, 80, 0.05);
+  --shadow-brand-xl: 0 20px 25px -5px rgba(45, 50, 80, 0.1),
+    0 10px 10px -5px rgba(45, 50, 80, 0.04);
+  --shadow-accent: 0 4px 6px -1px rgba(248, 177, 121, 0.2),
+    0 2px 4px -1px rgba(248, 177, 121, 0.1);
+
+  /* 背景漸變 */
+  --gradient-brand: linear-gradient(
+    135deg,
+    #2d3250 0%,
+    #424669 50%,
+    #676f9d 100%
+  );
+  --gradient-accent: linear-gradient(135deg, #f8b179 0%, #f69d5a 100%);
+  --gradient-hero: linear-gradient(
+    135deg,
+    #2d3250 0%,
+    #676f9d 50%,
+    #f8b179 100%
+  );
+
+  --text-2xs: 0.625rem;
+}
+
+@layer theme {
+  .dark {
+    /* 品牌主色系 */
+    --color-primary-50: #171e2a;
+    --color-primary-100: #1c2339;
+    --color-primary-200: #272d48;
+    --color-primary-300: #343a5a;
+    --color-primary-400: #454b70;
+    --color-primary-500: #565d86;
+    --color-primary-600: #686f9c;
+    --color-primary-700: #848aae;
+    --color-primary-800: #a2a6bf;
+    --color-primary-900: #c0c2d1;
+    --color-primary-950: #d3d4dd;
+
+    /* 點綴色系 */
+    --color-accent-50: #a85208;
+    --color-accent-100: #af5a16;
+    --color-accent-200: #bb6827;
+    --color-accent-300: #c87638;
+    --color-accent-400: #d38347;
+    --color-accent-500: #e09255;
+    --color-accent-600: #ec9f65;
+    --color-accent-700: #f5ab71;
+    --color-accent-800: #f8b47c;
+    --color-accent-900: #fbbc89;
+    --color-accent-950: #ffca9e;
+
+    /* 中性色系 */
+    --color-neutral-50: #0f172a;
+    --color-neutral-100: #1f2937;
+    --color-neutral-200: #2d3748;
+    --color-neutral-300: #374151;
+    --color-neutral-400: #4b5563;
+    --color-neutral-500: #6b7280;
+    --color-neutral-600: #9ca3af;
+    --color-neutral-700: #d1d5db;
+    --color-neutral-800: #e3e5e8;
+    --color-neutral-900: #f1f3f4;
+    --color-neutral-950: #f8f9fa;
+
+    /* 品牌快捷別名 */
+    --color-brand: #f1f3f4;
+    --color-brand-light: #a5a8bd;
+    --color-brand-dark: #2d3250;
+    --color-brand-accent: #f69d5a;
+
+    /* 品牌陰影（微調透明度，增加深度） */
+    --shadow-brand-sm: 0 1px 2px 0 rgba(240, 240, 240, 0.05);
+    --shadow-brand: 0 1px 3px 0 rgba(240, 240, 240, 0.1),
+      0 1px 2px 0 rgba(240, 240, 240, 0.06);
+    --shadow-brand-md: 0 4px 6px -1px rgba(240, 240, 240, 0.1),
+      0 2px 4px -1px rgba(240, 240, 240, 0.06);
+    --shadow-brand-lg: 0 10px 15px -3px rgba(240, 240, 240, 0.1),
+      0 4px 6px -2px rgba(240, 240, 240, 0.05);
+    --shadow-brand-xl: 0 20px 25px -5px rgba(240, 240, 240, 0.1),
+      0 10px 10px -5px rgba(240, 240, 240, 0.04);
+    --shadow-accent: 0 4px 6px -1px rgba(255, 180, 130, 0.2),
+      0 2px 4px -1px rgba(255, 180, 130, 0.1);
+
+    /* 背景漸變（反轉/調暗漸層） */
+    --gradient-brand: linear-gradient(
+      135deg,
+      #f1f3f4 0%,
+      #a5a8bd 50%,
+      #2d3250 100%
+    );
+    --gradient-accent: linear-gradient(135deg, #f69d5a 0%, #7c3c22 100%);
+    --gradient-hero: linear-gradient(
+      135deg,
+      #f8f9fa 0%,
+      #676f9d 50%,
+      #f69d5a 100%
+    );
+  }
+}
+
+@layer utilities {
+  .theme-light-only {
+    display: block;
+  }
+  .dark .theme-light-only {
+    display: none;
+  }
+
+  .theme-dark-only {
+    display: none;
+  }
+  .dark .theme-dark-only {
+    display: block;
+  }
+}

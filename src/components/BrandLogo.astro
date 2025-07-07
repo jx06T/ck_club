@@ -1,0 +1,26 @@
+---
+// src/components/BrandLogo.astro
+import BrightLogo from "@images/branding/logo.svg?url";
+import DarkLogo from "@images/branding/logo_dark.svg?url";
+
+interface Props {
+  w: number;
+}
+
+const { w } = Astro.props;
+---
+
+<div class="relative" style={`width: ${w}px;`}>
+  <img
+    src={BrightLogo}
+    alt="Brand Logo"
+    class="h-auto theme-light-only"
+    style={`width: ${w}px;`}
+  />
+  <img
+    src={DarkLogo}
+    alt="Brand Logo"
+    class="h-auto theme-dark-only"
+    style={`width: ${w}px;`}
+  />
+</div>
