@@ -2,105 +2,128 @@
 interface TabItem {
   name: string;
   description: string;
-  image: ImageMetadata; // 使用 Astro 圖片優化
+  image: ImageMetadata;
 }
 interface Props {
   tabs: TabItem[];
+  title: string;
+  id?: string;
 }
-const { tabs } = Astro.props;
-import { Image } from 'astro:assets';
+const { tabs, title, id } = Astro.props;
+import { Image } from "astro:assets";
 ---
 
-<div data-tabs-container class="grid md:grid-cols-2 gap-8">
-  
-  <!-- 左側圖片區 (電腦版) -->
+<div
+  data-tabs-container
+  class="grid md:grid-cols-[1.4fr_1fr] gap-10 min-h-[26rem] mt-20 mb-14"
+>
   <div class="relative hidden md:block">
-    {tabs.map((tab, index) => (
-      <div 
-        data-tab-panel={index} 
-        class:list={[
-          "absolute inset-0 transition-opacity duration-300",
-          { "opacity-100 z-10": index === 0 }, // 預設顯示第一個
-          { "opacity-0": index !== 0 }
-        ]}
-      >
-        <Image src={tab.image} alt={tab.name} class="w-full h-full object-cover rounded-lg" />
-      </div>
-    ))}
-  </div>
-
-  <!-- 右側內容區 (電腦版) / 主要內容區 (手機版) -->
-  <div>
-    <!-- 標籤按鈕 -->
-    <div class="flex border-b border-gray-200 dark:border-gray-700 md:justify-start">
-      {tabs.map((tab, index) => (
-        <button
-          data-tab-button={index}
+    {
+      tabs.map((tab, index) => (
+        <div
+          data-tab-panel={index}
           class:list={[
-            "px-4 py-2 -mb-px font-semibold border-b-2 transition-colors",
-            { "border-accent-400 text-accent-400": index === 0 }, // 預設選中第一個
-            { "border-transparent text-gray-500 hover:text-gray-700": index !== 0 }
+            "absolute inset-0 transition-opacity duration-300 min-h-96",
+            { "opacity-100 z-10": index === 0 },
+            { "opacity-0": index !== 0 },
           ]}
         >
-          {tab.name}
-        </button>
-      ))}
-    </div>
-
-    <!-- 內容面板 -->
-    <div class="mt-4">
-      {tabs.map((tab, index) => (
-        <div 
-          data-tab-panel={index} 
-          class:list={[
-            "transition-opacity duration-300",
-            { "opacity-100": index === 0 }, // 預設顯示第一個
-            { "opacity-0 h-0 overflow-hidden pointer-events-none": index !== 0 }
-          ]}
-        >
-          {/* 手機版的圖片 */}
-          <div class="relative w-full aspect-video mb-4 md:hidden">
-            <Image src={tab.image} alt={tab.name} class="w-full h-full object-cover rounded-lg" />
-          </div>
-          <p class="text-gray-600 dark:text-gray-400">{tab.description}</p>
+          <Image
+            src={tab.image}
+            alt={tab.name}
+            class="w-full h-full object-cover rounded-lg"
+          />
         </div>
-      ))}
-    </div>
+      ))
+    }
   </div>
 
+  <div>
+    <h1 id={id} class=" mb-4 block text-balance text-3xl font-bold tracking-tight">
+      {title}
+    </h1>
+    <div class="flex border-b border-primary-800 md:justify-start">
+      {
+        tabs.map((tab, index) => (
+          <button
+            data-tab-button={index}
+            class:list={[
+              "px-4 py-2 w-[33.4%] -mb-px font-semibold border-b-2 transition-colors text-lg",
+              { "border-accent-400 text-accent-400 hover:text-accent-500": index === 0 },
+              {
+                "border-transparent text-primary-700 hover:text-primary-500":
+                  index !== 0,
+              },
+            ]}
+          >
+            {tab.name}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="mt-4">
+      {
+        tabs.map((tab, index) => (
+          <div
+            data-tab-panel={index}
+            class:list={[
+              "transition-opacity duration-300",
+              { "opacity-100": index === 0 },
+              {
+                "opacity-0 h-0 overflow-hidden pointer-events-none":
+                  index !== 0,
+              },
+            ]}
+          >
+            <div class="relative w-full aspect-video mb-4 md:hidden">
+              <Image
+                src={tab.image}
+                alt={tab.name}
+                class="w-full h-full object-cover rounded-lg"
+              />
+            </div>
+            <p class="text-primary-700 text-base ">{tab.description}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
 </div>
 
 <script is:inline>
-  document.addEventListener('DOMContentLoaded', () => {
-    // 選取所有使用了 data-tabs-container 的組件
-    const containers = document.querySelectorAll('[data-tabs-container]');
-    
-    containers.forEach(container => {
-      const buttons = container.querySelectorAll('[data-tab-button]');
-      const panels = container.querySelectorAll('[data-tab-panel]');
-      
-      buttons.forEach(button => {
-        button.addEventListener('click', () => {
-          const tabIndex = button.getAttribute('data-tab-button');
-          
-          // 更新按鈕的活躍狀態
-          buttons.forEach(btn => {
-            const btnIndex = btn.getAttribute('data-tab-button');
-            btn.classList.toggle('border-accent-400', btnIndex === tabIndex);
-            btn.classList.toggle('text-accent-400', btnIndex === tabIndex);
-            btn.classList.toggle('border-transparent', btnIndex !== tabIndex);
-            btn.classList.toggle('text-gray-500', btnIndex !== tabIndex);
+  document.addEventListener("DOMContentLoaded", () => {
+    const containers = document.querySelectorAll("[data-tabs-container]");
+
+    containers.forEach((container) => {
+      const buttons = container.querySelectorAll("[data-tab-button]");
+      const panels = container.querySelectorAll("[data-tab-panel]");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const tabIndex = button.getAttribute("data-tab-button");
+
+          buttons.forEach((btn) => {
+            const btnIndex = btn.getAttribute("data-tab-button");
+            btn.classList.toggle("border-accent-400", btnIndex === tabIndex);
+            btn.classList.toggle("text-accent-400", btnIndex === tabIndex);
+            btn.classList.toggle("hover:text-accent-500", btnIndex === tabIndex);
+            btn.classList.toggle("border-transparent", btnIndex !== tabIndex);
+            btn.classList.toggle("text-primary-700", btnIndex !== tabIndex);
+            btn.classList.toggle("hover:text-primary-500", btnIndex !== tabIndex);
           });
-          
-          // 更新內容面板的顯隱狀態
-          panels.forEach(panel => {
-            const panelIndex = panel.getAttribute('data-tab-panel');
-            panel.classList.toggle('opacity-100', panelIndex === tabIndex);
-            panel.classList.toggle('z-10', panelIndex === tabIndex); // 用於電腦版圖片疊放
-            panel.classList.toggle('opacity-0', panelIndex !== tabIndex);
-            panel.classList.toggle('h-0', panelIndex !== tabIndex);
-            panel.classList.toggle('overflow-hidden', panelIndex !== tabIndex);
-            panel.classList.toggle('pointer-events-none', panelIndex !== tabIndex);
+
+          panels.forEach((panel) => {
+            const panelIndex = panel.getAttribute("data-tab-panel");
+            panel.classList.toggle("opacity-100", panelIndex === tabIndex);
+            panel.classList.toggle("z-10", panelIndex === tabIndex);
+            panel.classList.toggle("opacity-0", panelIndex !== tabIndex);
+            panel.classList.toggle("h-0", panelIndex !== tabIndex);
+            panel.classList.toggle("overflow-hidden", panelIndex !== tabIndex);
+            panel.classList.toggle(
+              "pointer-events-none",
+              panelIndex !== tabIndex
+            );
           });
         });
       });

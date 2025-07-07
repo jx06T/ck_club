@@ -8,22 +8,20 @@ interface Props {
 const { question, answer } = Astro.props;
 ---
 
-<div
-  class="details border-b border-neutral-200 py-6 last:border-b-0 cursor-pointer"
->
-  <div
-    class="summary-question flex cursor-pointer list-none items-center justify-between text-balance font-bold text-primary-800 transition hover:text-primary-700 md:text-lg"
+<div class="details border-b border-neutral-200 pb-2 last:border-b-0">
+  <h2
+    class="summary-question flex cursor-pointer pb-4 pt-2 list-none items-center justify-between text-balance font-bold text-primary-700 transition hover:text-primary-500 md:text-lg"
   >
     {question}
     <div class="transition-transform duration-300">
       <ChevronDown />
     </div>
-  </div>
+  </h2>
 
   <div
-    class="details-answer overflow-hidden block transition-[max-height] duration-300 ease-in-out max-h-0"
+    class="details-answer -mt-2 mb-2 overflow-hidden block transition-[max-height] duration-300 ease-in-out max-h-0"
   >
-    <p class="pt-4 text-pretty text-primary-700">
+    <p class="pb-2  text-pretty text-primary-700">
       {answer}
     </p>
   </div>

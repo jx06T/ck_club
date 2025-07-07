@@ -66,6 +66,24 @@ const faqs = {
     },
   ],
 };
+
+const testTabs = [
+  {
+    name: "束口袋",
+    description: "黑色的束口袋，方便收納各種小物",
+    image: CKRed,
+  },
+  {
+    name: "徽章",
+    description: "專屬於社團博覽會的獨一無二徽章，金屬材質自帶高級感",
+    image: CKRed,
+  },
+  {
+    name: "悠遊卡套",
+    description: "新拿到的學生證最好的收納方式！",
+    image: CKRed,
+  },
+];
 ---
 
 <Hero
@@ -90,6 +108,7 @@ const faqs = {
   client:visible
 />
 
+<Tabs tabs={testTabs} title="紀念品介紹" />
+
 <FAQ title="常見問題" faqs={faqs} />
 
-<!-- <Tabs /> -->

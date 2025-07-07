@@ -118,9 +118,9 @@ function News({ id }: Props) {
                 即時訊息
             </h1>
 
-            <div className="bg-primary-200 rounded-xl overflow-hidden">
+            <div className="bg-primary-200 rounded-md overflow-hidden">
                 <div className=" bg-primary-300 px-4 md:px-6 py-4">
-                    <div className="grid grid-cols-[2.4fr_1.2fr_1fr] items-center text-sm font-semibold text-slate-100">
+                    <div className="grid grid-cols-[2.4fr_1.2fr_1fr] items-center text-base font-semibold text-slate-100">
                         <span className="">內容</span>
                         <span>社團</span>
                         <span className="">時間</span>
@@ -130,7 +130,7 @@ function News({ id }: Props) {
                 {newsInPage.map((news, i) => (
                     <div
                         key={i}
-                        className="grid grid-cols-[2.4fr_1.2fr_1fr] items-center px-4 md:px-6 py-4 border-t border-primary-50  text-sm hover:bg-primary-300 transition-colors"
+                        className="grid grid-cols-[2.4fr_1.2fr_1fr] items-center px-4 md:px-6 py-4 border-t border-primary-50  text-base hover:bg-primary-300/10 transition-colors"
                     >
                         <div className="pr-4 ">
                             <p className="text-slate-100 font-medium line-clamp-2">{news.content}</p>
@@ -139,7 +139,7 @@ function News({ id }: Props) {
                                     href={news.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 text-accent-300 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-xs mt-1 hover:underline"
+                                    className="inline-flex items-center gap-1 text-accent-300 hover:text-accent-400 text-base mt-1 hover:underline"
                                 >
                                     <ExternalLink className="w-3 h-3" />
                                     外部連結
@@ -147,18 +147,18 @@ function News({ id }: Props) {
                             )}
                         </div>
                         <div className="pr-4">
-                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary-100 text-slate-100 dark:bg-blue-900 dark:text-blue-300">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-primary-100 text-slate-100 ">
                                 {news.clubName}
                             </span>
                         </div>
-                        <p className="text-slate-50 font-mono text-xs">{formatTimestamp(news.timestamp)}</p>
+                        <p className="text-slate-50 font-mono text-sm">{formatTimestamp(news.timestamp)}</p>
 
                     </div>
                 ))}
             </div>
 
-            <div className="mt-4 px-4 md:px-6 flex justify-between items-center">
-                <div className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="mt-5 px-4 md:px-6 flex justify-between items-center">
+                <div className="text-sm text-gray-500 ">
                     第 {currentPage * itemsPerPage + 1} - {Math.min((currentPage + 1) * itemsPerPage, testData.length)} 筆，
                     共 {testData.length} 筆
                 </div>
@@ -171,7 +171,7 @@ function News({ id }: Props) {
                         <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
                         <span className=" hidden md:block">上一頁</span>
                     </button>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                    <span className="text-sm text-gray-500">
                         {currentPage + 1} / {totalPages}
                     </span>
                     <button

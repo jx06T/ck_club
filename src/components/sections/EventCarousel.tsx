@@ -18,7 +18,6 @@ interface Props {
 }
 
 function EventCarousel({ id, slides }: Props) {
-    console.log(slides[0].image)
     const extendedSlides = [slides[slides.length - 1], ...slides, slides[0]];
 
     const [currentIndex, setCurrentIndex] = useState(1);
