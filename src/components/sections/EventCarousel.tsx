@@ -169,11 +169,11 @@ function EventCarousel({ id, slides }: Props) {
                                         clipPath: expandedSlide === index ? 'polygon(0 0, 100% 0, 0 100%)' : 'polygon(0 0, 100% 0, 0 100%)',
                                         transition: 'all 0.3s ease-in-out'
                                     }}
-                                    className={`absolute top-0 left-0 z-20 ${expandedSlide === index ? 'h-[200%] w-[200%]' : 'h-[30%] w-[55%]'
+                                    className={`absolute top-0 left-0 z-20 ${expandedSlide === index ? 'h-[200%] w-[200%]  backdrop-blur-xs' : 'h-[30%] w-[55%]'
                                         }`}
                                 />
 
-                                <div className={` overflow-visible p-4 pt-3 absolute top-0 left-0 z-30 rounded-br-md transition-all duration-300 ${expandedSlide === index ? 'h-[100%] w-[70%] backdrop-blur-xs' : 'h-[30%] w-[55%]'}`}>
+                                <div className={` overflow-visible p-4 pt-3 absolute top-0 left-0 z-30 rounded-br-md transition-all duration-300 ${expandedSlide === index ? 'h-[100%] w-[70%] ' : 'h-[30%] w-[55%]'}`}>
 
                                     <div className="">
                                         <h2 className='  text-white font-normal text-xs sm:text-base md:text-lg lg:text-xl'>{slide.caption}</h2>
@@ -185,7 +185,7 @@ function EventCarousel({ id, slides }: Props) {
 
                                     {expandedSlide === index && (
                                         <div className="mt-1 md:mt-3 lg:mt-4 animate-in fade-in-0 slide-in-from-top-2 duration-300">
-                                            <div className="space-y-3">
+                                            <div className=" space-y-2 md:space-y-3">
                                                 <div>
                                                     <p className="text-white/90 font-medium text-xs md:text-base lg:text-lg mb-0 md:mb-1">主辦單位</p>
                                                     <p className="text-slate-300 text-2xs md:text-sm lg:text-base ">{slide.organizer}</p>
@@ -198,7 +198,7 @@ function EventCarousel({ id, slides }: Props) {
                                                     <a
                                                         href={slide.link}
                                                         target="_blank"
-                                                        className="inline-flex items-center text-accent-300 hover:text-accent-400 transition-colors text-sm md:text-base lg:text-lg "
+                                                        className="inline-flex items-center text-accent-300 hover:text-accent-400 transition-colors text-xs md:text-base lg:text-lg "
                                                     >
                                                         了解更多 <SquareArrowOutUpRight className="ml-1 w-4 inline-block mt-0.5" />
                                                     </a>

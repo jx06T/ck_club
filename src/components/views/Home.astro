@@ -2,6 +2,7 @@
 import Hero from "@components/sections/Hero.astro";
 import CKRed from "@images/home/ck_red.jpg";
 import EventCarousel from "@components/sections/EventCarousel";
+import News from "../sections/News";
 
 import { getCollection } from "astro:content";
 
@@ -42,3 +43,4 @@ const slidesForCarousel: Slide[] = sortedEvents.map((event) => {
 />
 
 <EventCarousel id="event" slides={slidesForCarousel} client:visible />
+<News id="news" client:visible/>
