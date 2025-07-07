@@ -82,6 +82,8 @@
     #676f9d 50%,
     #f8b179 100%
   );
+
+  --text-2xs: 0.625rem;
 }
 
 @layer theme {
