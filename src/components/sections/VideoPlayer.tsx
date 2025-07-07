@@ -29,7 +29,7 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
                 }
             },
             {
-                threshold: 0.6,
+                threshold: 0.7,
             }
         );
 
