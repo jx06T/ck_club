@@ -51,7 +51,7 @@ import { Image } from "astro:assets";
               "px-4 py-2 w-[33.4%] -mb-px font-semibold border-b-2 transition-colors text-lg",
               { "border-accent-400 text-accent-400 hover:text-accent-500": index === 0 },
               {
-                "border-transparent text-primary-700 hover:text-primary-500":
+                "border-transparent text-primary-800 hover:text-primary-600":
                   index !== 0,
               },
             ]}
@@ -109,8 +109,8 @@ import { Image } from "astro:assets";
             btn.classList.toggle("text-accent-400", btnIndex === tabIndex);
             btn.classList.toggle("hover:text-accent-500", btnIndex === tabIndex);
             btn.classList.toggle("border-transparent", btnIndex !== tabIndex);
-            btn.classList.toggle("text-primary-700", btnIndex !== tabIndex);
-            btn.classList.toggle("hover:text-primary-500", btnIndex !== tabIndex);
+            btn.classList.toggle("text-primary-800", btnIndex !== tabIndex);
+            btn.classList.toggle("hover:text-primary-600", btnIndex !== tabIndex);
           });
 
           panels.forEach((panel) => {

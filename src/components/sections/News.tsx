@@ -118,22 +118,22 @@ function News({ id }: Props) {
                 即時訊息
             </h1>
 
-            <div className="bg-primary-200 rounded-md overflow-hidden">
-                <div className=" bg-primary-300 px-4 md:px-6 py-4">
-                    <div className="grid grid-cols-[2.4fr_1.2fr_1fr] items-center text-base font-semibold text-slate-100">
-                        <span className="">內容</span>
-                        <span>社團</span>
-                        <span className="">時間</span>
+            <div className="rounded-md bg-primary-50 overflow-hidden">
+                <div className="px-4 md:px-6 py-4 border-b-4 border-primary-100">
+                    <div className="grid grid-cols-[2.4fr_1.2fr_1fr] items-center text-base font-semibold text-primary-700 ">
+                        <span >內容</span>
+                        <span >社團</span>
+                        <span >時間</span>
                     </div>
                 </div>
 
                 {newsInPage.map((news, i) => (
                     <div
                         key={i}
-                        className="grid grid-cols-[2.4fr_1.2fr_1fr] items-center px-4 md:px-6 py-4 border-t border-primary-50  text-base hover:bg-primary-300/10 transition-colors"
+                        className="grid grid-cols-[2.4fr_1.2fr_1fr] items-center px-4 md:px-6 py-4 text-base hover:bg-primary-100/50 "
                     >
                         <div className="pr-4 ">
-                            <p className="text-slate-100 font-medium line-clamp-2">{news.content}</p>
+                            <p className="text-primary-700 font-medium line-clamp-2">{news.content}</p>
                             {news.link && (
                                 <a
                                     href={news.link}
@@ -147,11 +147,11 @@ function News({ id }: Props) {
                             )}
                         </div>
                         <div className="pr-4">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-primary-100 text-slate-100 ">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-primary-100 text-primary-700 ">
                                 {news.clubName}
                             </span>
                         </div>
-                        <p className="text-slate-50 font-mono text-sm">{formatTimestamp(news.timestamp)}</p>
+                        <p className="text-primary-700 font-mono text-sm">{formatTimestamp(news.timestamp)}</p>
 
                     </div>
                 ))}
@@ -166,7 +166,7 @@ function News({ id }: Props) {
                     <button
                         disabled={currentPage === 0}
                         onClick={prevPage}
-                        className="inline-flex items-center px-3 py-1 rounded-lg hover:bg-accent-200 bg-accent-300  disabled:bg-primary-300 disabled:cursor-not-allowed transition-colors"
+                        className="inline-flex items-center px-3 py-1 rounded-lg hover:bg-accent-200 bg-accent-300  disabled:bg-primary-50 disabled:cursor-not-allowed transition-colors"
                     >
                         <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
                         <span className=" hidden md:block">上一頁</span>
@@ -177,7 +177,7 @@ function News({ id }: Props) {
                     <button
                         disabled={(currentPage + 1) * itemsPerPage >= testData.length}
                         onClick={nextPage}
-                        className="inline-flex items-center px-3 py-1 rounded-lg hover:bg-accent-200 bg-accent-300  disabled:bg-primary-300 disabled:cursor-not-allowed transition-colors"
+                        className="inline-flex items-center px-3 py-1 rounded-lg hover:bg-accent-200 bg-accent-300  disabled:bg-primary-50 disabled:cursor-not-allowed transition-colors"
                     >
                         <span className=" hidden md:block">下一頁</span>
                         <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />

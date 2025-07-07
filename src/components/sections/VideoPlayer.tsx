@@ -12,7 +12,7 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [showCTA, setShowCTA] = useState(false);
-    
+
     useEffect(() => {
         const videoElement = videoRef.current;
         if (!videoElement) return;
@@ -53,7 +53,7 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
     return (
         <div
             onClick={() => setShowCTA(!showCTA)}
-            className="relative w-full aspect-video rounded-lg overflow-hidden group mt-24 mb-24 transform duration-500"
+            className="relative w-full aspect-video rounded-lg overflow-hidden group mt-36 mb-36 transform duration-500"
             style={{ transform: isPlaying ? "scale(1.2)" : "scale(1)" }}
         >
             <video
