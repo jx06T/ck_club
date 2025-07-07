@@ -90,12 +90,10 @@ function EventCarousel({ id, slides }: Props) {
                     className=" pointer-events-none absolute top-0 left-0 w-full h-full rounded-md bg-transparent z-10"
                     style={{
                         boxShadow: `
-                    10px 5px 20px 5px ${extendedSlides[currentIndex].gradientStart}40,
-                    -10px -5px 20px 15px ${extendedSlides[currentIndex].gradientEnd}40,
-                    10px 5px 20px 20px ${extendedSlides[currentIndex].gradientStart}40,
-                    -10px -5px 20px 30px ${extendedSlides[currentIndex].gradientEnd}40,
-                    inset 10px 5px 20px 5px ${extendedSlides[currentIndex].gradientEnd}40,
-                    inset -10px -5px 20px 5px ${extendedSlides[currentIndex].gradientStart}40`,
+                    10px 5px 15px 5px ${extendedSlides[currentIndex].gradientStart}40,
+                    -10px -5px 15px 15px ${extendedSlides[currentIndex].gradientEnd}40,
+                    10px 5px 15px 20px ${extendedSlides[currentIndex].gradientStart}40,
+                    -10px -5px 15px 30px ${extendedSlides[currentIndex].gradientEnd}40`,
                         transition: "box-shadow 1s ease",
                     }}
                 >
