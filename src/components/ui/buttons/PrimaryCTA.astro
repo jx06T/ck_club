@@ -9,7 +9,7 @@ interface Props {
 }
 
 const baseClasses =
-  "group text-center rounded-lg px-4 py-3 text-base  text-slate-100 ring-accent-800 transition duration-300 focus-visible:ring-2 outline-hidden";
+  "group text-center rounded-lg px-4 py-3 text-base  text-slate-100 ring-accent-800 transition duration-300 focus-visible:ring-2 outline-hidden hover:scale-105";
 const borderClasses = "border border-transparent";
 const bgColorClasses = "bg-accent-500 hover:bg-accent-600 active:bg-accent-600";
 const disableClasses = "disabled:pointer-events-none disabled:opacity-50";
@@ -19,7 +19,7 @@ const disableClasses = "disabled:pointer-events-none disabled:opacity-50";
   class={`${baseClasses} ${borderClasses} ${bgColorClasses} ${disableClasses} `}
   href={url}
 >
-  <span class="inline-block align-middle">
+  <span class="inline-block align-middle mb-0.5">
     {title}
   </span>
   <span class="inline-block align-middle">

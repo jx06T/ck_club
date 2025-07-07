@@ -2,7 +2,8 @@
 import Hero from "@components/sections/Hero.astro";
 import CKRed from "@images/home/ck_red.jpg";
 import EventCarousel from "@components/sections/EventCarousel";
-import News from "../sections/News";
+import News from "@components/sections/News";
+import AutoPlayVideo from "@components/sections/VideoPlayer";
 
 import { getCollection } from "astro:content";
 
@@ -43,4 +44,11 @@ const slidesForCarousel: Slide[] = sortedEvents.map((event) => {
 />
 
 <EventCarousel id="event" slides={slidesForCarousel} client:visible />
-<News id="news" client:visible/>
+<News id="news" client:visible />
+
+<AutoPlayVideo
+  src="src/assets/t0.mov"
+  ctaText="立刻查看社團地圖"
+  ctaLink="/clubs"
+  client:visible
+/>

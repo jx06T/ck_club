@@ -147,7 +147,7 @@ function News({ id }: Props) {
                             )}
                         </div>
                         <div className="pr-4">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-slate-100 dark:bg-blue-900 dark:text-blue-300">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary-100 text-slate-100 dark:bg-blue-900 dark:text-blue-300">
                                 {news.clubName}
                             </span>
                         </div>
