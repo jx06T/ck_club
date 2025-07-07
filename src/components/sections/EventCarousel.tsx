@@ -90,7 +90,7 @@ function EventCarousel({ id, slides }: Props) {
 
     return (
         <div className='mt-10 mb-20'>
-            <h1 id={id} className='block text-balance text-2xl font-bold tracking-tight'>近期活動</h1>
+            <h1 id={id} className='block text-balance text-3xl font-bold tracking-tight'>近期活動</h1>
             <div
                 style={{
                     height: 'min(56.25vw, 80dvh)'

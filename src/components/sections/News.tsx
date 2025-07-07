@@ -159,8 +159,8 @@ function News({ id }: Props) {
 
             <div className="mt-4 px-4 md:px-6 flex justify-between items-center">
                 <div className="text-sm text-gray-500 dark:text-gray-400">
-                    顯示第 {currentPage * itemsPerPage + 1} - {Math.min((currentPage + 1) * itemsPerPage, testData.length)} 筆，
-                    共 {testData.length} 筆訊息
+                    第 {currentPage * itemsPerPage + 1} - {Math.min((currentPage + 1) * itemsPerPage, testData.length)} 筆，
+                    共 {testData.length} 筆
                 </div>
                 <div className="flex items-center gap-3">
                     <button

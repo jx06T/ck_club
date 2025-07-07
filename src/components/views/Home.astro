@@ -4,6 +4,7 @@ import CKRed from "@images/home/ck_red.jpg";
 import EventCarousel from "@components/sections/EventCarousel";
 import News from "@components/sections/News";
 import AutoPlayVideo from "@components/sections/VideoPlayer";
+import FAQ from "@components/sections/FAQ.astro";
 
 import { getCollection } from "astro:content";
 
@@ -29,6 +30,34 @@ const slidesForCarousel: Slide[] = sortedEvents.map((event) => {
     caption: event.data.title,
   };
 });
+
+const faqs = {
+  subTitle: "以下是我們收到最多的提問",
+  faqs: [
+    {
+      question: "活動是否需要事先報名？",
+      answer: "是的，我們建議您事先報名，以確保有名額參加並獲得提醒通知。",
+    },
+    {
+      question: "報名後可以取消或更改嗎？",
+      answer:
+        "報名後若有異動，請於活動開始前 3 天聯絡我們，我們將協助您處理更改或取消。",
+    },
+    {
+      question: "需要攜帶什麼物品嗎？",
+      answer:
+        "請攜帶有效證件、報名確認信及個人文具，如有其他需求我們將於活動前公告。",
+    },
+    {
+      question: "活動是否提供午餐？",
+      answer: "活動全日場將提供簡便午餐，半日場不包含餐點，請自行準備。",
+    },
+    {
+      question: "我可以攜伴參加嗎？",
+      answer: "本活動為限額報名制，僅限報名者本人參加，恕不接受攜伴。",
+    },
+  ],
+};
 ---
 
 <Hero
@@ -52,3 +81,5 @@ const slidesForCarousel: Slide[] = sortedEvents.map((event) => {
   ctaLink="/clubs"
   client:visible
 />
+
+<FAQ title="常見問題" faqs={faqs} />

@@ -1,0 +1,30 @@
+---
+import { ChevronDown } from "lucide-react";
+
+interface Props {
+  question: string;
+  answer: string;
+}
+const { question, answer } = Astro.props;
+---
+
+<div
+  class="details border-b border-neutral-200 py-6 last:border-b-0 cursor-pointer"
+>
+  <div
+    class="summary-question flex cursor-pointer list-none items-center justify-between text-balance font-bold text-primary-800 transition hover:text-primary-700 md:text-lg"
+  >
+    {question}
+    <div class="transition-transform duration-300">
+      <ChevronDown />
+    </div>
+  </div>
+
+  <div
+    class="details-answer overflow-hidden block transition-[max-height] duration-300 ease-in-out max-h-0"
+  >
+    <p class="pt-4 text-pretty text-primary-700">
+      {answer}
+    </p>
+  </div>
+</div>

@@ -29,7 +29,7 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
                 }
             },
             {
-                threshold: 0.5,
+                threshold: 0.6,
             }
         );
 
@@ -53,7 +53,7 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
     return (
         <div
             onClick={() => setShowCTA(!showCTA)}
-            className="relative w-full aspect-video rounded-lg overflow-hidden group mt-10 mb-20 transform duration-500"
+            className="relative w-full aspect-video rounded-lg overflow-hidden group mt-24 mb-24 transform duration-500"
             style={{ transform: isPlaying ? "scale(1.2)" : "scale(1)" }}
         >
             <video
@@ -83,9 +83,9 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
                     href={ctaLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`
+                    className={` text-base 
         bg-accent-500 hover:bg-accent-600 active:bg-accent-600 text-slate-100 ring-accent-800 
-        py-3 px-4 rounded-lg transition-transform duration-300 hover:scale-105
+        py-2.5 pl-5 pr-3 rounded-lg transition-transform duration-300 hover:scale-105
         ${(!showCTA && isPlaying) ? 'pointer-events-none group-hover:pointer-events-auto' : ''}
         `}
                     onClick={(e) => e.stopPropagation()}
