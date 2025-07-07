@@ -142,7 +142,7 @@ function News({ id }: Props) {
                                     className="inline-flex items-center gap-1 text-accent-400 hover:text-accent-300 text-base mt-1 hover:underline"
                                 >
                                     <ExternalLink className="w-3 h-3" />
-                                    外部連結
+                                    詳細訊息
                                 </a>
                             )}
                         </div>
