@@ -20,9 +20,11 @@ const slidesForCarousel: Slide[] = sortedEvents.map((event) => {
     image: event.data.image,
     gradientStart: event.data.gradientStart,
     gradientEnd: event.data.gradientEnd,
-    caption: event.data.title,
     date: event.data.date,
     link: event.data.link,
+    organizer: event.data.organizer,
+    description: event.body,
+    caption: event.data.title,
   };
 });
 ---

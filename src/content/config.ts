@@ -8,7 +8,8 @@ const eventsCollection = defineCollection({
         image: image(),
         gradientStart: z.string(),
         gradientEnd: z.string(),
-        link: z.string()
+        link: z.string(),
+        organizer: z.string()
     }),
 });
 

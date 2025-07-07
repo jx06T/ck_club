@@ -113,7 +113,6 @@ import { Menu, X } from "lucide-react";
   window.addEventListener("scroll", () => {
     const currentScrollY = window.scrollY;
     if (!header) return;
-    console.log(currentScrollY);
     if (currentScrollY > lastScrollY && currentScrollY > 50) {
       lastHideY = window.scrollY;
       header.style.transform = "translateY(-100%)";
