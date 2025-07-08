@@ -4,17 +4,22 @@ import Layout from "./Layout.astro";
 const { frontmatter } = Astro.props;
 ---
 
-<Layout title={frontmatter.title+" | CKClubHub"} description={frontmatter.description}>
-  <h1 class="mb-2 text-4xl font-bold">{frontmatter.title}</h1>
-  {
-    frontmatter.date && (
-      <p class="text-base mb-3 text-neutral-500">
-        {new Date(frontmatter.date).toLocaleDateString()}
-      </p>
-    )
-  }
-  <hr class=" text-accent-400 border mb-10">
-  <article class="prose prose-sm  dark:prose-invert mb-20">
+<Layout
+  title={frontmatter.title + " | CKClubHub"}
+  description={frontmatter.description}
+>
+  <div class="mt-12 sm:mt-12 md:mt-0">
+    <h1 class="mb-2 text-4xl font-bold">{frontmatter.title}</h1>
+    {
+      frontmatter.date && (
+        <p class="text-base mb-3 text-neutral-500">
+          {new Date(frontmatter.date).toLocaleDateString()}
+        </p>
+      )
+    }
+    <hr class="text-accent-400 border mb-10" />
+  </div>
+  <article class="prose prose-sm dark:prose-invert mb-20">
     <slot />
   </article>
 </Layout>
