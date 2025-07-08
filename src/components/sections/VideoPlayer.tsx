@@ -100,7 +100,7 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
             ref={videoDivRef}
         >
             <div
-                className=" relative w-full aspect-video rounded-lg overflow-hidden group transform transition-transform duration-1000"
+                className=" relative w-full aspect-video rounded-lg overflow-hidden group transform transition-transform duration-700"
                 style={{ transform: isPlaying ? `scale(${responsiveSettings.scale})` : "scale(1)" }}
             >
 
@@ -116,7 +116,7 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
 
                 <div
                     className={`
-    absolute inset-[18%] bg-black/40 outline-[240px] outline-black/40
+    absolute inset-0 md:inset-[18%] bg-black/30 md:outline-[240px] md:outline-black/30
     flex flex-col items-center justify-center 
     transition-opacity duration-300
     ${isPlaying ? (showCTA ? 'opacity-100' : 'opacity-0 hover:opacity-100') : 'opacity-100'}
@@ -129,7 +129,7 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
                 >
                     <div
                         style={{ transform: isPlaying ? `scale(${1 / responsiveSettings.scale + 0.15})` : "scale(1)" }}
-                        className=' transition-transform duration-1000'
+                        className=' transition-transform duration-700'
                     >
                         <a
                             href={ctaLink}
@@ -138,15 +138,15 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
 
                             className={` text-base 
         bg-accent-500 hover:bg-accent-600 active:bg-accent-600 text-slate-100 ring-accent-800 
-        py-2.5 pl-5 pr-3 rounded-lg transition-transform duration-300 hover:scale-105
+        inline-block h-12 py-2.5 pl-5 pr-3 rounded-lg transition-transform duration-300 hover:scale-105
         ${(!showCTA && isPlaying) ? 'pointer-events-none group-hover:pointer-events-auto' : ''}
         `}
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <span className="inline-block align-middle mb-1.5">
+                            <span className="inline-block align-middle mb-0.5">
                                 {ctaText}
                             </span>
-                            <span className="inline-block align-middle mb-1">
+                            <span className="inline-block align-middle">
                                 <ChevronRight />
                             </span>
                         </a>
