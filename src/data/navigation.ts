@@ -12,9 +12,10 @@ const footerLinks = [
     section: "網站頁面",
     links: [
       { name: "關於此網站", url: "/about" },
+      { name: "近期活動", url: "/events" },
       { name: "聯絡我們", url: "/contact" },
       { name: "隱私權政策", url: "/privacy" },
-      { name: "開發者頁面", url: "/dev" },
+      // { name: "開發者頁面", url: "/dev" },
     ],
   },
   {

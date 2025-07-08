@@ -32,16 +32,14 @@ const { title, date, image, organizer, link } = post.data;
   <article
     class="prose prose-neutral dark:prose-invert max-w-3xl mx-auto py-8 px-4 sm:py-12"
   >
-    <h1
-      class="text-4xl font-bold mb-2 !text-primary-800 dark:!text-primary-100"
-    >
+    <h1 class="text-4xl font-bold mb-2 !text-primary-800">
       {title}
     </h1>
 
-    <div
-      class="flex flex-wrap items-center text-neutral-500 dark:text-neutral-400 mb-4 gap-x-4"
-    >
-      <span>舉辦單位：<strong>{organizer}</strong></span>
+    <div class="flex flex-wrap items-center text-neutral-500 mb-4 gap-x-4">
+      <span
+        >舉辦單位：<strong class="text-primary-800">{organizer}</strong></span
+      >
       <time datetime={date.toISOString()}>
         {
           date.toLocaleDateString("en-US", {
@@ -62,7 +60,8 @@ const { title, date, image, organizer, link } = post.data;
     <div class="mt-8 my-10">
       <Content />
     </div>
-    <div class="my-10">
+
+    <div class="my-10 ">
       <ExternalCTA title="了解詳細訊息" url={link} />
     </div>
   </article>

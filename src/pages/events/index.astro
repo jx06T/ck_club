@@ -1,14 +1,14 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
 
+import Layout from "../../layouts/Layout.astro";
 import EventCard from "@components/ui/cards/EventCard.astro";
 
 const allEvents = await getCollection("events", ({ data }) => {
-  return data.date <= new Date();
+  // return data.date <= new Date();
+  return true;
 });
 
-// 按照活動日期排序，最新的在最前面
 allEvents.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
@@ -29,11 +29,7 @@ allEvents.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-14">
-      {
-        allEvents.map((event) => (
-          <EventCard event={event} />
-        ))
-      }
+      {allEvents.map((event) => <EventCard event={event} />)}
     </div>
   </main>
 </Layout>
