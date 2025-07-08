@@ -10,6 +10,7 @@ export interface Slide {
     link: string;
     organizer: string;
     description: string;
+    slug: string;
 }
 
 interface Props {
@@ -155,14 +156,6 @@ function EventCarousel({ id, slides }: Props) {
                             >
                                 <img src={slide.image.src} alt={slide.caption} className="w-full h-full object-cover" />
 
-                                {/* <div style={{
-                                    clipPath: 'polygon(100% 0, 100% 100%, 0 100%)'
-                                }} className='bg-accent-300 absolute bottom-0 right-0 h-10 w-12 z-30'>
-                                    <a target='_blank' href={slide.link}>
-                                        <SquareArrowOutUpRight className='inline-block ml-7 mt-3.5 w-4' />
-                                    </a>
-                                </div> */}
-
                                 <div
                                     style={{
                                         background: `linear-gradient(to bottom right,rgba(0,0,0,0.5) 0%, ${slide.gradientStart}bb 50%)`,
@@ -196,7 +189,7 @@ function EventCarousel({ id, slides }: Props) {
                                                 </div>
                                                 <div className="">
                                                     <a
-                                                        href={slide.link}
+                                                        href={`/events/${slide.slug}`}
                                                         target="_blank"
                                                         className="inline-flex items-center text-accent-300 hover:text-accent-400 transition-colors text-xs md:text-base lg:text-lg "
                                                     >

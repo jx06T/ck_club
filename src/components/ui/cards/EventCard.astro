@@ -1,0 +1,45 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  event: CollectionEntry<"events">;
+}
+
+const { event } = Astro.props;
+const { title, date, image, organizer } = event.data;
+---
+
+<a
+  href={`/events/${event.slug}`}
+  class="group block overflow-hidden rounded-lg bg-primary-50 shadow-brand hover:shadow-brand-lg transition-all duration-300 hover:-translate-y-1"
+>
+  <article class="h-full">
+    <div class="aspect-[16/9] w-full overflow-hidden">
+      <Image
+        src={image}
+        alt={`Cover image for ${title}`}
+        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+      />
+    </div>
+
+    <div class="p-6">
+      <h3 class="text-xl font-bold text-primary-800 dark:text-primary-200 mb-2">
+        {title}
+      </h3>
+
+      <div class="text-sm text-neutral-500 dark:text-neutral-400 mt-auto pt-4">
+        <p><strong>{organizer}</strong></p>
+        <time datetime={date.toISOString()}>
+          {
+            date.toLocaleDateString("zh-TW", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          }
+        </time>
+      </div>
+    </div>
+  </article>
+</a>

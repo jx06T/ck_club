@@ -1,0 +1,69 @@
+---
+import { Image } from "astro:assets";
+
+import ExternalCTA from "@components/ui/buttons/ExternalCTA.astro";
+
+import { getCollection, getEntry, type CollectionEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const events = await getCollection("events");
+  return events.map((post) => ({
+    params: { slug: post.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+
+const post: CollectionEntry<"events"> | undefined = await getEntry(
+  "events",
+  slug
+);
+
+if (post === undefined) {
+  return Astro.redirect("/404");
+}
+
+const { Content } = await post.render();
+const { title, date, image, organizer, link } = post.data;
+---
+
+<Layout title={title + " | CKClubHub"}>
+  <article
+    class="prose prose-neutral dark:prose-invert max-w-3xl mx-auto py-8 px-4 sm:py-12"
+  >
+    <h1
+      class="text-4xl font-bold mb-2 !text-primary-800 dark:!text-primary-100"
+    >
+      {title}
+    </h1>
+
+    <div
+      class="flex flex-wrap items-center text-neutral-500 dark:text-neutral-400 mb-4 gap-x-4"
+    >
+      <span>舉辦單位：<strong>{organizer}</strong></span>
+      <time datetime={date.toISOString()}>
+        {
+          date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        }
+      </time>
+    </div>
+
+    <Image
+      src={image}
+      alt={`Cover image for ${title}`}
+      class="rounded-md mb-8 w-full h-auto object-cover"
+    />
+
+    <div class="mt-8 my-10">
+      <Content />
+    </div>
+    <div class="my-10">
+      <ExternalCTA title="了解詳細訊息" url={link} />
+    </div>
+  </article>
+</Layout>

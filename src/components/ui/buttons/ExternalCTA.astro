@@ -11,19 +11,19 @@ interface Props {
 const baseClasses =
   "group text-center rounded-lg px-4 py-3 text-base text-slate-100 ring-primary-800 transition duration-300 focus-visible:ring-2 outline-hidden";
 const borderClasses = "border border-transparent";
-const bgColorClasses =
-  "bg-primary-200 hover:bg-primary-300 active:bg-primary-300";
+const bgColorClasses = "bg-accent-500 hover:bg-accent-600 active:bg-accent-600";
 const disableClasses = "disabled:pointer-events-none disabled:opacity-50";
 ---
 
 <a
+  target="_blank"
   class={`${baseClasses} ${borderClasses} ${bgColorClasses} ${disableClasses} `}
   href={url}
 >
-  <span class="inline-block align-middle">
+  <span class="inline-block align-middle mb-0.5">
     {title}
   </span>
   <span class="inline-block align-middle">
-    <SquareArrowOutUpRight />
+    <SquareArrowOutUpRight className="w-5 ml-1 mb-0.5" />
   </span>
 </a>

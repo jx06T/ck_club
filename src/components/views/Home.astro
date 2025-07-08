@@ -37,6 +37,7 @@ const slidesForCarousel: Slide[] = await Promise.all(
       organizer: event.data.organizer,
       description: event.body,
       caption: event.data.title,
+      slug: event.slug,
     };
   })
 );
