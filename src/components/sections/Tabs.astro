@@ -13,83 +13,93 @@ const { tabs, title, id } = Astro.props;
 import { Image } from "astro:assets";
 ---
 
-<div
+<section
   data-tabs-container
-  class="grid md:grid-cols-[1.4fr_1fr] gap-10 min-h-[26rem] mt-20 mb-14"
+  class="min-h-[26rem] pt-6 pb-10 md:pt-12 md:pb-14 px-4 sm:px-6 lg:px-8"
 >
-  <div class="relative hidden md:block">
-    {
-      tabs.map((tab, index) => (
-        <div
-          data-tab-panel={index}
-          class:list={[
-            "absolute inset-0 transition-opacity duration-300 min-h-96",
-            { "opacity-100 z-10": index === 0 },
-            { "opacity-0": index !== 0 },
-          ]}
-        >
-          <Image
-            src={tab.image}
-            alt={tab.name}
-            class="w-full h-full object-cover rounded-lg"
-          />
-        </div>
-      ))
-    }
-  </div>
-
-  <div>
-    <h1 id={id} class=" mb-4 block text-balance text-3xl font-bold tracking-tight">
-      {title}
-    </h1>
-    <div class="flex border-b border-primary-800 md:justify-start">
-      {
-        tabs.map((tab, index) => (
-          <button
-            data-tab-button={index}
-            class:list={[
-              "px-4 py-2 w-[33.4%] -mb-px font-semibold border-b-2 transition-colors text-lg",
-              { "border-accent-400 text-accent-400 hover:text-accent-500": index === 0 },
-              {
-                "border-transparent text-primary-800 hover:text-primary-600":
-                  index !== 0,
-              },
-            ]}
-          >
-            {tab.name}
-          </button>
-        ))
-      }
-    </div>
-
-    <div class="mt-4">
+  <div
+    class="grid md:grid-cols-[1.4fr_1fr] gap-10 h-full min-h-[26rem]"
+  >
+    <div class="relative hidden md:block">
       {
         tabs.map((tab, index) => (
           <div
             data-tab-panel={index}
             class:list={[
-              "transition-opacity duration-300",
-              { "opacity-100": index === 0 },
-              {
-                "opacity-0 h-0 overflow-hidden pointer-events-none":
-                  index !== 0,
-              },
+              "absolute inset-0 transition-opacity duration-300 ",
+              { "opacity-100 z-10": index === 0 },
+              { "opacity-0": index !== 0 },
             ]}
           >
-            <div class="relative w-full aspect-video mb-4 md:hidden">
-              <Image
-                src={tab.image}
-                alt={tab.name}
-                class="w-full h-full object-cover rounded-lg"
-              />
-            </div>
-            <p class="text-primary-700 text-base ">{tab.description}</p>
+            <Image
+              src={tab.image}
+              alt={tab.name}
+              class="w-full h-full object-cover rounded-lg"
+            />
           </div>
         ))
       }
     </div>
+
+    <div>
+      <h1
+        id={id}
+        class="mb-4 block text-balance text-3xl font-bold tracking-tight"
+      >
+        {title}
+      </h1>
+      <div class="flex border-b border-primary-800 md:justify-start">
+        {
+          tabs.map((tab, index) => (
+            <button
+              data-tab-button={index}
+              class:list={[
+                "px-4 py-2 w-[33.4%] -mb-px font-semibold border-b-2 transition-colors text-lg",
+                {
+                  "border-accent-400 text-accent-400 hover:text-accent-500":
+                    index === 0,
+                },
+                {
+                  "border-transparent text-primary-800 hover:text-primary-600":
+                    index !== 0,
+                },
+              ]}
+            >
+              {tab.name}
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="mt-4">
+        {
+          tabs.map((tab, index) => (
+            <div
+              data-tab-panel={index}
+              class:list={[
+                "transition-opacity duration-300",
+                { "opacity-100": index === 0 },
+                {
+                  "opacity-0 h-0 overflow-hidden pointer-events-none":
+                    index !== 0,
+                },
+              ]}
+            >
+              <div class="relative w-full aspect-video mb-4 md:hidden">
+                <Image
+                  src={tab.image}
+                  alt={tab.name}
+                  class="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+              <p class="text-primary-700 text-base ">{tab.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
 <script is:inline>
   document.addEventListener("DOMContentLoaded", () => {
@@ -107,10 +117,16 @@ import { Image } from "astro:assets";
             const btnIndex = btn.getAttribute("data-tab-button");
             btn.classList.toggle("border-accent-400", btnIndex === tabIndex);
             btn.classList.toggle("text-accent-400", btnIndex === tabIndex);
-            btn.classList.toggle("hover:text-accent-500", btnIndex === tabIndex);
+            btn.classList.toggle(
+              "hover:text-accent-500",
+              btnIndex === tabIndex
+            );
             btn.classList.toggle("border-transparent", btnIndex !== tabIndex);
             btn.classList.toggle("text-primary-800", btnIndex !== tabIndex);
-            btn.classList.toggle("hover:text-primary-600", btnIndex !== tabIndex);
+            btn.classList.toggle(
+              "hover:text-primary-600",
+              btnIndex !== tabIndex
+            );
           });
 
           panels.forEach((panel) => {

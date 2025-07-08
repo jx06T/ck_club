@@ -52,7 +52,7 @@ function EventCarousel({ id, slides }: Props) {
             if (expandedSlide === null) {
                 goToNext();
             }
-        }, 4000);
+        }, 3500);
 
         return () => clearInterval(timer);
     }, [currentIndex, expandedSlide]);
@@ -89,7 +89,7 @@ function EventCarousel({ id, slides }: Props) {
     };
 
     return (
-        <div className='mt-10 mb-20'>
+        <section className='pt-6 pb-16'>
             <h1 id={id} className='block text-balance text-3xl font-bold tracking-tight'>近期活動</h1>
             <div
                 style={{
@@ -212,7 +212,7 @@ function EventCarousel({ id, slides }: Props) {
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 export default EventCarousel;
