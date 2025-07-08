@@ -24,15 +24,15 @@ const { title, date, image, organizer } = event.data;
     </div>
 
     <div class="p-6">
-      <h3 class="text-xl font-bold text-primary-800  mb-2">
+      <h3 class="text-xl font-bold text-primary-800 mb-2">
         {title}
       </h3>
 
-      <div class="text-sm text-neutral-500  mt-auto pt-4">
+      <div class="text-sm text-neutral-500 mt-auto pt-4">
         <p><strong>{organizer}</strong></p>
         <time datetime={date.toISOString()}>
           {
-            date.toLocaleDateString("zh-TW", {
+            date.toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
               day: "numeric",
