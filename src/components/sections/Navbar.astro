@@ -12,7 +12,7 @@ import { Menu, X } from "lucide-react";
   id="site-header"
 >
   <nav
-    class="relative mx-2 w-full rounded-[36px] border border-accent-400/40 bg-accent-200/60 px-4 py-3 backdrop-blur-sm  md:flex md:items-center md:justify-between md:px-6 md:py-0 lg:px-8 xl:mx-auto"
+    class="relative mx-2 w-full rounded-[36px] border border-accent-400/40 bg-accent-200/60 px-4 py-3 backdrop-blur-sm md:flex md:items-center md:justify-between md:px-6 md:py-0 lg:px-8 xl:mx-auto"
     aria-label="Global"
   >
     <div class="flex items-center justify-between">
@@ -30,7 +30,7 @@ import { Menu, X } from "lucide-react";
         <button
           id="hamburger-button"
           type="button"
-          class="group flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-primary-700 transition duration-300 hover:bg-accent-200/70 ring-accent-600 outline-none disabled:pointer-events-none disabled:opacity-50 "
+          class="group flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-primary-700 transition duration-300 hover:bg-accent-200/70 ring-accent-600 outline-none disabled:pointer-events-none disabled:opacity-50"
           aria-controls="navbar-collapse-container"
           aria-expanded="false"
           aria-label="Toggle navigation"
@@ -107,17 +107,23 @@ import { Menu, X } from "lucide-react";
   const header = document.getElementById("site-header");
   let lastScrollY = window.scrollY;
   let lastHideY = window.scrollY;
+  let lastShowY = window.scrollY;
 
   window.addEventListener("scroll", () => {
     const currentScrollY = window.scrollY;
     if (!header) return;
-    if (currentScrollY > lastScrollY && currentScrollY > 50) {
+    if (
+      currentScrollY > lastScrollY &&
+      currentScrollY > 50 &&
+      currentScrollY > lastShowY + 100
+    ) {
       lastHideY = window.scrollY;
-      header.style.transform = "translateY(-100%)";
+      header.style.transform = "translateY(-115%)";
     } else if (
       (currentScrollY < lastScrollY && currentScrollY < lastHideY - 100) ||
       currentScrollY < 50
     ) {
+      lastShowY = window.scrollY;
       header.style.transform = "translateY(0)";
     }
 
