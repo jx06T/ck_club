@@ -7,12 +7,15 @@ const Panzoom = PanzoomModule.default;
 import type { PanzoomObject } from '@panzoom/panzoom';
 
 import MapSVG from '@assets/mapppp.svg?react';
+import FuzzySearch from '@/components/ui/inputs/FuzzySearch';
 
 interface ClubInfo {
-    id: string;
+    mapId: string;
+    clubId: string;
     name: string;
     summary: string;
     slug: string;
+    tags?: string[];
 }
 
 interface ClubLabel {
@@ -34,11 +37,11 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
     const [rotate, setRotate] = useState<number>(0);
     const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
 
-    const clubsDataMap = useRef(new Map(clubs.map(club => [club.id, club])));
+    const clubsDataMap = useRef(new Map(clubs.map(club => [club.mapId, club])));
     const panzoomInstanceRef = useRef<PanzoomObject | null>(null);
 
     useEffect(() => {
-        clubsDataMap.current = new Map(clubs.map(club => [club.id, club]));
+        clubsDataMap.current = new Map(clubs.map(club => [club.mapId, club]));
     }, [clubs]);
 
     const containerRef = useCallback((node: HTMLDivElement | null) => {
@@ -73,7 +76,6 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
 
                 if (currentScale > zoomThreshold) {
                     setIsZoomedIn(true);
-                    console.log("!")
                 } else {
                     setIsZoomedIn(false);
                 }
@@ -163,6 +165,28 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         }
     }
 
+    const handleSelectClubFromSearch = (club: ClubInfo) => {
+        const panzoom = panzoomInstanceRef.current;
+        const svgElement = document.getElementById('interactive-map-svg');
+        const pathElement = document.getElementById(club.mapId) as SVGGraphicsElement | null;
+
+        if (!panzoom || !svgElement || !pathElement) return;
+
+        const bbox = pathElement.getBBox();
+        const targetX = bbox.x + bbox.width / 2;
+        const targetY = bbox.y + bbox.height / 2;
+        const targetScale = 5;
+
+        const svgRect = svgElement.getBoundingClientRect();
+        const panX = -targetX * targetScale + svgRect.width / 2;
+        const panY = -targetY * targetScale + svgRect.height / 2;
+
+        panzoom.zoom(targetScale, { animate: true, duration: 800 });
+        panzoom.pan(panX, panY, { animate: true, duration: 800 });
+
+        setSelectedClubId(club.mapId);
+    };
+
     return (
         <div className="map-wrapper mb-12">
             <div id='map-div' className="relative map-svg-container h-screen bg-primary-100">
@@ -226,6 +250,20 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                         : <Maximize />
                     }
                 </button>
+
+                <FuzzySearch<ClubInfo>
+                    items={clubs}
+                    searchKeys={['name', 'summary']}
+                    onSelect={handleSelectClubFromSearch}
+                    placeholder="搜尋社團名稱或簡介..."
+                    className="absolute block left-1/2 transform -translate-x-1/2 top-3 md:top-5 max-w-[50%]"
+                    displayRender={(club) => (
+                        <>
+                            <p className="font-semibold">{club.name}</p>
+                            <p className="text-xs text-gray-600 truncate">{club.summary}</p>
+                        </>
+                    )}
+                />
             </div>
         </div >
     );

@@ -19,7 +19,8 @@ const clubsCollection = defineCollection({
         id: z.string(),
         name: z.string(),
         summary: z.string(),
-        mapId: z.string()
+        mapId: z.string(),
+        tags: z.array(z.string()).optional()
     }),
 });
 

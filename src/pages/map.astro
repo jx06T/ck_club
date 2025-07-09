@@ -7,12 +7,13 @@ import InteractiveMap from "@components/InteractiveMap.tsx";
 const allClubsData = await getCollection("clubs");
 
 const clubsIndex = allClubsData.map((club) => ({
-  id: club.data.mapId,
+  mapId: club.data.mapId,
+  clubId: club.data.id,
   name: club.data.name,
   summary: club.data.summary,
   slug: club.slug,
+  tags: club.data.tags,
 }));
-
 ---
 
 <Layout>
