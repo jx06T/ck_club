@@ -6,6 +6,8 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 import svgr from "vite-plugin-svgr"
 
+import vercel from '@astrojs/vercel/serverless';
+
 export default defineConfig({
   site: process.env.PUBLIC_SITE || 'http://localhost:4321',
 
@@ -28,4 +30,15 @@ export default defineConfig({
   },
 
   integrations: [react()],
+
+  output: 'server',
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
+    },
+    maxDuration: 8,
+  }),
+  build: {
+    format: 'directory'
+  }
 });
