@@ -37,6 +37,9 @@ export default function FuzzySearch<T>({
                 if (typeof value === 'string') {
                     return value.toLowerCase().includes(lowerCaseSearchTerm);
                 }
+                if (Array.isArray(value)) {
+                    return value.join(' ').toLowerCase().includes(lowerCaseSearchTerm);
+                }
                 return false;
             });
         });
@@ -46,9 +49,6 @@ export default function FuzzySearch<T>({
 
     const handleSelect = (item: T) => {
         onSelect(item);
-        setSearchTerm('');
-        setIsFocused(false);
-        searchInputRef.current?.blur();
     };
 
     return (
@@ -62,7 +62,7 @@ export default function FuzzySearch<T>({
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-                    className="h-10 w-full pl-10 pr-8 bg-accent-400 rounded-md shadow-brand outline-none focus:ring-2 ring-accent-600 transition-all"
+                    className="h-10 w-full pl-10 pr-8 bg-accent-400 rounded-md shadow-brand outline-none focus:ring-2 ring-accent-600 transition-all text-gray-700 placeholder:text-gray-500"
                 />
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
                 {searchTerm && (
@@ -76,13 +76,13 @@ export default function FuzzySearch<T>({
                 )}
             </div>
 
-            {isFocused && results.length > 0 && (
-                <ul className="absolute z-10 top-full mt-2 w-full max-h-60 overflow-y-auto bg-white/90 backdrop-blur-sm rounded-md shadow-lg border border-gray-200">
+            {(isFocused || true) && results.length > 0 && (
+                <ul className="absolute z-10 top-10 mt-2 w-full max-h-60 overflow-y-auto bg-accent-500 backdrop-blur-sm rounded-md shadow-lg transition-colors duration-300">
                     {results.map((item, index) => (
-                        <li key={index}>
+                        <li key={index} className=' h-14'>
                             <button
-                                onMouseDown={() => handleSelect(item)}
-                                className="w-full text-left px-4 py-2 hover:bg-accent-200"
+                                onClick={() => handleSelect(item)}
+                                className="h-full w-full text-left px-4 py-2 hover:bg-accent-600"
                             >
                                 {displayRender(item)}
                             </button>
@@ -90,6 +90,16 @@ export default function FuzzySearch<T>({
                     ))}
                 </ul>
             )}
+            {searchTerm && isFocused && results.length === 0 &&
+                <ul className="absolute z-10 top-10 mt-2 w-full max-h-60 overflow-y-auto bg-accent-500 backdrop-blur-sm rounded-md shadow-lg transition-colors duration-300">
+                    <li className='h-14' >
+                        <p className='h-full w-full text-left px-4 py-2 text-gray-700'>
+                            無符合結果
+                        </p>
+                    </li>
+                </ul>
+            }
+            <div style={{ height: ((searchTerm && isFocused) ? Math.max(results.length, 1) * 3.5 + 0.3 : 0) + "rem" }} ></div>
         </div>
     );
 }

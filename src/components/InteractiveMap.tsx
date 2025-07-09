@@ -166,31 +166,34 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
     }
 
     const handleSelectClubFromSearch = (club: ClubInfo) => {
+        zoomToClub(club.mapId)
+        setSelectedClubId(club.mapId);
+    };
+
+    const zoomToClub = (id: string) => {
         const panzoom = panzoomInstanceRef.current;
         const svgElement = document.getElementById('interactive-map-svg');
-        const pathElement = document.getElementById(club.mapId) as SVGGraphicsElement | null;
+        const pathElement = document.getElementById(id) as SVGGraphicsElement | null;
 
         if (!panzoom || !svgElement || !pathElement) return;
 
         const bbox = pathElement.getBBox();
         const targetX = bbox.x + bbox.width / 2;
         const targetY = bbox.y + bbox.height / 2;
-        const targetScale = 5;
+        const targetScale = 6;
 
-        const svgRect = svgElement.getBoundingClientRect();
-        const panX = -targetX * targetScale + svgRect.width / 2;
-        const panY = -targetY * targetScale + svgRect.height / 2;
+        const panX = -targetX + 320;
+        const panY = -targetY + 320;
 
-        panzoom.zoom(targetScale, { animate: true, duration: 800 });
-        panzoom.pan(panX, panY, { animate: true, duration: 800 });
-
-        setSelectedClubId(club.mapId);
-    };
+        panzoom.zoom(1, { animate: true, duration: 500 });
+        panzoom.pan(panX, panY, { animate: true, duration: 500 });
+        panzoom.zoom(targetScale, { animate: true, duration: 500 });
+    }
 
     return (
         <div className="map-wrapper mb-12">
             <div id='map-div' className="relative map-svg-container h-screen bg-primary-100">
-                <div className={`map-viewport grow-0 shrink-0 w-full ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "} overflow-hidden rounded-lg border-2 border-accent-400`}>
+                <div className={`map-viewport w-full ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "} overflow-hidden rounded-lg border-2 border-accent-400`}>
                     <div
                         ref={containerRef}
                         className="relative w-full h-full"
@@ -228,42 +231,45 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                         </svg>
                     </div>
                 </div>
-                <div className="absolute right-4 top-3 md:right-6 md:top-5 shadow-brand hover:shadow-brand-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 map-info-panel text-black text-base bg-accent-400 rounded-md w-64 max-w-[50%] px-4 py-2">
-                    {selectedClubInfo ? (
-                        <div>
-                            <h4 className="font-bold text-lg">{selectedClubInfo.name}</h4>
-                            <p className="text-sm mt-1">{selectedClubInfo.summary}</p>
-                            <a href={`/clubs/${selectedClubInfo.slug}`} className="text-primary-600 fon hover:underline text-base mt-2 block">
-                                查看詳情 <SquareArrowOutUpRight className=' inline-block w-4 mb-0.5' />
-                            </a>
-                        </div>
-                    ) : (
-                        <p>點擊地圖選擇社團。</p>
-                    )}
+                <div className={`absolute ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "}  right-4 top-3 md:right-6 md:top-5 w-72 md:w-[40rem] max-w-[60%] flex flex-col md:flex-row gap-4 items-start pointer-events-none`}>
+                    <FuzzySearch<ClubInfo>
+                        items={clubs}
+                        searchKeys={['name', 'summary', 'tags', 'clubId']}
+                        onSelect={handleSelectClubFromSearch}
+                        placeholder="搜尋社團名稱或簡介..."
+                        className="  md:flex-1 pointer-events-auto"
+                        displayRender={(club) => (
+                            <>
+                                <p className="text-black">{club.name}</p>
+                                <p className="text-xs text-gray-700 truncate">{club.summary}</p>
+                            </>
+                        )}
+                    />
+
+                    <div className="h-fit w-full pointer-events-auto md:flex-1 shadow-brand shadow-black/10 map-info-panel text-black text-base bg-accent-400 rounded-md px-4 py-2 transition-colors duration-300">
+                        {selectedClubInfo ? (
+                            <div>
+                                <h4 className="font-bold text-lg cursor-pointer" onClick={() => zoomToClub(selectedClubId!)}>{selectedClubInfo.name}</h4>
+                                <p className="text-sm mt-1 ">{selectedClubInfo.summary}</p>
+                                <a href={`/clubs/${selectedClubInfo.slug}`} className="text-primary-600 fon text-base mt-2 block">
+                                    查看詳情 <SquareArrowOutUpRight className=" inline-block w-4 mb-0.5" />
+                                </a>
+                            </div>
+                        ) : (
+                            <p>點擊地圖選擇社團。</p>
+                        )}
+                    </div>
                 </div>
-                <button onClick={() => setRotate(rotate + 1)} className=' absolute left-4 top-3 md:left-6 md:top-5 shadow-brand hover:shadow-brand-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 map-info-panel text-black text-base bg-accent-400 focus-visible:ring-2 outline-0  ring-accent-600 rounded-md w-10 h-10 px-2 py-2'>
+                <button onClick={() => setRotate(rotate + 1)} className=" absolute left-4 top-3 md:left-6 md:top-5 shadow-brand hover:shadow-brand-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 map-info-panel text-black text-base bg-accent-400 focus-visible:ring-2 outline-0  ring-accent-600 rounded-md w-10 h-10 px-2 py-2">
                     <RotateCw />
                 </button>
-                <button onClick={toggleFullscreen} className=' hidden md:block absolute left-[4.1rem] top-3 md:left-[4.6rem] md:top-5 shadow-brand hover:shadow-brand-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 map-info-panel text-black text-base bg-accent-400 focus-visible:ring-2 outline-0  ring-accent-600 rounded-md w-10 h-10 px-2 py-2'>
+                <button onClick={toggleFullscreen} className=" hidden md:block absolute left-[4.1rem] top-3 md:left-[4.6rem] md:top-5 shadow-brand hover:shadow-brand-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 map-info-panel text-black text-base bg-accent-400 focus-visible:ring-2 outline-0  ring-accent-600 rounded-md w-10 h-10 px-2 py-2">
                     {isFullScreen
                         ? <Minimize />
                         : <Maximize />
                     }
                 </button>
 
-                <FuzzySearch<ClubInfo>
-                    items={clubs}
-                    searchKeys={['name', 'summary']}
-                    onSelect={handleSelectClubFromSearch}
-                    placeholder="搜尋社團名稱或簡介..."
-                    className="absolute block left-1/2 transform -translate-x-1/2 top-3 md:top-5 max-w-[50%]"
-                    displayRender={(club) => (
-                        <>
-                            <p className="font-semibold">{club.name}</p>
-                            <p className="text-xs text-gray-600 truncate">{club.summary}</p>
-                        </>
-                    )}
-                />
             </div>
         </div >
     );
