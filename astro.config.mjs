@@ -3,8 +3,9 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 import svgr from "vite-plugin-svgr"
-import vercel from '@astrojs/vercel/serverless';
-import cloudflare from '@astrojs/cloudflare';
+
+// import vercel from '@astrojs/vercel/serverless';
+// import cloudflare from '@astrojs/cloudflare';
 
 // 檢測部署環境
 const isVercel = process.env.VERCEL === '1';
@@ -49,7 +50,7 @@ export default defineConfig({
   integrations: [react()],
   // @ts-ignore
   output: output,
-  adapter: adapter,
+  // adapter: adapter,
   build: {
     format: 'directory'
   }
