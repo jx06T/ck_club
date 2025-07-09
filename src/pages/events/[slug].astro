@@ -9,7 +9,7 @@ import Layout from "../../layouts/Layout.astro";
 export async function getStaticPaths() {
   const events = await getCollection("events");
   return events.map((post) => ({
-    params: { slug: decodeURI(post.slug) },
+    params: { slug: post.slug},
   }));
 }
 

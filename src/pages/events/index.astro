@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, getEntry, type CollectionEntry } from "astro:content";
 
 import Layout from "../../layouts/Layout.astro";
 import EventCard from "@components/ui/cards/EventCard.astro";
@@ -10,22 +10,22 @@ const allEvents = await getCollection("events", ({ data }) => {
 });
 
 allEvents.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const post: CollectionEntry<"events"> | undefined = await getEntry(
+  "events",
+  "聯合迎新"
+);
+
+console.log(post)
 ---
 
-<Layout
-  title="近期活動 | CKClubHub"
-  description="探索最近的活動！"
->
+<Layout title="近期活動 | CKClubHub" description="探索最近的活動！">
   <div class="max-w-6xl mx-auto px-4 mb-20 mt-12 sm:mt-12 md:mt-0">
     <div class="text-center mb-16">
-      <h1
-        class="text-4xl sm:text-5xl font-bold text-primary-800 mb-4"
-      >
+      <h1 class="text-4xl sm:text-5xl font-bold text-primary-800 mb-4">
         近期活動
       </h1>
-      <p class="text-lg text-neutral-600">
-        探索所有過去和即將舉行的精彩活動！
-      </p>
+      <p class="text-lg text-neutral-600">探索所有過去和即將舉行的精彩活動！</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-14">
