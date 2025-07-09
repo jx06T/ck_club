@@ -87,6 +87,13 @@
   --text-2xs: 0.625rem;
 }
 
+@layer base {
+  a:focus-visible,
+  button:focus-visible {
+    @apply outline-0 ring-2 ring-accent-600;
+  }
+}
+
 @layer theme {
   .dark {
     /* 品牌主色系 */

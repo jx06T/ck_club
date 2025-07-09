@@ -5,20 +5,20 @@
 
 #interactive-map-svg path[id^="club-"]:not(.selected):hover {
   fill: #ff8036 !important;
-  stroke-width: 0.7 !important;
-  stroke: #ffac7b !important;
+  stroke-width: 0.3 !important;
+  stroke: #fbcb98 !important;
   transition: stroke-width 0.2s ease !important;
   transition: fill 0.2s ease !important;
+  z-index: 1000;
 }
 
 #interactive-map-svg path.selected[id^="club-"]:hover {
-  fill: #d33131 !important;
+  fill: #e93131 !important;
 }
 
 #interactive-map-svg path.selected {
   fill: #ff4e4e !important;
-  stroke-width: 0.7 !important;
-  stroke: #ffac7b !important;
+  stroke: #fbcb98 !important;
 }
 
 .club-label {

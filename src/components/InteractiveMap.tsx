@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
+import { RotateCw, Maximize, Minimize, SquareArrowOutUpRight } from 'lucide-react';
+
 import * as PanzoomModule from '@panzoom/panzoom';
 const Panzoom = PanzoomModule.default;
 import type { PanzoomObject } from '@panzoom/panzoom';
@@ -29,6 +31,8 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
     const [selectedClubInfo, setSelectedClubInfo] = useState<ClubInfo | null>(null);
     const [isZoomedIn, setIsZoomedIn] = useState(false);
     const [clubLabels, setClubLabels] = useState<ClubLabel[]>([]);
+    const [rotate, setRotate] = useState<number>(0);
+    const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
 
     const clubsDataMap = useRef(new Map(clubs.map(club => [club.id, club])));
     const panzoomInstanceRef = useRef<PanzoomObject | null>(null);
@@ -41,9 +45,10 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         if (node) {
             const panzoomInstance = Panzoom(node, {
                 minScale: 0.7,
-                maxScale: 8,
+                maxScale: 10,
                 transformOrigin: { x: 0.5, y: 0.5 },
                 canvas: true,
+                step: 1.5,
             });
             panzoomInstanceRef.current = panzoomInstance;
 
@@ -64,7 +69,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
 
             const handleZoom = (event: CustomEvent) => {
                 const currentScale = event.detail.scale;
-                const zoomThreshold = 3;
+                const zoomThreshold = 2.5;
 
                 if (currentScale > zoomThreshold) {
                     setIsZoomedIn(true);
@@ -144,23 +149,39 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         }
     }, [selectedClubId]);
 
+
+    function toggleFullscreen() {
+        const mapContainer = document.getElementById('map-div');
+        if (!mapContainer) return;
+        setIsFullScreen(!isFullScreen)
+        if (!document.fullscreenElement) {
+            mapContainer.requestFullscreen().catch(err => {
+                console.error(`全螢幕失敗：${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
     return (
         <div className="map-wrapper mb-12">
-            <div className="relative map-svg-container h-screen">
-                <div className="map-viewport grow-0 shrink-0 w-full h-[80%] md:h-[90%] overflow-hidden rounded-lg border-2 border-accent-400">
+            <div id='map-div' className="relative map-svg-container h-screen bg-primary-100">
+                <div className={`map-viewport grow-0 shrink-0 w-full ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "} overflow-hidden rounded-lg border-2 border-accent-400`}>
                     <div
                         ref={containerRef}
-                        className="relative w-full h-full /bg-accent-50"
+                        className="relative w-full h-full"
                     >
                         <MapSVG
                             id="interactive-map-svg"
                             ref={svgRootRef}
-                            className={`w-full h-full `}
+                            className={`w-full h-full transition-transform duration-300 `}
+                            style={{ rotate: rotate * 90 + "deg" }}
                         />
                         <svg
                             id="interactive-map-label-svg"
-                            className={`absolute inset-0 w-full h-full pointer-events-none ${isZoomedIn ? 'is-zoomed-in' : ''}`}
-                            viewBox="0 0 560 530"
+                            style={{ rotate: rotate * 90 + "deg" }}
+                            className={`absolute inset-0 w-full h-full pointer-events-none ${isZoomedIn ? 'is-zoomed-in' : ''} transition-transform duration-300`}
+                            viewBox="0 0 640 640"
                         >
                             {clubLabels.map(label => {
                                 const isXAxis = label.id.startsWith('club-x-');
@@ -183,19 +204,28 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                         </svg>
                     </div>
                 </div>
-                <div className="absolute right-6 top-6 shadow-brand hover:shadow-brand-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 map-info-panel text-black text-base bg-accent-400 rounded-md w-64 h-28 px-4 py-3">
+                <div className="absolute right-4 top-3 md:right-6 md:top-5 shadow-brand hover:shadow-brand-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 map-info-panel text-black text-base bg-accent-400 rounded-md w-64 max-w-[50%] px-4 py-2">
                     {selectedClubInfo ? (
                         <div>
                             <h4 className="font-bold text-lg">{selectedClubInfo.name}</h4>
                             <p className="text-sm mt-1">{selectedClubInfo.summary}</p>
-                            <a href={`/clubs/${selectedClubInfo.slug}`} className="text-blue-700 hover:underline text-base mt-2 block">
-                                查看詳情 →
+                            <a href={`/clubs/${selectedClubInfo.slug}`} className="text-primary-600 fon hover:underline text-base mt-2 block">
+                                查看詳情 <SquareArrowOutUpRight className=' inline-block w-4 mb-0.5' />
                             </a>
                         </div>
                     ) : (
                         <p>點擊地圖選擇社團。</p>
                     )}
                 </div>
+                <button onClick={() => setRotate(rotate + 1)} className=' absolute left-4 top-3 md:left-6 md:top-5 shadow-brand hover:shadow-brand-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 map-info-panel text-black text-base bg-accent-400 focus-visible:ring-2 outline-0  ring-accent-600 rounded-md w-10 h-10 px-2 py-2'>
+                    <RotateCw />
+                </button>
+                <button onClick={toggleFullscreen} className=' hidden md:block absolute left-[4.1rem] top-3 md:left-[4.6rem] md:top-5 shadow-brand hover:shadow-brand-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 map-info-panel text-black text-base bg-accent-400 focus-visible:ring-2 outline-0  ring-accent-600 rounded-md w-10 h-10 px-2 py-2'>
+                    {isFullScreen
+                        ? <Minimize />
+                        : <Maximize />
+                    }
+                </button>
             </div>
         </div >
     );
