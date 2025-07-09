@@ -1,5 +1,6 @@
 ---
 title: "114 學年度社團博覽會"
+slug : "社團博覽會" 
 date: 2024-08-22
 image: "../../images/events/3.jpg"
 organizer: "社執委 & 建中班聯會"
