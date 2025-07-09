@@ -1,6 +1,18 @@
 ---
+import { getCollection } from "astro:content";
+
 import Layout from "../layouts/Layout.astro";
 import InteractiveMap from "@components/InteractiveMap.tsx";
+
+const allClubsData = await getCollection("clubs");
+
+const clubsIndex = allClubsData.map((club) => ({
+  id: club.data.mapId,
+  name: club.data.name,
+  summary: club.data.summary,
+  slug: club.slug,
+}));
+
 ---
 
 <Layout>
@@ -11,6 +23,6 @@ import InteractiveMap from "@components/InteractiveMap.tsx";
     <p class="text-lg text-neutral-600">探索感興趣的社團！</p>
   </div>
   <div>
-    <InteractiveMap client:load />
+    <InteractiveMap client:load clubs={clubsIndex} />
   </div>
 </Layout>

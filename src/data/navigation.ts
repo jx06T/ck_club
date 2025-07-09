@@ -2,7 +2,7 @@ const navBarLinks = [
   { name: "首頁", url: "/" },
   { name: "社團資料庫", url: "/clubs" },
   { name: "社團地圖", url: "/map" },
-  { name: "社團聯展", url: "/map" },
+  { name: "社團聯展", url: "/exhibition" },
   { name: "關於", url: "/about" },
   // { name: "Dev", url: "/dev" },
 ];

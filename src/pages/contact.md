@@ -1,13 +1,12 @@
 ---
-title: 隱私權政策
+title: 聯絡我們
 layout: ../layouts/MarkdownLayout.astro
-date : "2025-07-08"
+date : "2025-07-09"
 ---
 
-# 我們的故事
-這是一段 Markdown 內容，會被 Astro 當成 HTML 輸出。
-- dd
-- dd
-- dd
-- dd
-- dd
+# 主要開發者
+- [jx06T](https://github.com/jx06T)
+
+
+# 貢獻者
+- 哇哈哈

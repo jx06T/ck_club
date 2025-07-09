@@ -13,6 +13,17 @@ const eventsCollection = defineCollection({
     }),
 });
 
+const clubsCollection = defineCollection({
+    type: 'content',
+    schema: ({ image }) => z.object({
+        id: z.string(),
+        name: z.string(),
+        summary: z.string(),
+        mapId: z.string()
+    }),
+});
+
 export const collections = {
     'events': eventsCollection,
+    'clubs': clubsCollection,
 };
