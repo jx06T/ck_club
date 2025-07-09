@@ -24,8 +24,8 @@
 .club-label {
   font-size: 5px;
   font-weight: bold;
-  fill: #1a202c; 
-  stroke: white; 
+  fill: #1a202c;
+  stroke: white;
   stroke-width: 0.3px;
   paint-order: stroke fill;
   pointer-events: none;
@@ -35,5 +35,5 @@
 }
 
 #interactive-map-label-svg.is-zoomed-in .club-label {
-  opacity: 1 ;
+  opacity: 1;
 }

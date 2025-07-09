@@ -76,7 +76,7 @@ export default function FuzzySearch<T>({
                 )}
             </div>
 
-            {(isFocused || true) && results.length > 0 && (
+            {isFocused && results.length > 0 && (
                 <ul className="absolute z-10 top-10 mt-2 w-full max-h-60 overflow-y-auto bg-accent-500 backdrop-blur-sm rounded-md shadow-lg transition-colors duration-300">
                     {results.map((item, index) => (
                         <li key={index} className=' h-14'>

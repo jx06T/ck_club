@@ -20,9 +20,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="1.0366452"
-     inkscape:cx="195.82399"
-     inkscape:cy="238.75092"
+     inkscape:zoom="1.4660377"
+     inkscape:cx="268.0695"
+     inkscape:cy="286.14543"
      inkscape:window-width="1920"
      inkscape:window-height="991"
      inkscape:window-x="-9"
@@ -619,4 +619,11 @@
        id="club-y-1" /><path
        style="font-variation-settings:'wght' 400;fill:#ffb136;fill-opacity:1;stroke:none;stroke-width:0.4;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
        d="m 180.72663,182.75418 h 0.28243 c 2.69177,0 4.85879,2.23008 4.85879,5.00001 0,2.77004 -2.16702,5.00001 -4.85879,5.00001 h -0.28243 c -2.69177,0 -4.85879,-2.22997 -4.85879,-5.00001 0,-2.76993 2.16702,-5.00001 4.85879,-5.00001 z"
-       id="club-y-0" /></g></svg>
+       id="club-y-0" /><rect
+       style="font-variation-settings:'wght' 400;display:none;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.0885157;stroke-linecap:square;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       id="rect32"
+       width="12.075472"
+       height="12.075472"
+       x="449.0722"
+       y="-4.7035813"
+       transform="rotate(45)" /></g></svg>

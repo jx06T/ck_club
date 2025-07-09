@@ -39,6 +39,8 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
 
     const clubsDataMap = useRef(new Map(clubs.map(club => [club.mapId, club])));
     const panzoomInstanceRef = useRef<PanzoomObject | null>(null);
+    const interactiveMapSvgRef = useRef<SVGSVGElement | null>(null);
+    const mapDivRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         clubsDataMap.current = new Map(clubs.map(club => [club.mapId, club]));
@@ -62,7 +64,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
 
             const parentContainer = node.parentElement;
             const handleWheel = (e: WheelEvent) => {
-                panzoomInstance.zoomWithWheel(e)
+                panzoomInstance.zoomWithWheel(e, { step: 0.4 })
                 e.stopPropagation();
             };
 
@@ -97,6 +99,8 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
 
     const svgRootRef = useCallback((node: SVGSVGElement | null) => {
         if (node) {
+            interactiveMapSvgRef.current = node
+
             const clickablePaths = node.querySelectorAll<SVGPathElement>('path[id^="club-"]');
             const handlePathClick = (event: MouseEvent) => {
                 const targetPath = event.currentTarget as SVGPathElement;
@@ -106,6 +110,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
             const labels: ClubLabel[] = [];
             clickablePaths.forEach(path => {
                 path.addEventListener('click', handlePathClick);
+                // path.addEventListener("mouseover", handlePathClick);
 
                 const clubId = path.id;
                 const clubData = clubsDataMap.current.get(clubId);
@@ -129,13 +134,14 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
             return () => {
                 clickablePaths.forEach(path => {
                     path.removeEventListener('click', handlePathClick);
+                    // path.removeEventListener('mouseover', handlePathClick);
                 });
             };
         }
     }, []);
 
     useEffect(() => {
-        const svgRoot = document.getElementById('interactive-map-svg');
+        const svgRoot = interactiveMapSvgRef.current;
         if (!svgRoot) return;
 
         svgRoot.querySelectorAll('path.selected').forEach(p => {
@@ -153,7 +159,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
 
 
     function toggleFullscreen() {
-        const mapContainer = document.getElementById('map-div');
+        const mapContainer = mapDivRef.current;
         if (!mapContainer) return;
         setIsFullScreen(!isFullScreen)
         if (!document.fullscreenElement) {
@@ -172,7 +178,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
 
     const zoomToClub = (id: string) => {
         const panzoom = panzoomInstanceRef.current;
-        const svgElement = document.getElementById('interactive-map-svg');
+        const svgElement = interactiveMapSvgRef.current;
         const pathElement = document.getElementById(id) as SVGGraphicsElement | null;
 
         if (!panzoom || !svgElement || !pathElement) return;
@@ -180,11 +186,17 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         const bbox = pathElement.getBBox();
         const targetX = bbox.x + bbox.width / 2;
         const targetY = bbox.y + bbox.height / 2;
+
         const targetScale = 6;
 
-        const panX = -targetX + 320;
-        const panY = -targetY + 320;
+        const mapContainer = mapDivRef.current;
+        if (!mapContainer) return;
 
+        const divH = mapContainer.offsetHeight;
+        const divW = mapContainer.offsetWidth;
+
+        const panX = (-targetX + 320) * (divW < 640 ? divW / 640 : 1)
+        const panY = (-targetY + 320) * (divW < 640 ? divW / 640 : 1)
         panzoom.zoom(1, { animate: true, duration: 500 });
         panzoom.pan(panX, panY, { animate: true, duration: 500 });
         panzoom.zoom(targetScale, { animate: true, duration: 500 });
@@ -192,11 +204,11 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
 
     return (
         <div className="map-wrapper mb-12">
-            <div id='map-div' className="relative map-svg-container h-screen bg-primary-100">
+            <div ref={mapDivRef} id='map-div' className="relative map-svg-container h-screen bg-primary-100">
                 <div className={`map-viewport w-full ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "} overflow-hidden rounded-lg border-2 border-accent-400`}>
                     <div
                         ref={containerRef}
-                        className="relative w-full h-full"
+                        className="relative w-full h-full "
                     >
                         <MapSVG
                             id="interactive-map-svg"
@@ -231,7 +243,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                         </svg>
                     </div>
                 </div>
-                <div className={`absolute ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "}  right-4 top-3 md:right-6 md:top-5 w-72 md:w-[40rem] max-w-[60%] flex flex-col md:flex-row gap-4 items-start pointer-events-none`}>
+                <div className={`absolute ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "}  right-4 top-3 md:right-6 md:top-5 w-72 md:w-[40rem] max-w-[60%] flex flex-col md:flex-row gap-2 md:gap-4 items-start pointer-events-none`}>
                     <FuzzySearch<ClubInfo>
                         items={clubs}
                         searchKeys={['name', 'summary', 'tags', 'clubId']}
