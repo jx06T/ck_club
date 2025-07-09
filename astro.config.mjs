@@ -22,10 +22,10 @@ if (isVercel) {
     },
     maxDuration: 8,
   });
-  // output = 'server';
+  output = 'server';
 } else if (isCloudflare) {
   adapter = cloudflare();
-  // output = 'server';
+  output = 'server';
 }
 
 export default defineConfig({
