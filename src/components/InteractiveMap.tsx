@@ -29,7 +29,6 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
     const [selectedClubInfo, setSelectedClubInfo] = useState<ClubInfo | null>(null);
     const [isZoomedIn, setIsZoomedIn] = useState(false);
     const [clubLabels, setClubLabels] = useState<ClubLabel[]>([]);
-    const [panTransform, setPanTransform] = useState('');
 
     const clubsDataMap = useRef(new Map(clubs.map(club => [club.id, club])));
     const panzoomInstanceRef = useRef<PanzoomObject | null>(null);
@@ -38,7 +37,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         clubsDataMap.current = new Map(clubs.map(club => [club.id, club]));
     }, [clubs]);
 
-    const svgRootRef = useCallback((node: SVGSVGElement | null) => {
+    const containerRef = useCallback((node: HTMLDivElement | null) => {
         if (node) {
             const panzoomInstance = Panzoom(node, {
                 minScale: 0.7,
@@ -63,12 +62,39 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                 parentContainer.addEventListener('wheel', handleWheel);
             }
 
+            const handleZoom = (event: CustomEvent) => {
+                const currentScale = event.detail.scale;
+                const zoomThreshold = 3;
+
+                if (currentScale > zoomThreshold) {
+                    setIsZoomedIn(true);
+                    console.log("!")
+                } else {
+                    setIsZoomedIn(false);
+                }
+            };
+
+            // @ts-ignore
+            node.addEventListener('panzoomchange', handleZoom);
+
+            return () => {
+                if (parentContainer) {
+                    parentContainer.removeEventListener('wheel', handleWheel);
+                }
+                // @ts-ignore
+                node.removeEventListener('panzoomchange', handleZoom);
+                panzoomInstance.destroy();
+            };
+        }
+    }, []);
+
+    const svgRootRef = useCallback((node: SVGSVGElement | null) => {
+        if (node) {
             const clickablePaths = node.querySelectorAll<SVGPathElement>('path[id^="club-"]');
             const handlePathClick = (event: MouseEvent) => {
                 const targetPath = event.currentTarget as SVGPathElement;
                 setSelectedClubId(prevId => (prevId === targetPath.id ? null : targetPath.id));
             };
-
 
             const labels: ClubLabel[] = [];
             clickablePaths.forEach(path => {
@@ -92,36 +118,11 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
             });
 
             setClubLabels(labels);
-            console.log(labels)
-
-            const handleZoom = (event: CustomEvent) => {
-                const currentScale = event.detail.scale;
-                const zoomThreshold = 3.5;
-
-                if (currentScale > zoomThreshold) {
-                    setIsZoomedIn(true);
-                } else {
-                    setIsZoomedIn(false);
-                }
-
-                setPanTransform(`translate(${event.detail.x}, ${event.detail.y}) scale(${event.detail.scale})`);
-            };
-
-            // @ts-ignore
-            // node.addEventListener('panzoomzoom', handleZoom);
-            node.addEventListener('panzoomchange', handleZoom);
 
             return () => {
                 clickablePaths.forEach(path => {
                     path.removeEventListener('click', handlePathClick);
                 });
-                if (parentContainer) {
-                    parentContainer.removeEventListener('wheel', handleWheel);
-                }
-                // @ts-ignore
-                // node.removeEventListener('panzoomzoom', handleZoom);
-                node.removeEventListener('panzoomchange', handleZoom);
-                panzoomInstance.destroy();
             };
         }
     }, []);
@@ -147,27 +148,38 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         <div className="map-wrapper mb-12">
             <div className="relative map-svg-container h-screen">
                 <div className="map-viewport grow-0 shrink-0 w-full h-[80%] md:h-[90%] overflow-hidden rounded-lg border-2 border-accent-400">
-                    <div className="relative w-full h-full bg-accent-50">
+                    <div
+                        ref={containerRef}
+                        className="relative w-full h-full bg-accent-50"
+                    >
                         <MapSVG
                             id="interactive-map-svg"
                             ref={svgRootRef}
-                            className={`w-full h-full ${isZoomedIn ? 'is-zoomed-in' : ''}`}
+                            className={`w-full h-full `}
                         />
-                        <svg className="absolute inset-0 w-full h-full pointer-events-none bg-blue-500/50" viewBox="0 0 560 530">
-                            <g transform={panTransform}>
-                                {clubLabels.map(label => (
+                        <svg
+                            id="interactive-map-label-svg"
+                            className={`absolute inset-0 w-full h-full pointer-events-none ${isZoomedIn ? 'is-zoomed-in' : ''}`}
+                            viewBox="0 0 560 530"
+                        >
+                            {clubLabels.map(label => {
+                                const isXAxis = label.id.startsWith('club-x-');
+                                return (
                                     <text
-                                        key={label.id}
+                                        key={
+                                            label.id
+                                        }
                                         x={label.x}
                                         y={label.y}
                                         className="club-label"
                                         textAnchor="middle"
                                         dominantBaseline="middle"
+                                        transform={isXAxis ? `rotate(-90, ${label.x}, ${label.y})` : undefined}
                                     >
                                         {label.name}
-                                    </text>
-                                ))}
-                            </g>
+                                    </text>)
+                            }
+                            )}
                         </svg>
                     </div>
                 </div>
@@ -185,7 +197,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

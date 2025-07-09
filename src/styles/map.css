@@ -22,7 +22,7 @@
 }
 
 .club-label {
-  font-size: 8px;
+  font-size: 5px;
   font-weight: bold;
   fill: #1a202c; 
   stroke: white; 
@@ -30,10 +30,10 @@
   paint-order: stroke fill;
   pointer-events: none;
 
-  /* opacity: 0; */
+  opacity: 0;
   transition: opacity 0.3s ease-in-out;
 }
 
-#interactive-map-svg.is-zoomed-in .club-label {
-  opacity: 1;
+#interactive-map-label-svg.is-zoomed-in .club-label {
+  opacity: 1 ;
 }
