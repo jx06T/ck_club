@@ -113,8 +113,8 @@ function News({ id }: Props) {
     };
 
     return (
-        <div className='mt-10 mb-20'>
-            <h1 id={id} className='block text-balance text-3xl font-bold tracking-tight mb-6'>
+        <section className=' pt-6 pb-10'>
+            <h1 id={id} className='block text-balance text-3xl lg:text-4xl font-bold tracking-tight mb-6'>
                 即時訊息
             </h1>
 
@@ -184,7 +184,7 @@ function News({ id }: Props) {
                     </button>
                 </div>
             </div>
-        </div>
+        </section>
     );
 }
 

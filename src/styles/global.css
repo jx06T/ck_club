@@ -1,6 +1,7 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   /* 品牌主色系 */
@@ -84,6 +85,13 @@
   );
 
   --text-2xs: 0.625rem;
+}
+
+@layer base {
+  a:focus-visible,
+  button:focus-visible {
+    @apply outline-0 ring-2 ring-accent-600;
+  }
 }
 
 @layer theme {
@@ -177,4 +185,9 @@
   .dark .theme-dark-only {
     display: block;
   }
+}
+
+section {
+  /* background-color: #ff0000 !important;
+  border: solid 2px white; */
 }

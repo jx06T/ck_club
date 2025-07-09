@@ -37,6 +37,7 @@ const slidesForCarousel: Slide[] = await Promise.all(
       organizer: event.data.organizer,
       description: event.body,
       caption: event.data.title,
+      slug: event.slug,
     };
   })
 );
@@ -100,15 +101,22 @@ const testTabs = [
   SectionId="hero"
 />
 
-<EventCarousel id="event" slides={slidesForCarousel} client:visible />
-<News id="news" client:visible />
+<div>
+  <EventCarousel id="event" slides={slidesForCarousel} client:visible />
+</div>
 
-<AutoPlayVideo
-  src={MapVideo}
-  ctaText="立刻查看社團地圖"
-  ctaLink="/clubs"
-  client:visible
-/>
+<div>
+  <News id="news" client:visible />
+</div>
+
+<div>
+  <AutoPlayVideo
+    src={MapVideo}
+    ctaText="立刻查看社團地圖"
+    ctaLink="/clubs"
+    client:idle
+  />
+</div>
 
 <Tabs tabs={testTabs} title="紀念品介紹" />
 
