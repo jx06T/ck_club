@@ -9,7 +9,7 @@ import Layout from "../../layouts/Layout.astro";
 export async function getStaticPaths() {
   const events = await getCollection("events");
   return events.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: decodeURI(post.slug) },
   }));
 }
 
@@ -61,7 +61,7 @@ const { title, date, image, organizer, link } = post.data;
       <Content />
     </div>
 
-    <div class="my-10 ">
+    <div class="my-10">
       <ExternalCTA title="了解詳細訊息" url={link} />
     </div>
   </article>
