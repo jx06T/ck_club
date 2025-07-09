@@ -150,7 +150,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                 <div className="map-viewport grow-0 shrink-0 w-full h-[80%] md:h-[90%] overflow-hidden rounded-lg border-2 border-accent-400">
                     <div
                         ref={containerRef}
-                        className="relative w-full h-full bg-accent-50"
+                        className="relative w-full h-full /bg-accent-50"
                     >
                         <MapSVG
                             id="interactive-map-svg"
