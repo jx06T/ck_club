@@ -8,15 +8,9 @@ import type { PanzoomObject } from '@panzoom/panzoom';
 
 import MapSVG from '@assets/mapppp.svg?react';
 import FuzzySearch from '@/components/ui/inputs/FuzzySearch';
+import ClubInfoCard from '@components/ui/cards/ClubInfoCard'
+import type { ClubInfo } from '@types/club';
 
-interface ClubInfo {
-    mapId: string;
-    clubId: string;
-    name: string;
-    summary: string;
-    slug: string;
-    tags?: string[];
-}
 
 interface ClubLabel {
     id: string;
@@ -180,26 +174,39 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
     const handleRotate = () => {
         const panzoom = panzoomInstanceRef.current;
         if (!panzoom) return;
+
         const originalScale = panzoom.getScale()
         panzoom.zoom(0.5, { animate: true, duration: 300 })
+        const nextRotate = rotate + 1;
+        if (selectedClubId) {
+            setTimeout(() => {
+                setRotate(nextRotate)
+            }, 400);
 
-        const rawPanX = panzoom.getPan().x;
-        const rawPanY = panzoom.getPan().y;
+            setTimeout(() => {
+                zoomToClub(selectedClubId, nextRotate)
+            }, 800);
 
-        const panX = -rawPanY;
-        const panY = rawPanX;
+        } else {
+            const rawPanX = panzoom.getPan().x;
+            const rawPanY = panzoom.getPan().y;
 
-        setTimeout(() => {
-            setRotate(rotate + 1)
-        }, 400);
+            const panX = -rawPanY;
+            const panY = rawPanX;
 
-        setTimeout(() => {
-            panzoom.pan(panX, panY, { animate: true, duration: 300 });
-            panzoom.zoom(originalScale, { animate: true, duration: 300 })
-        }, 800);
+            setTimeout(() => {
+                setRotate(nextRotate)
+            }, 400);
+
+            setTimeout(() => {
+                panzoom.pan(panX, panY, { animate: true, duration: 300 });
+                panzoom.zoom(originalScale, { animate: true, duration: 300 })
+            }, 800);
+        }
+
     };
 
-    const zoomToClub = (id: string) => {
+    const zoomToClub = (id: string, nextRotate?: number) => {
         const panzoom = panzoomInstanceRef.current;
         const svgElement = interactiveMapSvgRef.current;
         const pathElement = document.getElementById(id) as SVGGraphicsElement | null;
@@ -226,7 +233,8 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         let panX = rawPanX;
         let panY = rawPanY;
 
-        switch (rotate % 4) {
+        const currentRotate = nextRotate || rotate
+        switch (currentRotate % 4) {
             case 0:
                 break;
             case 1:
@@ -309,14 +317,8 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                     />
 
                     <div className="h-fit w-full pointer-events-auto md:flex-1 shadow-brand shadow-black/10 map-info-panel text-black text-base bg-accent-400 rounded-md px-4 py-2 transition-colors duration-300">
-                        {selectedClubInfo ? (
-                            <div>
-                                <h4 className="font-bold text-lg cursor-pointer" onClick={() => zoomToClub(selectedClubId!)}>{selectedClubInfo.name}</h4>
-                                <p className="text-sm mt-1 ">{selectedClubInfo.summary}</p>
-                                <a href={`/clubs/${selectedClubInfo.slug}`} className="text-primary-600 fon text-base mt-2 block">
-                                    查看詳情 <SquareArrowOutUpRight className=" inline-block w-4 mb-0.5" />
-                                </a>
-                            </div>
+                        {(selectedClubId && selectedClubInfo) ? (
+                            <ClubInfoCard clubInfo={selectedClubInfo} onZoomToClub={() => zoomToClub(selectedClubId!)} />
                         ) : (
                             <p>點擊地圖選擇社團。</p>
                         )}
