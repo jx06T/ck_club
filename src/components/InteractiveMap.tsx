@@ -41,6 +41,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
     const panzoomInstanceRef = useRef<PanzoomObject | null>(null);
     const interactiveMapSvgRef = useRef<SVGSVGElement | null>(null);
     const mapDivRef = useRef<HTMLDivElement | null>(null);
+    const mapViewportRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         clubsDataMap.current = new Map(clubs.map(club => [club.mapId, club]));
@@ -50,7 +51,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         if (node) {
             const panzoomInstance = Panzoom(node, {
                 minScale: 0.7,
-                maxScale: 10,
+                maxScale: 11,
                 transformOrigin: { x: 0.5, y: 0.5 },
                 canvas: true,
                 step: 1.5,
@@ -176,6 +177,28 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         setSelectedClubId(club.mapId);
     };
 
+    const handleRotate = () => {
+        const panzoom = panzoomInstanceRef.current;
+        if (!panzoom) return;
+        const originalScale = panzoom.getScale()
+        panzoom.zoom(0.5, { animate: true, duration: 300 })
+
+        const rawPanX = panzoom.getPan().x;
+        const rawPanY = panzoom.getPan().y;
+
+        const panX = -rawPanY;
+        const panY = rawPanX;
+
+        setTimeout(() => {
+            setRotate(rotate + 1)
+        }, 400);
+
+        setTimeout(() => {
+            panzoom.pan(panX, panY, { animate: true, duration: 300 });
+            panzoom.zoom(originalScale, { animate: true, duration: 300 })
+        }, 800);
+    };
+
     const zoomToClub = (id: string) => {
         const panzoom = panzoomInstanceRef.current;
         const svgElement = interactiveMapSvgRef.current;
@@ -189,14 +212,41 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
 
         const targetScale = 6;
 
-        const mapContainer = mapDivRef.current;
+        const mapContainer = mapViewportRef.current;
         if (!mapContainer) return;
 
         const divH = mapContainer.offsetHeight;
         const divW = mapContainer.offsetWidth;
 
-        const panX = (-targetX + 320) * (divW < 640 ? divW / 640 : 1)
-        const panY = (-targetY + 320) * (divW < 640 ? divW / 640 : 1)
+        const scale = (divW < 640 || divH < 640) ? Math.min(divH / 640, divW / 640) : 1;
+
+        let rawPanX = (-targetX + 320) * scale;
+        let rawPanY = (-targetY + 320) * scale;
+
+        let panX = rawPanX;
+        let panY = rawPanY;
+
+        switch (rotate % 4) {
+            case 0:
+                break;
+            case 1:
+                [panX, panY] = [-rawPanY, rawPanX];
+                break;
+            case 2:
+                [panX, panY] = [-rawPanX, -rawPanY];
+                break;
+            case 3:
+                [panX, panY] = [rawPanY, -rawPanX];
+                break;
+        }
+
+        if (divH > 400 && divW < 600) {
+            panY += 10
+        }
+        if (divH < 400 && divW < 600) {
+            panX -= 20
+        }
+
         panzoom.zoom(1, { animate: true, duration: 500 });
         panzoom.pan(panX, panY, { animate: true, duration: 500 });
         panzoom.zoom(targetScale, { animate: true, duration: 500 });
@@ -205,10 +255,10 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
     return (
         <div className="map-wrapper mb-12">
             <div ref={mapDivRef} id='map-div' className="relative map-svg-container h-screen bg-primary-100">
-                <div className={`map-viewport w-full ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "} overflow-hidden rounded-lg border-2 border-accent-400`}>
+                <div ref={mapViewportRef} className={`map-viewport w-full ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "} overflow-hidden rounded-lg border-2 border-accent-400`}>
                     <div
                         ref={containerRef}
-                        className="relative w-full h-full "
+                        className="relative w-full h-full /w-[1600px] /h-[1600px] /bg-red-300/50"
                     >
                         <MapSVG
                             id="interactive-map-svg"
@@ -234,7 +284,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                                         className="club-label"
                                         textAnchor="middle"
                                         dominantBaseline="middle"
-                                        transform={isXAxis ? `rotate(-90, ${label.x}, ${label.y})` : undefined}
+                                        transform={`rotate(${((((rotate % 4 === 3) || (rotate % 4 === 2)) ? 2 : 0) + (isXAxis ? -1 : 0)) * 90}, ${label.x}, ${label.y})`}
                                     >
                                         {label.name}
                                     </text>)
@@ -272,7 +322,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                         )}
                     </div>
                 </div>
-                <button onClick={() => setRotate(rotate + 1)} className=" absolute left-4 top-3 md:left-6 md:top-5 shadow-brand hover:shadow-brand-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 map-info-panel text-black text-base bg-accent-400 focus-visible:ring-2 outline-0  ring-accent-600 rounded-md w-10 h-10 px-2 py-2">
+                <button onClick={handleRotate} className=" absolute left-4 top-3 md:left-6 md:top-5 shadow-brand hover:shadow-brand-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 map-info-panel text-black text-base bg-accent-400 focus-visible:ring-2 outline-0  ring-accent-600 rounded-md w-10 h-10 px-2 py-2">
                     <RotateCw />
                 </button>
                 <button onClick={toggleFullscreen} className=" hidden md:block absolute left-[4.1rem] top-3 md:left-[4.6rem] md:top-5 shadow-brand hover:shadow-brand-md shadow-black/10 transition-all duration-300 hover:-translate-y-0.5 map-info-panel text-black text-base bg-accent-400 focus-visible:ring-2 outline-0  ring-accent-600 rounded-md w-10 h-10 px-2 py-2">
