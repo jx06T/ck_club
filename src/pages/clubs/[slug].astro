@@ -1,0 +1,45 @@
+---
+import { getCollection, getEntry, type CollectionEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const clubs = await getCollection("clubs");
+  return clubs.map((post) => ({
+    params: { slug: post.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+
+const post: CollectionEntry<"clubs"> | undefined = await getEntry(
+  "clubs",
+  slug
+);
+
+if (post === undefined) {
+  return Astro.redirect("/404");
+}
+
+const { Content } = await post.render();
+const { id, name, summary, tags } = post.data;
+---
+
+<Layout title={name + " | CKClubHub"}>
+  <article
+    class="prose prose-neutral dark:prose-invert max-w-3xl mx-auto py-8 px-4 sm:py-12"
+  >
+    <div class="cursor-pointer flex justify-between items-center">
+      <h1 class="text-4xl font-bold mb-2 !text-primary-800">
+        {name}
+      </h1>
+      <span
+        class="text-sm w-10 h-10 text-center pt-2.5 rounded-full bg-accent-300 text-primary-950"
+        >{id}</span
+      >
+    </div>
+
+    <div class="mt-8 my-10">
+      <Content />
+    </div>
+  </article>
+</Layout>

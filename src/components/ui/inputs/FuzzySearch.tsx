@@ -24,24 +24,26 @@ export default function FuzzySearch<T>({
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        if (searchTerm.trim() === '') {
+        const trimmed = searchTerm.trim();
+        if (trimmed === '') {
             setResults([]);
             return;
         }
 
-        const lowerCaseSearchTerm = searchTerm.toLowerCase();
-
+        const keywords = trimmed.toLowerCase().split(/\s+/);
+        
         const filteredResults = items.filter(item => {
-            return searchKeys.some(key => {
-                const value = item[key];
-                if (typeof value === 'string') {
-                    return value.toLowerCase().includes(lowerCaseSearchTerm);
-                }
-                if (Array.isArray(value)) {
-                    return value.join(' ').toLowerCase().includes(lowerCaseSearchTerm);
-                }
-                return false;
-            });
+            const mergedText = searchKeys
+                .map(key => {
+                    const value = item[key];
+                    if (typeof value === 'string') return value;
+                    if (Array.isArray(value)) return value.join(' ');
+                    return '';
+                })
+                .join(' ')
+                .toLowerCase();
+
+            return keywords.every(keyword => mergedText.includes(keyword));
         });
 
         setResults(filteredResults);
