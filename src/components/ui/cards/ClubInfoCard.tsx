@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { SquareArrowOutUpRight, ChevronDown, Tag } from 'lucide-react';
-import type { ClubInfo } from '@types/club';
+import type { ClubInfo } from '../../../types/club';
 
 interface ClubInfoCardProps {
     clubInfo: ClubInfo;

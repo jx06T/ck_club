@@ -4,18 +4,17 @@ import { getCollection, getEntry, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import EventCard from "@components/ui/cards/EventCard.astro";
 
-const allEvents = await getCollection("events", ({ data }) => {
+const allEvents = await getCollection("events", ({}) => {
   // return data.date <= new Date();
   return true;
 });
 
 allEvents.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const post: CollectionEntry<"events"> | undefined = await getEntry(
-  "events",
-  "聯合迎新"
-);
-
+// const post: CollectionEntry<"events"> | undefined = await getEntry(
+//   "events",
+//   "聯合迎新"
+// );
 ---
 
 <Layout title="近期活動 | CKClubHub" description="探索最近的活動！">

@@ -9,7 +9,7 @@ import type { PanzoomObject } from '@panzoom/panzoom';
 import MapSVG from '@assets/mapppp.svg?react';
 import FuzzySearch from '@/components/ui/inputs/FuzzySearch';
 import ClubInfoCard from '@components/ui/cards/ClubInfoCard'
-import type { ClubInfo } from '@types/club';
+import type { ClubInfo } from '../types/club';
 
 
 interface ClubLabel {

@@ -39,7 +39,7 @@ interface Props {
     <div class="md:col-span-3">
       <div>
         {
-          faqs.faqs.map((faq, index) => (
+          faqs.faqs.map((faq, _) => (
             <AccordionItem question={faq.question} answer={faq.answer} />
           ))
         }
