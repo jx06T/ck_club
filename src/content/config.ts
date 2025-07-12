@@ -12,17 +12,61 @@ const eventsCollection = defineCollection({
         organizer: z.string()
     }),
 });
-
 const clubsCollection = defineCollection({
     type: 'content',
     schema: ({ image }) => z.object({
-        id: z.string(),
+        // --- 基本資訊 ---
+        timestamp: z.date(),
+        clubCode: z.string(),
         name: z.string(),
         summary: z.string(),
-        mapId: z.string(),
-        tags: z.array(z.string()).optional()
+
+        profileImage: image(),
+        coverImage: image(),
+
+        // --- 詳細資料 ---
+        members: z.object({
+            current: z.string(),
+            previousYear: z.string(),
+        }),
+
+        // 可能是空字串
+        membershipFee: z.string().optional(),
+
+        activities: z.array(z.string()),
+        workshops: z.object({
+            has: z.boolean(),
+            description: z.string(),
+        }),
+
+        // --- 標籤與分類 ---
+        tags: z.array(z.string()),
+
+        // --- 布林值旗標 ---
+        attendsExpo: z.boolean(),
+        hasClubStamp: z.boolean(),
+        acceptsUnofficial: z.boolean(),
+
+        // --- 聯絡資訊 ---
+        officers: z.array(
+            z.object({
+                title: z.string(),
+                name: z.string(),
+                contact: z.string().optional(),
+            })
+        ),
+        links: z.array(
+            z.object({
+                platform: z.string(),
+                handle: z.string(),
+                url: z.string().url(),
+            })
+        ),
+
+        mapId: z.string().optional(),
     }),
 });
+
 
 export const collections = {
     'events': eventsCollection,
