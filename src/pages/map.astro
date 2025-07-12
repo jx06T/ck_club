@@ -6,9 +6,16 @@ import InteractiveMap from "@components/InteractiveMap.tsx";
 
 const allClubsData = await getCollection("clubs");
 
+const clubCodeToMapId: { [key: string]: string } = {
+  E04: "club-x-0",
+  A01: "club-x-1",
+  B14: "club-y-0",
+  D04: "club-y-1",
+};
+
 const clubsIndex = allClubsData.map((club) => ({
-  mapId: club.data.mapId,
-  clubId: club.data.id,
+  clubCode: club.data.clubCode,
+  mapId: clubCodeToMapId[club.data.clubCode],
   name: club.data.name,
   summary: club.data.summary,
   slug: club.slug,

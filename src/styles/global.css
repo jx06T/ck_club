@@ -58,15 +58,18 @@
 
   /* 品牌陰影 */
   --shadow-brand-sm: 0 1px 2px 0 rgba(45, 50, 80, 0.05);
-  --shadow-brand: 0 1px 3px 0 rgba(45, 50, 80, 0.1),
-    0 1px 2px 0 rgba(45, 50, 80, 0.06);
-  --shadow-brand-md: 0 4px 6px -1px rgba(45, 50, 80, 0.1),
-    0 2px 4px -1px rgba(45, 50, 80, 0.06);
-  --shadow-brand-lg: 0 10px 15px -3px rgba(45, 50, 80, 0.1),
+  --shadow-brand:
+    0 1px 3px 0 rgba(45, 50, 80, 0.1), 0 1px 2px 0 rgba(45, 50, 80, 0.06);
+  --shadow-brand-md:
+    0 4px 6px -1px rgba(45, 50, 80, 0.1), 0 2px 4px -1px rgba(45, 50, 80, 0.06);
+  --shadow-brand-lg:
+    0 10px 15px -3px rgba(45, 50, 80, 0.1),
     0 4px 6px -2px rgba(45, 50, 80, 0.05);
-  --shadow-brand-xl: 0 20px 25px -5px rgba(45, 50, 80, 0.1),
+  --shadow-brand-xl:
+    0 20px 25px -5px rgba(45, 50, 80, 0.1),
     0 10px 10px -5px rgba(45, 50, 80, 0.04);
-  --shadow-accent: 0 4px 6px -1px rgba(248, 177, 121, 0.2),
+  --shadow-accent:
+    0 4px 6px -1px rgba(248, 177, 121, 0.2),
     0 2px 4px -1px rgba(248, 177, 121, 0.1);
 
   /* 背景漸變 */
@@ -143,15 +146,20 @@
 
     /* 品牌陰影（微調透明度，增加深度） */
     --shadow-brand-sm: 0 1px 2px 0 rgba(240, 240, 240, 0.05);
-    --shadow-brand: 0 1px 3px 0 rgba(240, 240, 240, 0.1),
+    --shadow-brand:
+      0 1px 3px 0 rgba(240, 240, 240, 0.1),
       0 1px 2px 0 rgba(240, 240, 240, 0.06);
-    --shadow-brand-md: 0 4px 6px -1px rgba(240, 240, 240, 0.1),
+    --shadow-brand-md:
+      0 4px 6px -1px rgba(240, 240, 240, 0.1),
       0 2px 4px -1px rgba(240, 240, 240, 0.06);
-    --shadow-brand-lg: 0 10px 15px -3px rgba(240, 240, 240, 0.1),
+    --shadow-brand-lg:
+      0 10px 15px -3px rgba(240, 240, 240, 0.1),
       0 4px 6px -2px rgba(240, 240, 240, 0.05);
-    --shadow-brand-xl: 0 20px 25px -5px rgba(240, 240, 240, 0.1),
+    --shadow-brand-xl:
+      0 20px 25px -5px rgba(240, 240, 240, 0.1),
       0 10px 10px -5px rgba(240, 240, 240, 0.04);
-    --shadow-accent: 0 4px 6px -1px rgba(255, 180, 130, 0.2),
+    --shadow-accent:
+      0 4px 6px -1px rgba(255, 180, 130, 0.2),
       0 2px 4px -1px rgba(255, 180, 130, 0.1);
 
     /* 背景漸變（反轉/調暗漸層） */
@@ -184,6 +192,12 @@
   }
   .dark .theme-dark-only {
     display: block;
+  }
+  .prose h1 {
+    @apply text-3xl;
+  }
+  .prose :is(h1, h2, h3, h4, h5, h6) {
+    @apply text-primary-900;
   }
 }
 

@@ -21,24 +21,24 @@ if (post === undefined) {
 }
 
 const { Content } = await post.render();
-const { id, name, summary, tags } = post.data;
+const { clubCode, name, summary, tags } = post.data;
 ---
 
 <Layout title={name + " | CKClubHub"}>
   <article
-    class="prose prose-neutral dark:prose-invert max-w-3xl mx-auto py-8 px-4 sm:py-12"
+    class="max-w-3xl mx-auto py-8 px-4 sm:py-12"
   >
     <div class="cursor-pointer flex justify-between items-center">
-      <h1 class="text-4xl font-bold mb-2 !text-primary-800">
+      <h1 class="text-4xl font-bold mb-2 text-primary-950">
         {name}
       </h1>
       <span
         class="text-sm w-10 h-10 text-center pt-2.5 rounded-full bg-accent-300 text-primary-950"
-        >{id}</span
+        >{clubCode}</span
       >
     </div>
 
-    <div class="mt-8 my-10">
+    <div class="mt-8 my-10 prose prose-base dark:prose-invert mb-20 max-w-none">
       <Content />
     </div>
   </article>

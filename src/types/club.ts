@@ -1,6 +1,6 @@
 export interface ClubInfo {
     mapId: string;
-    clubId: string;
+    clubCode: string;
     name: string;
     summary: string;
     slug: string;

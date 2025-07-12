@@ -304,7 +304,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                 <div className={`absolute ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "}  right-4 top-3 md:right-6 md:top-5 w-72 md:w-[40rem] max-w-[60%] flex flex-col md:flex-row gap-2 md:gap-4 items-start pointer-events-none`}>
                     <FuzzySearch<ClubInfo>
                         items={clubs}
-                        searchKeys={['name', 'summary', 'tags', 'clubId']}
+                        searchKeys={['name', 'summary', 'tags', 'clubCode']}
                         onSelect={handleSelectClubFromSearch}
                         placeholder="搜尋社團名稱或簡介..."
                         className="  md:flex-1 pointer-events-auto"
