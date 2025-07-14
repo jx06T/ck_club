@@ -15,6 +15,7 @@ const {
   lang = "zh-Hant",
   customDescription = null,
   customOgTitle = null,
+  customOgImage = null,
 } = Astro.props;
 
 // Interface to type-check the properties
@@ -26,6 +27,7 @@ interface Props {
   lang?: string;
   customDescription?: string | null;
   customOgTitle?: string | null;
+  customOgImage?: ImageMetadata | null;
 }
 ---
 
@@ -37,10 +39,11 @@ interface Props {
       structuredData={structuredData}
       customDescription={customDescription}
       customOgTitle={customOgTitle}
+      customOgImage={customOgImage}
       description={description}
     />
 
-    <title>{title}</title>
+    <title data-pagefind-meta="title">{title}</title>
 
     <script is:inline>
       const isThemeDark =
@@ -61,6 +64,8 @@ interface Props {
         metaThemeColor.setAttribute("content", "#c0c2d1");
       }
     </script>
+
+    <!-- <link href="/pagefind/pagefind-ui.css" rel="stylesheet" /> -->
   </head>
 
   <body

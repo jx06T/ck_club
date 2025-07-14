@@ -1,5 +1,14 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+
+import SearchPage from "@/components/SearchPage";
+
+const clubs = await getCollection("clubs");
+const allClubs = clubs.map((club) => ({
+  ...club.data,
+  slug: club.slug,
+}));
 ---
 
 <Layout title="社團資料庫 | CKClubHub" description="探索所有社團！">
@@ -11,4 +20,5 @@ import Layout from "../../layouts/Layout.astro";
       <p class="text-lg text-neutral-600">探索建中超過 60 個精彩社團</p>
     </div>
   </div>
+  <SearchPage allClubs={allClubs} client:load />
 </Layout>

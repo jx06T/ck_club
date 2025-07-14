@@ -1,16 +1,17 @@
 ---
 import { getCollection, getEntry, type CollectionEntry } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
+import Layout from "../../layouts/Layout.astro"; // 假設你的 Meta 組件在 Layout 裡
+import { Image } from "astro:assets";
 
+// getStaticPaths 保持不變
 export async function getStaticPaths() {
   const clubs = await getCollection("clubs");
   return clubs.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.slug }, // Astro 會自動使用 id 作為 slug
   }));
 }
 
 const { slug } = Astro.params;
-
 const post: CollectionEntry<"clubs"> | undefined = await getEntry(
   "clubs",
   slug
@@ -21,25 +22,71 @@ if (post === undefined) {
 }
 
 const { Content } = await post.render();
-const { clubCode, name, summary, tags } = post.data;
+const { data } = post;
 ---
 
-<Layout title={name + " | CKClubHub"}>
-  <article
-    class="max-w-3xl mx-auto py-8 px-4 sm:py-12"
-  >
+<Layout
+  title={`${data.name} | CKClubHub`}
+  customDescription={data.summary}
+  customOgImage={data.profileImage}
+>
+  <article class="max-w-3xl mx-auto py-8 px-4 sm:py-12">
     <div class="cursor-pointer flex justify-between items-center">
       <h1 class="text-4xl font-bold mb-2 text-primary-950">
-        {name}
+        {data.name}
       </h1>
       <span
         class="text-sm w-10 h-10 text-center pt-2.5 rounded-full bg-accent-300 text-primary-950"
-        >{clubCode}</span
       >
+        {data.clubCode}
+      </span>
     </div>
 
-    <div class="mt-8 my-10 prose prose-base dark:prose-invert mb-20 max-w-none">
+    <main
+      data-pagefind-body
+      class="mt-8 my-10 prose prose-base dark:prose-invert mb-20 max-w-none"
+    >
       <Content />
-    </div>
+    </main>
   </article>
+
+  <div style="display: none;" data-pagefind-body>
+    <p data-pagefind-weight="10">{data.name}</p>
+
+    <p data-pagefind-weight="8">{data.clubCode}</p>
+
+    <div data-pagefind-weight="6">
+      {data.tags.join(" ")}
+    </div>
+
+    <p data-pagefind-weight="5">{data.summary}</p>
+
+    <div data-pagefind-weight="3">
+      {data.activities.join(" ")}
+      {data.workshops.description}
+    </div>
+
+    <div data-pagefind-weight="2">
+      {data.officers.map((officer) => officer.name).join(" ")}
+    </div>
+
+    {data.tags.map((tag) => <div data-pagefind-filter="tag:{tag}" />)}
+
+    <!-- 2. 為「人數」建立篩選器 -->
+    <!-- Pagefind 會將 "11～20" 這個範圍加入名為 'members' 的篩選器中 -->
+    <div data-pagefind-filter={`members:${data.members.current}`}></div>
+  </div>
+
+  <div data-pagefind-ignore class="hidden">
+    <p data-pagefind-meta="clubCode">{post.data.clubCode}</p>
+    {
+      data.profileImage && (
+        <Image
+          data-pagefind-meta="image[src], image_alt[alt]"
+          src={data.profileImage}
+          alt={`Cover image for ${data.name}`}
+        />
+      )
+    }
+  </div>
 </Layout>

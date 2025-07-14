@@ -12,6 +12,7 @@ const eventsCollection = defineCollection({
         organizer: z.string()
     }),
 });
+
 const clubsCollection = defineCollection({
     type: 'content',
     schema: ({ image }) => z.object({

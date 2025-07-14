@@ -3,3 +3,4 @@ declare module '*.svg?react' {
   const content: FunctionComponent<SVGProps<SVGSVGElement>>;
   export default content;
 }
+
