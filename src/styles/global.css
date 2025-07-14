@@ -283,3 +283,9 @@ section {
 .no-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Edge */
 }
+
+mark {
+  @apply bg-accent-400 text-primary-900;
+  padding: 0 2px;
+  border-radius: 3px;
+}

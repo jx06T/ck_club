@@ -36,7 +36,7 @@ const { data } = post;
   <ClubHeader club={data} />
 
   <article class="max-w-3xl mx-auto pb-8 py-4 px-4 sm:px-6 lg:px-16">
-    <!-- <StickyActions client:load clubCode={data.clubCode} clubName={data.name} /> -->
+    <StickyActions client:load clubCode={data.clubCode} clubName={data.name} attendsExpo={data.attendsExpo}/>
 
     <ClubInfoPanel club={data} />
 
@@ -70,7 +70,7 @@ const { data } = post;
 
     {data.tags.map((tag) => <span data-pagefind-filter="tag">{tag}</span>)}
 
-    <p data-pagefind-filter={`members`}>${data.members.previousYear}</p>
+    <p data-pagefind-filter={`members`}>{data.members.previousYear}</p>
     
     {data.attendsExpo && <p data-pagefind-filter={`other`}>社團博覽會攤位</p>}
     {data.hasClubStamp && <p data-pagefind-filter={`other`}>社團博覽會印章</p>}

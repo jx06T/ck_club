@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 
-// T can be any type that can be JSON stringified
 export function useLocalStorage<T>(key: string, initialValue: T | (() => T)) {
   const isClient = typeof window !== 'undefined';
 

@@ -18,7 +18,13 @@ export interface PagefindDocument {
     [key: string]: string | undefined;
   };
   excerpt: string;
+  sub_results: sub_result[];
   // ... 其他你可能需要的欄位
+}
+export interface sub_result {
+  title: string;
+  url: string;
+  excerpt: string;
 }
 
 // results 陣列中的單個結果

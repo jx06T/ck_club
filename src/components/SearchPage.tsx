@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 
 import type { Club } from '@/types/club';
 type ClubData = Club;
@@ -8,7 +8,7 @@ import Masonry from 'react-masonry-css';
 
 import { X, Filter, ChevronDown, ChevronRight } from 'lucide-react';
 
-import type { PagefindAPI, PagefindSearchResults, PagefindDocument } from '@/types/pagefind';
+import type { PagefindAPI, PagefindSearchResults, PagefindDocument, sub_result } from '@/types/pagefind';
 
 
 import { useLocalStorage } from '@/scripts/useLocalStorage';
@@ -16,12 +16,19 @@ import { clsx } from 'clsx';
 
 import ClubCard from '@/components/ui/cards/ClubCard';
 
+interface ClubWithSearchContext extends ClubData {
+    searchContext?: {
+        excerpt: string;
+        sub_results: sub_result[];
+    };
+}
+
 interface SearchPageProps {
     allClubs: ClubData[];
 }
 
 function SearchPage({ allClubs }: SearchPageProps) {
-    const [searchResults, setSearchResults] = useState<ClubData[]>([]);
+    const [searchResults, setSearchResults] = useState<ClubWithSearchContext[]>([]);
     const [isSearching, setIsSearching] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -34,9 +41,22 @@ function SearchPage({ allClubs }: SearchPageProps) {
     const [isClient, setIsClient] = useState(false);
     useEffect(() => {
         setIsClient(true);
+
+        const params = new URLSearchParams(window.location.search);
+        const q = params.get('q') || '';
+        const tags = params.getAll('tag');
+        const members = params.getAll('members');
+        const other = params.getAll('other');
+
+        setSearchQuery(q);
+        const initialFilters: Record<string, string[]> = {};
+        if (tags.length > 0) initialFilters.tag = tags;
+        if (members.length > 0) initialFilters.members = members;
+        if (other.length > 0) initialFilters.other = other;
+        setActiveFilters(initialFilters);
     }, []);
 
-    const [selectedClub, setSelectedClub] = useState<ClubData | null>(null);
+    const [selectedClub, setSelectedClub] = useState<ClubWithSearchContext | null>(null);
     const [availableFilters, setAvailableFilters] = useState({
         tags: [] as string[],
         members: [] as string[],
@@ -48,6 +68,8 @@ function SearchPage({ allClubs }: SearchPageProps) {
         new Map(allClubs.map(c => [c.clubCode, c])),
         [allClubs]
     );
+
+    const dragControls = useDragControls()
 
     useEffect(() => {
         const loadPagefind = async () => {
@@ -67,45 +89,79 @@ function SearchPage({ allClubs }: SearchPageProps) {
     }, []);
 
     useEffect(() => {
-        const performSearch = async () => {
-            const hasSearchTerm = searchQuery.trim().length > 0;
-            const hasFilters = Object.values(activeFilters).some(f => f.length > 0);
+        const hasSearchTerm = searchQuery.trim().length > 0;
+        const hasFilters = Object.values(activeFilters).some(f => f.length > 0);
 
-            if (!hasSearchTerm && !hasFilters) {
-                setIsSearching(false);
-                setSearchResults([]);
-                return;
-            }
 
-            setIsSearching(true);
-
-            if (!pagefindApi.current) return;
-
-            const searchResult: PagefindSearchResults = await pagefindApi.current.search((hasSearchTerm ? searchQuery : null), { filters: activeFilters });
-
-            console.log("Raw search result:", searchResult);
-
-            if (searchResult && searchResult.results) {
-                // 1. 呼叫每個 result 的 data() 函式來獲取詳細資料
-                //    Promise.all 會等待所有 data() 函式完成
-                const detailedResults: PagefindDocument[] = await Promise.all(
-                    searchResult.results.map(result => result.data())
-                );
-
-                console.log("Detailed results with meta:", detailedResults);
-
-                const clubCodes = detailedResults.map(doc => doc.meta.clubCode);
-
-                const clubsFromSearch = clubCodes
-                    .filter((code): code is string => !!code)
-                    .map(code => allClubsMap.get(code))
-                    .filter((c): c is Club => !!c);
-
-                setSearchResults(clubsFromSearch);
-            }
-        };
 
         const debounceTimeout = setTimeout(() => {
+            // 在執行搜尋前，先更新 URL
+            const params = new URLSearchParams();
+            if (hasSearchTerm) {
+                params.set('q', searchQuery);
+            }
+            // 處理篩選器
+            Object.entries(activeFilters).forEach(([key, values]) => {
+                values.forEach(value => {
+                    params.append(key, value);
+                });
+            });
+
+            // 使用 history.pushState 來更新 URL 而不重新載入頁面
+            // 這會創建一個新的瀏覽器歷史記錄
+            const newUrl = `${window.location.pathname}?${params.toString()}`;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+            const performSearch = async () => {
+                const hasSearchTerm = searchQuery.trim().length > 0;
+                const hasFilters = Object.values(activeFilters).some(f => f.length > 0);
+
+                if (!hasSearchTerm && !hasFilters) {
+                    setIsSearching(false);
+                    setSearchResults([]);
+                    return;
+                }
+
+                setIsSearching(true);
+
+                if (!pagefindApi.current) return;
+
+                const searchResult: PagefindSearchResults = await pagefindApi.current.search((hasSearchTerm ? searchQuery : null), { filters: activeFilters });
+
+                // console.log("Raw search result:", searchResult);
+
+                if (searchResult && searchResult.results) {
+                    // 1. 呼叫每個 result 的 data() 函式來獲取詳細資料
+                    //    Promise.all 會等待所有 data() 函式完成
+                    const detailedResults: PagefindDocument[] = await Promise.all(
+                        searchResult.results.map(result => result.data())
+                    );
+
+                    // console.log("Detailed results with meta:", detailedResults);
+
+                    const clubsFromSearch: ClubWithSearchContext[] = detailedResults
+                        .map(doc => {
+                            const clubCode = doc.meta.clubCode as string;
+                            const clubData = allClubsMap.get(clubCode);
+                            
+                            if (clubData) {
+                                return {
+                                    ...clubData,
+                                    searchContext: {
+                                        excerpt: doc.excerpt,
+                                        sub_results: doc.sub_results,
+                                    }
+                                };
+                            }
+                            return null;
+                        })
+                        .filter((c) => !!c);
+
+                    setSearchResults(clubsFromSearch);
+                } else {
+                    setSearchResults([])
+                }
+            };
+
             performSearch();
         }, 300);
 
@@ -116,9 +172,9 @@ function SearchPage({ allClubs }: SearchPageProps) {
     const clubsToDisplay = useMemo(() => {
         if (viewMode === 'favorites') {
             const favoriteClubs = allClubs.filter(club => favorites.has(club.clubCode));
+
             if (isSearching) {
-                const searchResultCodes = new Set(searchResults.map(c => c.clubCode));
-                return favoriteClubs.filter(c => searchResultCodes.has(c.clubCode));
+                return searchResults.filter(club => favorites.has(club.clubCode));
             }
             return favoriteClubs;
         }
@@ -131,7 +187,7 @@ function SearchPage({ allClubs }: SearchPageProps) {
 
             try {
                 const filters = await pagefindApi.current.filters();
-                console.log("filters:", filters)
+                // console.log("filters:", filters)
 
                 const tags = Object.keys(filters.tag || {});
                 const other = Object.keys(filters.other || {});
@@ -366,10 +422,12 @@ function SearchPage({ allClubs }: SearchPageProps) {
                                 animate={{ y: "0%" }}
                                 exit={{ y: "100%" }}
                                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                                className="bg-primary-50 w-full max-w-2xl rounded-t-2xl shadow-2xl p-5 py-6  pb-12 max-h-[40rem] "
+                                className="bg-primary-50 w-full max-w-2xl rounded-t-2xl shadow-2xl px-5 pt-0  pb-12 max-h-[40rem] "
                                 onClick={(e) => e.stopPropagation()}
 
                                 drag="y"
+                                dragControls={dragControls}
+                                dragListener={false}
                                 dragConstraints={{ top: 0, bottom: 500 }}
                                 onDragEnd={(event, info) => {
                                     if (info.offset.y > 100) {
@@ -377,9 +435,17 @@ function SearchPage({ allClubs }: SearchPageProps) {
                                     }
                                 }}
                             >
-                                <div className="w-12 h-1.5 bg-primary-100 rounded-full mx-auto mb-4"></div>
+                                <div
+                                    className=' h-10 p-4'
+                                    onPointerDown={(e) => {
+                                        dragControls.start(e)
+                                    }}
+                                >
+                                    <div className="w-12 h-1.5 bg-primary-100 rounded-full mx-auto mb-4">
+                                    </div>
+                                </div>
 
-                                <div className=' overflow-y-auto w-full h-full no-scrollbar'>
+                                <div className=' overflow-y-auto w-full h-full no-scrollbar'                                >
                                     <div className="flex justify-between items-center mb-4">
                                         <h2 className="text-2xl font-bold">{selectedClub.name}</h2>
                                         <button onClick={() => setSelectedClub(null)} className="p-1 rounded-full hover:bg-black/10 transition-colors">
@@ -387,7 +453,16 @@ function SearchPage({ allClubs }: SearchPageProps) {
                                         </button>
                                     </div>
                                     <img src={selectedClub.coverImage.src} alt={selectedClub.name} className="w-full h-48 object-cover rounded-md mb-4" />
-                                    <p className="mb-4">{selectedClub.summary}</p>
+
+                                    {selectedClub.searchContext ? (
+                                        <>
+                                            <p dangerouslySetInnerHTML={{ __html: "..." + selectedClub.searchContext.sub_results.map(e => e.excerpt).join(" ... ") + "..." }} />
+                                            <p className=' mt-1'>{selectedClub.summary}</p>
+                                        </>
+                                    ) : (
+                                        <p>{selectedClub.summary}</p>
+                                    )}
+
                                     <a href={`/clubs/${selectedClub.slug}`} className="text-accent-800 hover:underline font-semibold">
                                         查看完整介紹
                                         <ChevronRight className=" inline-block w-5 start-3 mb-0.5" />
@@ -397,7 +472,7 @@ function SearchPage({ allClubs }: SearchPageProps) {
                         </motion.div>
                     )}
                 </AnimatePresence>
-            </div>
+            </div >
         </>
     );
 }

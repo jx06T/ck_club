@@ -30,7 +30,7 @@ function ClubInfoCard({
                 <span className="text-sm w-10 h-10 text-center pt-2.5  rounded-full bg-primary-50 text-primary-800">{clubCode}</span>
             </div>
 
-            <p className="text-sm text-gray-800 flex-grow max-h-20 overflow-y-scroll">
+            <p className="text-sm text-gray-800 flex-grow max-h-20 md:max-h-96 overflow-y-scroll no-scrollbar">
                 {summary}
             </p>
 

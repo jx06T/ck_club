@@ -1,91 +1,86 @@
 import { useState, useEffect } from 'react';
-import { Heart, Share2, MapPin } from 'lucide-react';
-import { useLocalStorage } from '@/scripts/useLocalStorage'; 
-import { clsx } from 'clsx';
+import { Star, Share2, MapPin } from 'lucide-react';
+import { useLocalStorage } from '@/scripts/useLocalStorage';
 
 interface StickyActionsProps {
-  clubCode: string;
-  clubName: string;
+    clubCode: string;
+    clubName: string;
+    attendsExpo: boolean;
 }
 
-export default function StickyActions({ clubCode, clubName }: StickyActionsProps) {
-  const [favorites, setFavorites] = useLocalStorage<Set<string>>('favoriteClubs', new Set());
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+export default function StickyActions({ clubCode, clubName, attendsExpo }: StickyActionsProps) {
+    const [favorites, setFavorites] = useLocalStorage<Set<string>>('favoriteClubs', new Set());
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-    setIsFavorite(favorites.has(clubCode));
-  }, [favorites, clubCode]);
+    useEffect(() => {
+        setIsClient(true);
+        setIsFavorite(favorites.has(clubCode));
+    }, [favorites, clubCode]);
 
-  const handleToggleFavorite = () => {
-    setFavorites(prev => {
-      const newFavorites = new Set(prev);
-      if (newFavorites.has(clubCode)) {
-        newFavorites.delete(clubCode);
-      } else {
-        newFavorites.add(clubCode);
-      }
-      return newFavorites;
-    });
-  };
-
-  const handleShare = async () => {
-    const shareData = {
-      title: `${clubName} | CKClubHub`,
-      text: `來看看建中 ${clubName} 的介紹！`,
-      url: window.location.href,
+    const handleToggleFavorite = () => {
+        setFavorites(prev => {
+            const newFavorites = new Set(prev);
+            if (newFavorites.has(clubCode)) {
+                newFavorites.delete(clubCode);
+            } else {
+                newFavorites.add(clubCode);
+            }
+            return newFavorites;
+        });
     };
 
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        console.error("Share failed:", err);
-      }
-    } else {
-      // Fallback: Copy to clipboard
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        alert('社團連結已複製到剪貼簿！');
-      } catch (err) {
-        console.error('Failed to copy: ', err);
-        alert('複製連結失敗');
-      }
-    }
-  };
+    const handleShare = async () => {
+        const shareData = {
+            title: `${clubName} | CKClubHub`,
+            text: `來看看建中 ${clubName} 的介紹！`,
+            url: window.location.href,
+        };
 
-  return (
-    <div className="fixed bottom-4 right-4 md:sticky md:top-24 md:float-right z-40 flex flex-col gap-3">
-      <button
-        onClick={handleToggleFavorite}
-        disabled={!isClient}
-        className={clsx(
-          "w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300",
-          isFavorite 
-            ? "bg-red-500 text-white" 
-            : "bg-white dark:bg-primary-700 text-primary-800 dark:text-primary-200 hover:bg-primary-100"
-        )}
-        aria-label={isFavorite ? '從收藏移除' : '加入收藏'}
-      >
-        <Heart fill={isFavorite ? 'currentColor' : 'none'} size={24} />
-      </button>
-      <button
-        onClick={handleShare}
-        className="w-14 h-14 rounded-full bg-white dark:bg-primary-700 text-primary-800 dark:text-primary-200 shadow-lg flex items-center justify-center hover:bg-primary-100 transition-colors"
-        aria-label="分享"
-      >
-        <Share2 size={24} />
-      </button>
-       <a
-        href="https://www.google.com/maps/place/臺北市立建國高級中學" // 可替換成特定社辦的地圖連結
-        target="_blank"
-        rel="noopener noreferrer"
-        className="w-14 h-14 rounded-full bg-white dark:bg-primary-700 text-primary-800 dark:text-primary-200 shadow-lg flex items-center justify-center hover:bg-primary-100 transition-colors"
-        aria-label="地圖位置"
-      >
-        <MapPin size={24} />
-      </a>
-    </div>
-  );
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+            } catch (err) {
+                console.error("Share failed:", err);
+            }
+        } else {
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+        }
+    };
+
+    return (
+        <div className="fixed bottom-4 right-2 sm:right-[5%] sm:top-[5.5rem] z-40 flex flex-col gap-2">
+            <button
+                onClick={handleToggleFavorite}
+                disabled={!isClient}
+
+                className={`w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center hover:bg-accent-200/70 transition-colors ${isFavorite ? "text-accent-500" : "text-white"}`}
+                aria-label={isFavorite ? '取消收藏' : '加入收藏'}
+            >
+                <Star size={20} fill={isFavorite ? 'currentColor' : 'none'} />
+            </button>
+
+            <button
+                onClick={handleShare}
+                className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center hover:bg-accent-200/70 transition-colors text-white"
+                aria-label="分享"
+            >
+                <Share2 size={24} />
+            </button>
+            {attendsExpo &&
+                <a
+                    href={`/map?club=${clubCode}`}
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center hover:bg-accent-200/70 transition-colors text-white"
+                    aria-label="地圖位置"
+                >
+                    <MapPin size={24} />
+                </a>
+            }
+        </div>
+    );
 }

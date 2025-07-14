@@ -8,7 +8,7 @@ import type { PanzoomObject } from '@panzoom/panzoom';
 
 import MapSVG from '@assets/mapppp.svg?react';
 import FuzzySearch from '@/components/ui/inputs/FuzzySearch';
-import ClubInfoCard from '@/components/ui/cards/ClubInfoCardForMap'
+import ClubInfoCard from '@/components/ui/cards/ClubInfoCard'
 import type { ClubInfo } from '@/types/club';
 
 
@@ -58,6 +58,16 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
             panzoomInstanceRef.current = panzoomInstance;
 
             setTimeout(() => {
+                const params = new URLSearchParams(window.location.search);
+                const clubCode = params.get("club");
+                if (clubCode) {
+                    const mapId = clubs.find(c => c.clubCode === clubCode)?.mapId;
+                    if (mapId) {
+                        setSelectedClubId(mapId);
+                        zoomToClub(mapId);
+                        return;
+                    }
+                }
                 panzoomInstance.zoom(2.5, { animate: true, duration: 1000 })
                 panzoomInstance.pan(70, 20, { animate: true, duration: 1000 })
             }, 100);
@@ -128,7 +138,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                     });
                 }
             });
-            console.log("重渲染標籤")
+
             setClubLabels(labels);
 
             return () => {
@@ -175,6 +185,14 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         zoomToClub(club.mapId)
         setSelectedClubId(club.mapId);
     };
+
+    useEffect(() => {
+        if (selectedClubInfo) {
+            const url = new URL(window.location.href);
+            url.searchParams.set("club", selectedClubInfo.clubCode);
+            window.history.replaceState({}, '', url.toString());
+        }
+    }, [selectedClubInfo]);
 
     const handleRotate = () => {
         const panzoom = panzoomInstanceRef.current;

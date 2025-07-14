@@ -126,7 +126,7 @@ const { club } = Astro.props;
 
   {
     club.activities.length !== 0 && (
-      <InfoRow title="主要活動">
+      <InfoRow title="活動">
         <CalendarDays slot="icon" />
         <p slot="content">{club.activities.join("、")}</p>
       </InfoRow>
