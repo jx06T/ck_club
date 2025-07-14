@@ -119,7 +119,7 @@ function News({ id }: Props) {
             </h1>
 
             <div className="rounded-md /bg-primary-50/50 overflow-hidden ">
-                <div className="px-4 md:px-6 py-4 border-b border-accent-400">
+                <div className="px-4 md:px-6 py-4 border-b border-accent-600">
                     <div className="grid grid-cols-[2.4fr_1.2fr_1fr] items-center text-base font-semibold text-primary-700 ">
                         <span >內容</span>
                         <span >社團</span>
