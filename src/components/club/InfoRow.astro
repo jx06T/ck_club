@@ -1,0 +1,19 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<div class="flex items-start gap-2 md:gap-4 py-2.5">
+  <div class="flex-shrink-0 w-6 h-6 text-accent-600 dark:text-accent-400">
+    <!-- Icon 將會被放入這個插槽 -->
+    <slot name="icon" />
+  </div>
+  <div class="flex-grow">
+    <h3 class="font-semibold text-primary-800">{title}</h3>
+    <div class="prose prose-sm text-primary-900 max-w-none mt-1">
+      <slot name="content" />
+    </div>
+  </div>
+</div>

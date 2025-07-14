@@ -13,7 +13,8 @@ const footerLinks = [
     links: [
       { name: "關於此網站", url: "/about" },
       { name: "近期活動", url: "/events" },
-      { name: "聯絡我們", url: "/contact" },
+      // { name: "聯絡我們", url: "/contact" },
+      { name: "版權聲明", url: "/copyright" },
       { name: "隱私權政策", url: "/privacy" },
       // { name: "開發者頁面", url: "/dev" },
     ],

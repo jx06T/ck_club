@@ -58,15 +58,18 @@
 
   /* 品牌陰影 */
   --shadow-brand-sm: 0 1px 2px 0 rgba(45, 50, 80, 0.05);
-  --shadow-brand: 0 1px 3px 0 rgba(45, 50, 80, 0.1),
-    0 1px 2px 0 rgba(45, 50, 80, 0.06);
-  --shadow-brand-md: 0 4px 6px -1px rgba(45, 50, 80, 0.1),
-    0 2px 4px -1px rgba(45, 50, 80, 0.06);
-  --shadow-brand-lg: 0 10px 15px -3px rgba(45, 50, 80, 0.1),
+  --shadow-brand:
+    0 1px 3px 0 rgba(45, 50, 80, 0.1), 0 1px 2px 0 rgba(45, 50, 80, 0.06);
+  --shadow-brand-md:
+    0 4px 6px -1px rgba(45, 50, 80, 0.1), 0 2px 4px -1px rgba(45, 50, 80, 0.06);
+  --shadow-brand-lg:
+    0 10px 15px -3px rgba(45, 50, 80, 0.1),
     0 4px 6px -2px rgba(45, 50, 80, 0.05);
-  --shadow-brand-xl: 0 20px 25px -5px rgba(45, 50, 80, 0.1),
+  --shadow-brand-xl:
+    0 20px 25px -5px rgba(45, 50, 80, 0.1),
     0 10px 10px -5px rgba(45, 50, 80, 0.04);
-  --shadow-accent: 0 4px 6px -1px rgba(248, 177, 121, 0.2),
+  --shadow-accent:
+    0 4px 6px -1px rgba(248, 177, 121, 0.2),
     0 2px 4px -1px rgba(248, 177, 121, 0.1);
 
   /* 背景漸變 */
@@ -143,15 +146,20 @@
 
     /* 品牌陰影（微調透明度，增加深度） */
     --shadow-brand-sm: 0 1px 2px 0 rgba(240, 240, 240, 0.05);
-    --shadow-brand: 0 1px 3px 0 rgba(240, 240, 240, 0.1),
+    --shadow-brand:
+      0 1px 3px 0 rgba(240, 240, 240, 0.1),
       0 1px 2px 0 rgba(240, 240, 240, 0.06);
-    --shadow-brand-md: 0 4px 6px -1px rgba(240, 240, 240, 0.1),
+    --shadow-brand-md:
+      0 4px 6px -1px rgba(240, 240, 240, 0.1),
       0 2px 4px -1px rgba(240, 240, 240, 0.06);
-    --shadow-brand-lg: 0 10px 15px -3px rgba(240, 240, 240, 0.1),
+    --shadow-brand-lg:
+      0 10px 15px -3px rgba(240, 240, 240, 0.1),
       0 4px 6px -2px rgba(240, 240, 240, 0.05);
-    --shadow-brand-xl: 0 20px 25px -5px rgba(240, 240, 240, 0.1),
+    --shadow-brand-xl:
+      0 20px 25px -5px rgba(240, 240, 240, 0.1),
       0 10px 10px -5px rgba(240, 240, 240, 0.04);
-    --shadow-accent: 0 4px 6px -1px rgba(255, 180, 130, 0.2),
+    --shadow-accent:
+      0 4px 6px -1px rgba(255, 180, 130, 0.2),
       0 2px 4px -1px rgba(255, 180, 130, 0.1);
 
     /* 背景漸變（反轉/調暗漸層） */
@@ -185,9 +193,99 @@
   .dark .theme-dark-only {
     display: block;
   }
+  .prose h1 {
+    @apply text-3xl;
+  }
+  .prose :is(h1, h2, h3, h4, h5, h6) {
+    @apply text-primary-900;
+  }
 }
+/* ================================================== */
 
 section {
   /* background-color: #ff0000 !important;
   border: solid 2px white; */
+}
+
+/* ================================================== */
+.my-masonry-grid {
+  display: flex;
+  margin-left: -1.5rem; /* gutter size offset (建議與下面的 padding-left 相同) */
+  width: auto;
+}
+
+.my-masonry-grid_column {
+  padding-left: 1.5rem; /* gutter size (欄間距) */
+  background-clip: padding-box;
+}
+
+/* 這是針對瀑布流中每個元素的樣式 */
+.my-masonry-grid_column > div {
+  margin-bottom: 1.5rem;
+}
+
+/* ================================================== */
+
+.tab-active {
+  @apply dark:border-accent-400 dark:text-accent-400 border-accent-800 text-accent-800 
+         dark:hover:text-accent-500 hover:text-accent-700;
+}
+
+/* ================================================== */
+.loader {
+  width: 45px;
+  aspect-ratio: 1;
+  --c: no-repeat
+    linear-gradient(
+      var(--color-primary-700) calc(50% - 10px),
+      #0000 0 calc(50% + 10px),
+      var(--color-primary-700) 0
+    );
+  background:
+    var(--c) 0% 100%,
+    var(--c) 50% 100%,
+    var(--c) 100% 100%;
+  background-size: 20% calc(200% + 20px);
+  animation: l4 1s infinite linear;
+}
+
+@keyframes l4 {
+  33% {
+    background-position:
+      0% 50%,
+      50% 100%,
+      100% 100%;
+  }
+  50% {
+    background-position:
+      0% 0%,
+      50% 50%,
+      100% 100%;
+  }
+  66% {
+    background-position:
+      0% 0%,
+      50% 0%,
+      100% 50%;
+  }
+  100% {
+    background-position:
+      0% 0%,
+      50% 0%,
+      100% 0%;
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+mark {
+  @apply bg-accent-400 text-primary-900;
+  padding: 0 2px;
+  border-radius: 3px;
 }

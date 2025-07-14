@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { SquareArrowOutUpRight, ChevronDown, Tag } from 'lucide-react';
-import type { ClubInfo } from '@types/club';
+import type { ClubInfo } from '@/types/club';
 
 interface ClubInfoCardProps {
     clubInfo: ClubInfo;
@@ -17,7 +17,7 @@ function ClubInfoCard({
     className = ''
 }: ClubInfoCardProps) {
     const [tagsExpanded, setTagsExpanded] = useState(false);
-    const { mapId, name, summary, slug, tags, clubId } = clubInfo;
+    const { mapId, name, summary, slug, tags, clubCode } = clubInfo;
 
     return (
         <div className={`p-0 flex flex-col gap-2 ${className}`}>
@@ -27,10 +27,10 @@ function ClubInfoCard({
                 >
                     {name}
                 </h4>
-                <span className="text-sm w-10 h-10 text-center pt-2.5  rounded-full bg-primary-50 text-primary-800">{clubId}</span>
+                <span className="text-sm w-10 h-10 text-center pt-2.5  rounded-full bg-primary-50 text-primary-800">{clubCode}</span>
             </div>
 
-            <p className="text-sm text-gray-800 flex-grow">
+            <p className="text-sm text-gray-800 flex-grow max-h-20 md:max-h-96 overflow-y-scroll no-scrollbar">
                 {summary}
             </p>
 
@@ -72,7 +72,7 @@ function ClubInfoCard({
                 href={`/clubs/${slug}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-auto pt-2 text-primary-600 font-semibold hover:underline text-base flex items-center gap-1"
+                className=" -mt-1 pt-2 text-primary-600 font-semibold hover:underline text-base flex items-center gap-1"
             >
                 <span>查看詳情</span>
                 <SquareArrowOutUpRight size={16} />

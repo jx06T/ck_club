@@ -8,7 +8,8 @@ const { frontmatter } = Astro.props;
   title={frontmatter.title + " | CKClubHub"}
   description={frontmatter.description}
 >
-  <div class="mt-12 sm:mt-12 md:mt-0">
+  <article class="max-w-3xl mx-auto mb-36">
+
     <h1 class="mb-2 text-4xl font-bold">{frontmatter.title}</h1>
     {
       frontmatter.date && (
@@ -18,8 +19,8 @@ const { frontmatter } = Astro.props;
       )
     }
     <hr class="text-accent-400 border mb-10" />
-  </div>
-  <article class="prose prose-sm dark:prose-invert mb-20">
-    <slot />
+    <div class="prose prose-base dark:prose-invert mb-20">
+      <slot />
+    </div>
   </article>
 </Layout>

@@ -191,7 +191,7 @@ function EventCarousel({ id, slides }: Props) {
                                                     <a
                                                         href={`/events/${slide.slug}`}
                                                         target="_blank"
-                                                        className="inline-flex items-center text-accent-300 hover:text-accent-400 transition-colors text-xs md:text-base lg:text-lg "
+                                                        className="inline-flex items-center text-accent-500 hover:text-accent-400 dark:text-accent-500 dark:hover:text-accent-600 transition-colors text-xs md:text-base lg:text-lg "
                                                     >
                                                         了解更多 <SquareArrowOutUpRight className="ml-1 w-4 inline-block mt-0.5" />
                                                     </a>

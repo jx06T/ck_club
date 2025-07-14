@@ -12,6 +12,7 @@ const defaultProps = {
   structuredData: SEO.structuredData,
   customDescription: null,
   customOgTitle: null,
+  customOgImage: null,
 };
 
 // Extract props with default values assigned from defaultProps. Values can be overridden when the component is used.
@@ -22,6 +23,7 @@ const {
   structuredData = defaultProps.structuredData,
   customDescription = defaultProps.customDescription,
   customOgTitle = defaultProps.customOgTitle,
+  customOgImage = defaultProps.customOgImage,
 } = Astro.props;
 
 // Use custom description if provided, otherwise use default meta
@@ -29,17 +31,21 @@ const description = customDescription || meta;
 // Use custom OG title if provided, otherwise use default OG title
 const ogTitle = customOgTitle || OG.title;
 const ogDescription = customDescription || OG.description;
+const imageSource = customOgImage || OG.image;
 
 // Define the metadata for your website and individual pages
 const URL = `${Astro.site}`; // Set the website URL in astro.config.mjs
 const author = SITE.author;
 const canonical = Astro.url.href;
 const basePath = Astro.url.pathname;
+
 const socialImageRes = await getImage({
-  src: OG.image,
+  src: imageSource,
   width: 1200,
   height: 600,
+  fit: "cover",
 });
+
 const socialImage = Astro.url.origin + socialImageRes.src; // Get the full URL of the image (https://stackoverflow.com/a/9858694)
 
 const languages: { [key: string]: string } = {
@@ -90,13 +96,16 @@ const appleTouchIcon = await getImage({
   structuredData && (
     <script
       type="application/ld+json"
+      is:inline
       set:html={JSON.stringify(structuredData)}
     />
   )
 }
 {/* Define the character set, description, author, and viewport settings */}
 <meta charset="utf-8" />
-<meta content={description} name="description" />
+
+<meta name="description" content={description} />
+
 <meta name="web_author" content={author} />
 <meta
   name="viewport"

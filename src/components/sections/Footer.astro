@@ -21,7 +21,7 @@ import { MdiGithub, MdiInstagram } from "@components/ui/Icons.tsx";
           <div class="col-span-1">
             <h3 class=" text-neutral-900 font-bold"> {section.section}</h3>
             <ul class="mt-3 grid space-y-3">
-              {section.links.map((link, index) => (
+              {section.links.map((link, _) => (
                 <li>
                   <a
                     href={link.url}

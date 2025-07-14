@@ -17,9 +17,7 @@ import { Image } from "astro:assets";
   data-tabs-container
   class="min-h-[26rem] pt-6 pb-10 md:pt-12 md:pb-14 px-4 sm:px-6 lg:px-8"
 >
-  <div
-    class="grid md:grid-cols-[1.4fr_1fr] gap-10 h-full min-h-[26rem]"
-  >
+  <div class="grid md:grid-cols-[1.4fr_1fr] gap-10 h-full min-h-[26rem]">
     <div class="relative hidden md:block">
       {
         tabs.map((tab, index) => (
@@ -56,10 +54,7 @@ import { Image } from "astro:assets";
               class:list={[
                 "px-4 py-2 w-[33.4%] -mb-px font-semibold border-b-2 transition-colors text-lg",
                 {
-                  "border-accent-400 text-accent-400 hover:text-accent-500":
-                    index === 0,
-                },
-                {
+                  "tab-active": index === 0,
                   "border-transparent text-primary-800 hover:text-primary-600":
                     index !== 0,
                 },
@@ -115,12 +110,7 @@ import { Image } from "astro:assets";
 
           buttons.forEach((btn) => {
             const btnIndex = btn.getAttribute("data-tab-button");
-            btn.classList.toggle("border-accent-400", btnIndex === tabIndex);
-            btn.classList.toggle("text-accent-400", btnIndex === tabIndex);
-            btn.classList.toggle(
-              "hover:text-accent-500",
-              btnIndex === tabIndex
-            );
+            btn.classList.toggle("tab-active", btnIndex === tabIndex);
             btn.classList.toggle("border-transparent", btnIndex !== tabIndex);
             btn.classList.toggle("text-primary-800", btnIndex !== tabIndex);
             btn.classList.toggle(

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
 import { RotateCw, Maximize, Minimize, SquareArrowOutUpRight } from 'lucide-react';
 
@@ -8,8 +8,8 @@ import type { PanzoomObject } from '@panzoom/panzoom';
 
 import MapSVG from '@assets/mapppp.svg?react';
 import FuzzySearch from '@/components/ui/inputs/FuzzySearch';
-import ClubInfoCard from '@components/ui/cards/ClubInfoCard'
-import type { ClubInfo } from '@types/club';
+import ClubInfoCard from '@/components/ui/cards/ClubInfoCard'
+import type { ClubInfo } from '@/types/club';
 
 
 interface ClubLabel {
@@ -31,14 +31,19 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
     const [rotate, setRotate] = useState<number>(0);
     const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
 
-    const clubsDataMap = useRef(new Map(clubs.map(club => [club.mapId, club])));
+    // const clubsDataMap = useRef(new Map(clubs.map(club => [club.mapId, club])));
     const panzoomInstanceRef = useRef<PanzoomObject | null>(null);
     const interactiveMapSvgRef = useRef<SVGSVGElement | null>(null);
     const mapDivRef = useRef<HTMLDivElement | null>(null);
     const mapViewportRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
-        clubsDataMap.current = new Map(clubs.map(club => [club.mapId, club]));
+    // useEffect(() => {
+    //     clubsDataMap.current = new Map(clubs.map(club => [club.mapId, club]));
+    // }, [clubs]);
+
+    const clubsDataMap = useMemo(() => {
+        // console.log("重新計算 clubsDataMap...");
+        return new Map(clubs.map(club => [club.mapId, club]));
     }, [clubs]);
 
     const containerRef = useCallback((node: HTMLDivElement | null) => {
@@ -53,6 +58,16 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
             panzoomInstanceRef.current = panzoomInstance;
 
             setTimeout(() => {
+                const params = new URLSearchParams(window.location.search);
+                const clubCode = params.get("club");
+                if (clubCode) {
+                    const mapId = clubs.find(c => c.clubCode === clubCode)?.mapId;
+                    if (mapId) {
+                        setSelectedClubId(mapId);
+                        zoomToClub(mapId);
+                        return;
+                    }
+                }
                 panzoomInstance.zoom(2.5, { animate: true, duration: 1000 })
                 panzoomInstance.pan(70, 20, { animate: true, duration: 1000 })
             }, 100);
@@ -108,7 +123,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                 // path.addEventListener("mouseover", handlePathClick);
 
                 const clubId = path.id;
-                const clubData = clubsDataMap.current.get(clubId);
+                const clubData = clubsDataMap.get(clubId);
 
                 if (clubData) {
                     const bbox = path.getBBox();
@@ -133,7 +148,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                 });
             };
         }
-    }, []);
+    }, [clubs]);
 
     useEffect(() => {
         const svgRoot = interactiveMapSvgRef.current;
@@ -148,9 +163,9 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
             if (selectedPath) {
                 selectedPath.classList.add('selected');
             }
-            setSelectedClubInfo(clubsDataMap.current.get(selectedClubId) || null)
+            setSelectedClubInfo(clubsDataMap.get(selectedClubId) || null)
         }
-    }, [selectedClubId]);
+    }, [selectedClubId, clubsDataMap]);
 
 
     function toggleFullscreen() {
@@ -170,6 +185,14 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         zoomToClub(club.mapId)
         setSelectedClubId(club.mapId);
     };
+
+    useEffect(() => {
+        if (selectedClubInfo) {
+            const url = new URL(window.location.href);
+            url.searchParams.set("club", selectedClubInfo.clubCode);
+            window.history.replaceState({}, '', url.toString());
+        }
+    }, [selectedClubInfo]);
 
     const handleRotate = () => {
         const panzoom = panzoomInstanceRef.current;
@@ -301,10 +324,10 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                         </svg>
                     </div>
                 </div>
-                <div className={`absolute ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "}  right-4 top-3 md:right-6 md:top-5 w-72 md:w-[40rem] max-w-[60%] flex flex-col md:flex-row gap-2 md:gap-4 items-start pointer-events-none`}>
+                <div className={`absolute ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "}  right-4 top-3 md:right-6 md:top-5 w-72 md:w-[40rem] max-w-[70%] flex flex-col md:flex-row gap-2 md:gap-4 items-start pointer-events-none`}>
                     <FuzzySearch<ClubInfo>
                         items={clubs}
-                        searchKeys={['name', 'summary', 'tags', 'clubId']}
+                        searchKeys={['name', 'summary', 'tags', 'clubCode']}
                         onSelect={handleSelectClubFromSearch}
                         placeholder="搜尋社團名稱或簡介..."
                         className="  md:flex-1 pointer-events-auto"
