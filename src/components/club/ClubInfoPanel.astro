@@ -1,0 +1,135 @@
+---
+import type { CollectionEntry } from "astro:content";
+import InfoRow from "./InfoRow.astro";
+import { MdiInstagram } from "@components/ui/Icons";
+// 從 astro-lucide 靜態引入所有需要的 Icon
+import {
+  Users,
+  Tag,
+  Link as LinkIcon,
+  Award,
+  CalendarDays,
+  Handshake,
+  ExternalLink,
+  TableOfContents,
+} from "lucide-react";
+
+interface Props {
+  club: CollectionEntry<"clubs">["data"];
+}
+const { club } = Astro.props;
+---
+
+<div class="rounded-xl p-4 md:p-6 pb-2 border border-accent-600 mb-10">
+  <div class="w-fit">
+    <h2 class="text-2xl font-bold mb-2 text-primary-950 w-fit px-2">
+      {club.clubCode} - {club.name}
+    </h2>
+    <hr class="mt-1 outline-0 border-accent-600" />
+  </div>
+
+  <InfoRow title="簡介">
+    <TableOfContents slot="icon" />
+    <p slot="content">
+      {club.summary}
+    </p>
+  </InfoRow>
+
+  <InfoRow title="標籤">
+    <Tag slot="icon" />
+    <div slot="content" class="flex flex-wrap gap-1.5 pt-1">
+      {
+        club.tags.map((tag) => (
+          <span class="text-xs border border-accent-600 text-neutral-800 px-2 py-1 rounded-full">
+            {tag}
+          </span>
+        ))
+      }
+    </div>
+  </InfoRow>
+
+  <!-- <hr class="outline-0 border-accent-600" /> -->
+
+  <div class="grid grid-cols-2">
+    <InfoRow title="人數">
+      <Users slot="icon" />
+      <p slot="content">
+        預計 {
+          club.members.previousYear.includes("以上")
+            ? "＞ " + club.members.previousYear.slice(0, 2)
+            : club.members.previousYear
+        } 人
+      </p>
+    </InfoRow>
+    {
+      club.acceptsUnofficial && (
+        <InfoRow title="可地社">
+          <Handshake slot="icon" />
+        </InfoRow>
+      )
+    }
+  </div>
+
+  <!-- <hr class="outline-0 border-accent-600" /> -->
+  <div class="grid grid-cols-2">
+    <InfoRow title="幹部">
+      <Award slot="icon" />
+      <ul slot="content" class="-ml-7 !-space-y-0">
+        {
+          club.officers.map((officer) => (
+            <li class=" marker:text-transparent">
+              <strong class=" text-primary-900">{officer.title}：</strong>
+              {officer.name}
+              {officer.contact && !officer.contact.includes(":") && (
+                <a
+                  class=" inline-block "
+                  href={
+                    "https://www.instagram.com/" +
+                    officer.contact.replaceAll("@", "")
+                  }
+                  target="_blank"
+                >
+                  <ExternalLink className=" w-4 inline-block ml-0.5  text-accent-800" />
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </InfoRow>
+
+    <InfoRow title="外部連結">
+      <LinkIcon slot="icon" />
+      <ul slot="content" class="-ml-7 !-space-y-0">
+        {
+          club.links.map((link) => (
+            <li class=" marker:text-transparent">
+              {link.platform == "Instagram" && (
+                <MdiInstagram className=" inline-block w-4 h-4" />
+              )}
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-accent-800 hover:underline dark:text-accent-300"
+              >
+                {link.handle}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </InfoRow>
+  </div>
+
+  <!-- <hr class="outline-0 border-accent-600" /> -->
+
+  {
+    club.activities.length !== 0 && (
+      <InfoRow title="主要活動">
+        <CalendarDays slot="icon" />
+        <p slot="content">{club.activities.join("、")}</p>
+      </InfoRow>
+    )
+  }
+</div>

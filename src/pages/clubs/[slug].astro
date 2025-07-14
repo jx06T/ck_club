@@ -1,9 +1,12 @@
 ---
 import { getCollection, getEntry, type CollectionEntry } from "astro:content";
-import Layout from "../../layouts/Layout.astro"; // 假設你的 Meta 組件在 Layout 裡
+import Layout from "../../layouts/ClubLayout.astro"; // 假設你的 Meta 組件在 Layout 裡
 import { Image } from "astro:assets";
 
-// getStaticPaths 保持不變
+import ClubHeader from "@/components/club/ClubHeader.astro";
+import StickyActions from "@/components/club/StickyActions.tsx";
+import ClubInfoPanel from "@/components/club/ClubInfoPanel.astro";
+
 export async function getStaticPaths() {
   const clubs = await getCollection("clubs");
   return clubs.map((post) => ({
@@ -30,21 +33,16 @@ const { data } = post;
   customDescription={data.summary}
   customOgImage={data.profileImage}
 >
-  <article class="max-w-3xl mx-auto py-8 px-4 sm:py-12">
-    <div class="cursor-pointer flex justify-between items-center">
-      <h1 class="text-4xl font-bold mb-2 text-primary-950">
-        {data.name}
-      </h1>
-      <span
-        class="text-sm w-10 h-10 text-center pt-2.5 rounded-full bg-accent-300 text-primary-950"
-      >
-        {data.clubCode}
-      </span>
-    </div>
+  <ClubHeader club={data} />
+
+  <article class="max-w-3xl mx-auto pb-8 py-4 px-4 sm:px-6 lg:px-16">
+    <!-- <StickyActions client:load clubCode={data.clubCode} clubName={data.name} /> -->
+
+    <ClubInfoPanel club={data} />
 
     <main
       data-pagefind-body
-      class="mt-8 my-10 prose prose-base dark:prose-invert mb-20 max-w-none"
+      class="mt-6  prose prose-base dark:prose-invert mb-20 max-w-none  py-8 px-2 sm:px-4 md:px-6 lg:px-[5%]"
     >
       <Content />
     </main>
@@ -72,9 +70,12 @@ const { data } = post;
 
     {data.tags.map((tag) => <span data-pagefind-filter="tag">{tag}</span>)}
 
-    <!-- 2. 為「人數」建立篩選器 -->
-    <!-- Pagefind 會將 "11～20" 這個範圍加入名為 'members' 的篩選器中 -->
-    <p data-pagefind-filter={`members:${data.members.current}`}></p>
+    <p data-pagefind-filter={`members`}>${data.members.previousYear}</p>
+    
+    {data.attendsExpo && <p data-pagefind-filter={`other`}>社團博覽會攤位</p>}
+    {data.hasClubStamp && <p data-pagefind-filter={`other`}>社團博覽會印章</p>}
+    {data.acceptsUnofficial && <p data-pagefind-filter={`other`}>可地社</p>}
+
   </div>
 
   <div data-pagefind-ignore class="hidden">

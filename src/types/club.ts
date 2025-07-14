@@ -1,3 +1,4 @@
+import type { GetImageResult } from 'astro';
 export interface ClubInfo {
     mapId: string;
     clubCode: string;
@@ -13,8 +14,8 @@ export type Club = {
     name: string;
     summary: string;
 
-    profileImage: ImageMetadata;
-    coverImage: ImageMetadata;
+    profileImage: ImageMetadata | GetImageResult;
+    coverImage: ImageMetadata | GetImageResult;
 
     members: {
         current: string;
@@ -47,8 +48,5 @@ export type Club = {
         url: string;
     }[];
 
-    mapId?: string;
-
-    // 👇 加上 slug
     slug: string;
 };

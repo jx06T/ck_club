@@ -48,7 +48,7 @@ const clubsCollection = defineCollection({
         hasClubStamp: z.boolean(),
         acceptsUnofficial: z.boolean(),
 
-        // --- 聯絡資訊 ---
+        // --- 幹部 ---
         officers: z.array(
             z.object({
                 title: z.string(),

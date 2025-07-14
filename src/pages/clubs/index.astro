@@ -1,18 +1,28 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-
+import { getImage } from "astro:assets";
 import SearchPage from "@/components/SearchPage";
 
 const clubs = await getCollection("clubs");
-const allClubs = clubs.map((club) => ({
-  ...club.data,
-  slug: club.slug,
-}));
+const allClubs = await Promise.all(
+  clubs.map(async (club) => ({
+    ...club.data,
+    slug: club.slug,
+    coverImage: await getImage({
+      src: club.data.coverImage,
+      format: "avif",
+    }),
+    profileImage: await getImage({
+      src: club.data.profileImage,
+      format: "avif",
+    }),
+  }))
+);
 ---
 
 <Layout title="社團資料庫 | CKClubHub" description="探索所有社團！">
-  <div class="max-w-6xl mx-auto px-4 mb-20 ">
+  <div class="max-w-6xl mx-auto px-4">
     <div class="text-center mb-16">
       <h1 class="text-4xl sm:text-5xl font-bold text-primary-800 mb-4">
         社團資料庫

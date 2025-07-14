@@ -118,8 +118,8 @@ function News({ id }: Props) {
                 即時訊息
             </h1>
 
-            <div className="rounded-md bg-primary-50 overflow-hidden">
-                <div className="px-4 md:px-6 py-4 border-b-4 border-primary-100">
+            <div className="rounded-md /bg-primary-50/50 overflow-hidden ">
+                <div className="px-4 md:px-6 py-4 border-b border-accent-400">
                     <div className="grid grid-cols-[2.4fr_1.2fr_1fr] items-center text-base font-semibold text-primary-700 ">
                         <span >內容</span>
                         <span >社團</span>
@@ -139,7 +139,7 @@ function News({ id }: Props) {
                                     href={news.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 text-accent-400 hover:text-accent-300 text-base mt-1 hover:underline"
+                                    className="inline-flex items-center gap-1 text-accent-600 hover:text-accent-500 text-base mt-1 hover:underline"
                                 >
                                     <ExternalLink className="w-3 h-3" />
                                     詳細訊息
