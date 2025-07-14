@@ -42,8 +42,12 @@ export interface PagefindSearchResults {
   };
 }
 
+export type PagefindFilterCounts = Record<string, number>;
+
 // Pagefind 核心 API 的介面
 export interface PagefindAPI {
   search(term: string | null, options?: PagefindSearchOptions): Promise<PagefindSearchResults>;
   options(options: any): Promise<void>;
+  filters(): Promise<Record<string, PagefindFilterCounts>>;
+
 }

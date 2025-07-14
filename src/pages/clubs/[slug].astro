@@ -55,26 +55,26 @@ const { data } = post;
 
     <p data-pagefind-weight="8">{data.clubCode}</p>
 
-    <div data-pagefind-weight="6">
+    <p data-pagefind-weight="6">
       {data.tags.join(" ")}
-    </div>
+    </p>
 
     <p data-pagefind-weight="5">{data.summary}</p>
 
-    <div data-pagefind-weight="3">
+    <p data-pagefind-weight="3">
       {data.activities.join(" ")}
       {data.workshops.description}
-    </div>
+    </p>
 
-    <div data-pagefind-weight="2">
+    <p data-pagefind-weight="2">
       {data.officers.map((officer) => officer.name).join(" ")}
-    </div>
+    </p>
 
-    {data.tags.map((tag) => <div data-pagefind-filter="tag:{tag}" />)}
+    {data.tags.map((tag) => <span data-pagefind-filter="tag">{tag}</span>)}
 
     <!-- 2. 為「人數」建立篩選器 -->
     <!-- Pagefind 會將 "11～20" 這個範圍加入名為 'members' 的篩選器中 -->
-    <div data-pagefind-filter={`members:${data.members.current}`}></div>
+    <p data-pagefind-filter={`members:${data.members.current}`}></p>
   </div>
 
   <div data-pagefind-ignore class="hidden">

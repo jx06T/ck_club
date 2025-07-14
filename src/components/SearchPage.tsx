@@ -7,12 +7,13 @@ import Masonry from 'react-masonry-css';
 
 import { X, Filter, ChevronDown } from 'lucide-react';
 
-import type { PagefindAPI, PagefindSearchResults, PagefindResult, PagefindDocument } from '@/types/pagefind';
+import type { PagefindAPI, PagefindSearchResults, PagefindDocument } from '@/types/pagefind';
 
 
 import { useLocalStorage } from '@/scripts/useLocalStorage';
 import { clsx } from 'clsx';
-import ClubCard from '@components/ui/cards/ClubCardForSearch';
+
+import ClubCard from '@/components/ui/cards/ClubCard';
 
 interface SearchPageProps {
     allClubs: ClubData[];
@@ -21,12 +22,24 @@ interface SearchPageProps {
 export default function SearchPage({ allClubs }: SearchPageProps) {
     const [searchResults, setSearchResults] = useState<ClubData[]>([]);
     const [isSearching, setIsSearching] = useState(false);
-    const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>({});
     const [searchQuery, setSearchQuery] = useState('');
-    const [viewMode, setViewMode] = useState<'all' | 'favorites'>('all');
+
+    const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>({});
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+    const [viewMode, setViewMode] = useState<'all' | 'favorites'>('all');
     const [favorites, setFavorites] = useLocalStorage<Set<string>>('favoriteClubs', new Set());
+
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
     const [selectedClub, setSelectedClub] = useState<ClubData | null>(null);
+    const [availableFilters, setAvailableFilters] = useState({
+        tags: [] as string[],
+        members: [] as string[],
+    });
 
     const pagefindApi = useRef<PagefindAPI | null>(null);
     const allClubsMap = useMemo(() =>
@@ -40,6 +53,8 @@ export default function SearchPage({ allClubs }: SearchPageProps) {
                 try {
                     // @ts-ignore
                     const pagefindModule = await import(/*@vite-ignore */ `/pagefind/pagefind.js?${Date.now()}`);
+                    pagefindModule.init();
+
                     pagefindApi.current = pagefindModule;
                 } catch (e) {
                     console.error("Failed to load Pagefind Core API:", e);
@@ -54,7 +69,7 @@ export default function SearchPage({ allClubs }: SearchPageProps) {
             const hasSearchTerm = searchQuery.trim().length > 0;
             const hasFilters = Object.values(activeFilters).some(f => f.length > 0);
 
-            if (!hasSearchTerm && !hasFilters) {
+            if (!hasSearchTerm || !hasFilters) {
                 setIsSearching(false);
                 setSearchResults([]);
                 return;
@@ -64,8 +79,7 @@ export default function SearchPage({ allClubs }: SearchPageProps) {
 
             if (!pagefindApi.current) return;
 
-            // `searchResult` 現在是 PagefindSearchResults 類型
-            const searchResult: PagefindSearchResults = await pagefindApi.current.search(searchQuery, { filters: activeFilters });
+            const searchResult: PagefindSearchResults = await pagefindApi.current.search((hasSearchTerm ? searchQuery : null), { filters: activeFilters });
 
             console.log("Raw search result:", searchResult);
 
@@ -78,12 +92,10 @@ export default function SearchPage({ allClubs }: SearchPageProps) {
 
                 console.log("Detailed results with meta:", detailedResults);
 
-                // 2. 從詳細資料中提取 clubCode
                 const clubCodes = detailedResults.map(doc => doc.meta.clubCode);
 
-                // 3. 用 clubCode 找到完整的 ClubData
                 const clubsFromSearch = clubCodes
-                    .filter((code): code is string => !!code) // 過濾掉 undefined 的 code
+                    .filter((code): code is string => !!code)
                     .map(code => allClubsMap.get(code))
                     .filter((c): c is Club => !!c);
 
@@ -111,18 +123,25 @@ export default function SearchPage({ allClubs }: SearchPageProps) {
         return isSearching ? searchResults : allClubs;
     }, [viewMode, favorites, isSearching, searchResults, allClubs]);
 
-    const availableFilters = useMemo(() => {
-        const tags = new Set<string>();
-        const members = new Set<string>();
-        allClubs.forEach(club => {
-            club.tags.forEach(tag => tags.add(tag));
-            if (club.members?.current) members.add(club.members.current);
-        });
-        return {
-            tags: Array.from(tags).sort(),
-            members: Array.from(members).sort((a, b) => parseInt(a) - parseInt(b)),
+    useEffect(() => {
+        const updateFilters = async () => {
+            if (!pagefindApi.current) return;
+
+            try {
+                const filters = await pagefindApi.current.filters();
+                console.log(filters)
+
+                const tags = Object.keys(filters.tag || {});
+                const members = Object.keys(filters.members || {}).sort((a, b) => parseInt(a) - parseInt(b));
+
+                setAvailableFilters({ tags, members });
+            } catch (e) {
+                console.error("Failed to fetch filters from Pagefind:", e);
+            }
         };
-    }, [allClubs]);
+
+        updateFilters();
+    }, [pagefindApi.current, allClubs]);
 
     const handleToggleFavorite = useCallback((id: string) => {
         setFavorites(prev => {
@@ -162,7 +181,21 @@ export default function SearchPage({ allClubs }: SearchPageProps) {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <header className="mb-8">
+            <div className="mb-8">
+                <div className=" w-full grid grid-cols-2 gap-2">
+                    <button
+                        onClick={() => setViewMode('all')}
+                        className={clsx("px-4 py-2 rounded-lg transition-colors", viewMode === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200')}
+                    >
+                        所有社團
+                    </button>
+                    <button
+                        onClick={() => setViewMode('favorites')}
+                        className={clsx("px-4 py-2 rounded-lg transition-colors", viewMode === 'favorites' ? 'bg-blue-600 text-white' : 'bg-gray-200')}
+                    >
+                        我的收藏
+                    </button>
+                </div>
                 <div className="flex flex-col sm:flex-row gap-4">
                     <input
                         type="text"
@@ -171,20 +204,7 @@ export default function SearchPage({ allClubs }: SearchPageProps) {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                     />
-                    <div className="flex-shrink-0 grid grid-cols-2 gap-2">
-                        <button
-                            onClick={() => setViewMode('all')}
-                            className={clsx("px-4 py-2 rounded-lg transition-colors", viewMode === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200')}
-                        >
-                            所有社團
-                        </button>
-                        <button
-                            onClick={() => setViewMode('favorites')}
-                            className={clsx("px-4 py-2 rounded-lg transition-colors", viewMode === 'favorites' ? 'bg-blue-600 text-white' : 'bg-gray-200')}
-                        >
-                            我的收藏
-                        </button>
-                    </div>
+
                 </div>
 
                 <div className="mt-4">
@@ -236,7 +256,7 @@ export default function SearchPage({ allClubs }: SearchPageProps) {
                         </div>
                     )}
                 </div>
-            </header>
+            </div>
 
             <main>
                 {clubsToDisplay.length > 0 ? (
@@ -249,7 +269,7 @@ export default function SearchPage({ allClubs }: SearchPageProps) {
                             <ClubCard
                                 key={club.clubCode}
                                 club={club}
-                                isFavorite={favorites.has(club.clubCode)}
+                                isFavorite={isClient ? favorites.has(club.clubCode) : false}
                                 onToggleFavorite={handleToggleFavorite}
                                 onClick={setSelectedClub}
                             />

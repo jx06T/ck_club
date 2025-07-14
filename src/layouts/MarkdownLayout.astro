@@ -8,7 +8,8 @@ const { frontmatter } = Astro.props;
   title={frontmatter.title + " | CKClubHub"}
   description={frontmatter.description}
 >
-  <article class="max-w-3xl mx-auto py-8 px-4 sm:py-12">
+  <article class="max-w-3xl mx-auto mb-36">
+
     <h1 class="mb-2 text-4xl font-bold">{frontmatter.title}</h1>
     {
       frontmatter.date && (

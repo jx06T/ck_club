@@ -2,14 +2,18 @@ import { useState, useEffect } from 'react';
 
 // T can be any type that can be JSON stringified
 export function useLocalStorage<T>(key: string, initialValue: T | (() => T)) {
+  const isClient = typeof window !== 'undefined';
+
   const [value, setValue] = useState<T>(() => {
+    if (!isClient) return initialValue;
+    
     try {
       const jsonValue = window.localStorage.getItem(key);
       if (jsonValue != null) {
         // 因為 Set 無法直接 JSON.parse，需要特殊處理
         const parsed = JSON.parse(jsonValue);
         if (Array.isArray(parsed)) {
-            return new Set(parsed) as T;
+          return new Set(parsed) as T;
         }
         return parsed;
       }
