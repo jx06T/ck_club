@@ -1,16 +1,20 @@
 ---
 import { getCollection, getEntry, type CollectionEntry } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
+import Layout from "../../layouts/ClubLayout.astro"; // 假設你的 Meta 組件在 Layout 裡
+import { Image } from "astro:assets";
+
+import ClubHeader from "@/components/club/ClubHeader.astro";
+import StickyActions from "@/components/club/StickyActions.tsx";
+import ClubInfoPanel from "@/components/club/ClubInfoPanel.astro";
 
 export async function getStaticPaths() {
   const clubs = await getCollection("clubs");
   return clubs.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.slug }, // Astro 會自動使用 id 作為 slug
   }));
 }
 
 const { slug } = Astro.params;
-
 const post: CollectionEntry<"clubs"> | undefined = await getEntry(
   "clubs",
   slug
@@ -21,25 +25,69 @@ if (post === undefined) {
 }
 
 const { Content } = await post.render();
-const { id, name, summary, tags } = post.data;
+const { data } = post;
 ---
 
-<Layout title={name + " | CKClubHub"}>
-  <article
-    class="prose prose-neutral dark:prose-invert max-w-3xl mx-auto py-8 px-4 sm:py-12"
-  >
-    <div class="cursor-pointer flex justify-between items-center">
-      <h1 class="text-4xl font-bold mb-2 !text-primary-800">
-        {name}
-      </h1>
-      <span
-        class="text-sm w-10 h-10 text-center pt-2.5 rounded-full bg-accent-300 text-primary-950"
-        >{id}</span
-      >
-    </div>
+<Layout
+  title={`${data.name} | CKClubHub`}
+  customDescription={data.summary}
+  customOgImage={data.profileImage}
+>
+  <ClubHeader club={data} />
 
-    <div class="mt-8 my-10">
+  <article class="max-w-3xl mx-auto pb-8 py-4 px-4 sm:px-6 lg:px-16">
+    <StickyActions client:load clubCode={data.clubCode} clubName={data.name} attendsExpo={data.attendsExpo}/>
+
+    <ClubInfoPanel club={data} />
+
+    <main
+      data-pagefind-body
+      class="mt-6  prose prose-base dark:prose-invert mb-20 max-w-none  py-8 px-2 sm:px-4 md:px-6 lg:px-[5%]"
+    >
       <Content />
-    </div>
+    </main>
   </article>
+
+  <div style="display: none;" data-pagefind-body>
+    <p data-pagefind-weight="10">{data.name}</p>
+
+    <p data-pagefind-weight="8">{data.clubCode}</p>
+
+    <p data-pagefind-weight="6">
+      {data.tags.join(" ")}
+    </p>
+
+    <p data-pagefind-weight="5">{data.summary}</p>
+
+    <p data-pagefind-weight="3">
+      {data.activities.join(" ")}
+      {data.workshops.description}
+    </p>
+
+    <p data-pagefind-weight="2">
+      {data.officers.map((officer) => officer.name).join(" ")}
+    </p>
+
+    {data.tags.map((tag) => <span data-pagefind-filter="tag">{tag}</span>)}
+
+    <p data-pagefind-filter={`members`}>{data.members.previousYear}</p>
+    
+    {data.attendsExpo && <p data-pagefind-filter={`other`}>社團博覽會攤位</p>}
+    {data.hasClubStamp && <p data-pagefind-filter={`other`}>社團博覽會印章</p>}
+    {data.acceptsUnofficial && <p data-pagefind-filter={`other`}>可地社</p>}
+
+  </div>
+
+  <div data-pagefind-ignore class="hidden">
+    <p data-pagefind-meta="clubCode">{post.data.clubCode}</p>
+    {
+      data.profileImage && (
+        <Image
+          data-pagefind-meta="image[src], image_alt[alt]"
+          src={data.profileImage}
+          alt={`Cover image for ${data.name}`}
+        />
+      )
+    }
+  </div>
 </Layout>
