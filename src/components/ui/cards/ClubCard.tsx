@@ -1,5 +1,6 @@
 import { Star } from 'lucide-react';
 import type { Club } from '@/types/club';
+import { motion } from 'framer-motion';
 type ClubData = Club;
 
 function ClubCard({ club, isFavorite, onToggleFavorite, onClick }: {
@@ -46,7 +47,15 @@ function ClubCard({ club, isFavorite, onToggleFavorite, onClick }: {
                 className={`absolute top-2 right-2 p-1 rounded-full bg-transparent transition-colors duration-200 hover:bg-white/10 ${isFavorite ? "text-accent-500" : "text-white"}`}
                 aria-label={isFavorite ? '取消收藏' : '加入收藏'}
             >
-                <Star size={20} fill={isFavorite ? 'currentColor' : 'none'} />
+                <motion.div
+                    animate={{
+                        scale: isFavorite ? [1, 1.5, 1] : 1,
+                        rotate: isFavorite ? [0, 10, 0] : 0
+                    }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                    <Star size={20} fill={isFavorite ? 'currentColor' : 'none'} />
+                </motion.div>
             </button>
         </div >
     )

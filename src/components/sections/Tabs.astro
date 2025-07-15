@@ -15,9 +15,9 @@ import { Image } from "astro:assets";
 
 <section
   data-tabs-container
-  class="min-h-[26rem] pt-6 pb-10 md:pt-12 md:pb-14 px-4 sm:px-6 lg:px-8"
+  class=" pt-6 /pb-6 md:pt-12 md:pb-10 px-4 sm:px-6 lg:px-8"
 >
-  <div class="grid md:grid-cols-[1.4fr_1fr] gap-10 h-full min-h-[26rem]">
+  <div class="grid md:grid-cols-[1.1fr_1fr] gap-12 lg:gap-14 xl:gap-24 h-full \min-h-[32rem]">
     <div class="relative hidden md:block">
       {
         tabs.map((tab, index) => (
@@ -32,7 +32,7 @@ import { Image } from "astro:assets";
             <Image
               src={tab.image}
               alt={tab.name}
-              class="w-full h-full object-cover rounded-lg"
+              class="w-full object-cover rounded-lg  aspect-[3.5/4] xl:aspect-[4/3.5]"
             />
           </div>
         ))
@@ -80,7 +80,7 @@ import { Image } from "astro:assets";
                 },
               ]}
             >
-              <div class="relative w-full aspect-video mb-4 md:hidden">
+              <div class="relative w-full aspect-[4/3.5] mb-4 md:hidden">
                 <Image
                   src={tab.image}
                   alt={tab.name}

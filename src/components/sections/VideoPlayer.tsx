@@ -133,7 +133,6 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
                     >
                         <a
                             href={ctaLink}
-                            target="_blank"
                             rel="noopener noreferrer"
 
                             className={` text-base 

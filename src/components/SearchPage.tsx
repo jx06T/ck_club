@@ -130,8 +130,7 @@ function SearchPage({ allClubs }: SearchPageProps) {
                 // console.log("Raw search result:", searchResult);
 
                 if (searchResult && searchResult.results) {
-                    // 1. 呼叫每個 result 的 data() 函式來獲取詳細資料
-                    //    Promise.all 會等待所有 data() 函式完成
+                    // 呼叫每個 result 的 data() 函式來獲取詳細資料
                     const detailedResults: PagefindDocument[] = await Promise.all(
                         searchResult.results.map(result => result.data())
                     );
@@ -142,7 +141,7 @@ function SearchPage({ allClubs }: SearchPageProps) {
                         .map(doc => {
                             const clubCode = doc.meta.clubCode as string;
                             const clubData = allClubsMap.get(clubCode);
-                            
+
                             if (clubData) {
                                 return {
                                     ...clubData,
@@ -422,7 +421,7 @@ function SearchPage({ allClubs }: SearchPageProps) {
                                 animate={{ y: "0%" }}
                                 exit={{ y: "100%" }}
                                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                                className="bg-primary-50 w-full max-w-2xl rounded-t-2xl shadow-2xl px-5 pt-0  pb-12 max-h-[40rem] "
+                                className="bg-primary-50 w-full max-w-2xl rounded-t-2xl shadow-2xl px-5 pt-0  pb-12 /h-[40rem] !overflow-y-scroll no-scrollbar"
                                 onClick={(e) => e.stopPropagation()}
 
                                 drag="y"
@@ -436,24 +435,28 @@ function SearchPage({ allClubs }: SearchPageProps) {
                                 }}
                             >
                                 <div
-                                    className=' h-10 p-4'
+                                    className=' h-12 p-4 /bg-red-500'
                                     onPointerDown={(e) => {
                                         dragControls.start(e)
                                     }}
+                                    style={{ touchAction: 'none' }}
                                 >
                                     <div className="w-12 h-1.5 bg-primary-100 rounded-full mx-auto mb-4">
                                     </div>
                                 </div>
 
-                                <div className=' overflow-y-auto w-full h-full no-scrollbar'                                >
+                                <div
+                                    className=' w-full h-full overflow-y-auto no-scrollbar /bg-green-400'
+                                >
+
                                     <div className="flex justify-between items-center mb-4">
                                         <h2 className="text-2xl font-bold">{selectedClub.name}</h2>
                                         <button onClick={() => setSelectedClub(null)} className="p-1 rounded-full hover:bg-black/10 transition-colors">
                                             <X />
                                         </button>
                                     </div>
-                                    <img src={selectedClub.coverImage.src} alt={selectedClub.name} className="w-full h-48 object-cover rounded-md mb-4" />
 
+                                    <img src={selectedClub.coverImage.src} alt={selectedClub.name} className="w-full h-48 object-cover rounded-md mb-4" />
                                     {selectedClub.searchContext ? (
                                         <>
                                             <p dangerouslySetInnerHTML={{ __html: "..." + selectedClub.searchContext.sub_results.map(e => e.excerpt).join(" ... ") + "..." }} />
@@ -462,12 +465,13 @@ function SearchPage({ allClubs }: SearchPageProps) {
                                     ) : (
                                         <p>{selectedClub.summary}</p>
                                     )}
-
                                     <a href={`/clubs/${selectedClub.slug}`} className="text-accent-800 hover:underline font-semibold">
                                         查看完整介紹
                                         <ChevronRight className=" inline-block w-5 start-3 mb-0.5" />
                                     </a>
+
                                 </div>
+                                {/* <div className=' h-[50rem]'></div> */}
                             </motion.div>
                         </motion.div>
                     )}
