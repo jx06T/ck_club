@@ -54,7 +54,27 @@ function SearchPage({ allClubs }: SearchPageProps) {
         if (members.length > 0) initialFilters.members = members;
         if (other.length > 0) initialFilters.other = other;
         setActiveFilters(initialFilters);
-    }, []);
+
+        const hash = window.location.hash.substring(1);
+        if (hash) {
+            const clubFromHash = allClubsMap.get(hash);
+            if (clubFromHash) {
+                setSelectedClub(clubFromHash);
+
+
+                setTimeout(() => {
+                    const cardElement = document.querySelector(`[data-club-code="${hash}"]`);
+                    if (cardElement) {
+                        cardElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start',
+                        });
+                    }
+                }, 500);
+            }
+        }
+
+    }, [allClubs]);
 
     const [selectedClub, setSelectedClub] = useState<ClubWithSearchContext | null>(null);
     const [availableFilters, setAvailableFilters] = useState({
@@ -97,6 +117,7 @@ function SearchPage({ allClubs }: SearchPageProps) {
         const debounceTimeout = setTimeout(() => {
             // 在執行搜尋前，先更新 URL
             const params = new URLSearchParams();
+            const hash = window.location.hash.substring(1);
             if (hasSearchTerm) {
                 params.set('q', searchQuery);
             }
@@ -107,13 +128,12 @@ function SearchPage({ allClubs }: SearchPageProps) {
                 });
             });
 
-            // 使用 history.pushState 來更新 URL 而不重新載入頁面
-            // 這會創建一個新的瀏覽器歷史記錄
-            const newUrl = `${window.location.pathname}?${params.toString()}`;
+            // 使用 history.pushState 來更新 URL 而不重新載入頁面，這會創建一個新的瀏覽器歷史記錄
+            const newUrl = `${window.location.pathname}?${params.toString()}${hash ? ("#" + hash) : ""}`;
             window.history.pushState({ path: newUrl }, '', newUrl);
             const performSearch = async () => {
-                const hasSearchTerm = searchQuery.trim().length > 0;
-                const hasFilters = Object.values(activeFilters).some(f => f.length > 0);
+                // const hasSearchTerm = searchQuery.trim().length > 0;
+                // const hasFilters = Object.values(activeFilters).some(f => f.length > 0);
 
                 if (!hasSearchTerm && !hasFilters) {
                     setIsSearching(false);
@@ -166,6 +186,21 @@ function SearchPage({ allClubs }: SearchPageProps) {
 
         return () => clearTimeout(debounceTimeout);
     }, [searchQuery, activeFilters, allClubsMap]);
+
+    useEffect(() => {
+        if (!isClient) return;
+
+        const currentSearch = window.location.search;
+
+        if (selectedClub) {
+            const newUrl = `${window.location.pathname}${currentSearch}#${selectedClub.clubCode}`;
+            window.history.replaceState(null, '', newUrl);
+        } else {
+            // const newUrl = `${window.location.pathname}${currentSearch}`;
+            // window.history.replaceState(null, '', newUrl);
+        }
+    }, [selectedClub, isClient]);
+
 
 
     const clubsToDisplay = useMemo(() => {
@@ -386,6 +421,7 @@ function SearchPage({ allClubs }: SearchPageProps) {
                             {clubsToDisplay.map(club => (
                                 <motion.div
                                     key={club.clubCode}
+                                    data-club-code={club.clubCode}
                                     layout
                                     initial={{ opacity: 0, scale: 0.8 }}
                                     animate={{ opacity: 1, scale: 1 }}

@@ -84,7 +84,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
 
             const handleZoom = (event: CustomEvent) => {
                 const currentScale = event.detail.scale;
-                const zoomThreshold = 2.5;
+                const zoomThreshold = 1.5;
 
                 if (currentScale > zoomThreshold) {
                     setIsZoomedIn(true);

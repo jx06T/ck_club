@@ -236,6 +236,23 @@ section {
          dark:hover:text-accent-500 hover:text-accent-700;
 }
 
+.tab {
+  @apply border-transparent text-primary-800 hover:text-primary-600;
+}
+
+.panel-active {
+  max-height: 600px;
+  z-index: 10;
+  pointer-events: all;
+}
+
+.panel {
+  max-height: 0px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+
 /* ================================================== */
 .loader {
   width: 45px;

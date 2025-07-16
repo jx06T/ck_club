@@ -99,7 +99,7 @@ function News({ id }: Props) {
     return (
         <section className=' pt-6 pb-10'>
             <h1 id={id} className='block text-balance text-3xl lg:text-4xl font-bold tracking-tight mb-6'>
-                即時訊息
+                最新訊息
             </h1>
 
             <div className="rounded-md /bg-primary-50/50 overflow-hidden h-[66vh]">

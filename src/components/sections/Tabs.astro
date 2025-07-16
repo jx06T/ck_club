@@ -13,36 +13,41 @@ const { tabs, title, id } = Astro.props;
 import { Image } from "astro:assets";
 ---
 
-<section
-  data-tabs-container
-  class=" pt-6 /pb-6 md:pt-12 md:pb-10 px-4 sm:px-6 lg:px-8"
->
-  <div class="grid md:grid-cols-[1.1fr_1fr] gap-12 lg:gap-14 xl:gap-24 h-full \min-h-[32rem]">
-    <div class="relative hidden md:block">
+<section data-tabs-container class="pt-6 pb-4 px-4 sm:px-6 lg:px-8 ">
+  <div
+    class="grid md:grid-cols-[1.1fr_1fr] gap-12 lg:gap-14 xl:gap-24 h-full my-12 relative"
+  >
+    <div
+      class="curved-background absolute inset-0 bg-[#242424] scale-[1.15] sm:scale-[1.15] md:scale-[1.35] -z-10 pointer-events-none"
+    >
+    </div>
+    <div
+      class="hidden md:block aspect-[3.5/4] xl:aspect-[4/3.5] overflow-hidden rounded-md"
+    >
       {
         tabs.map((tab, index) => (
           <div
             data-tab-panel={index}
             class:list={[
-              "absolute inset-0 transition-opacity duration-300 ",
-              { "opacity-100 z-10": index === 0 },
-              { "opacity-0": index !== 0 },
+              " transition-[max-height] duration-300 w-full aspect-[3.5/4] xl:aspect-[4/3.5] ",
+              { "panel-active": index === 0 },
+              { panel: index !== 0 },
             ]}
           >
             <Image
               src={tab.image}
               alt={tab.name}
-              class="w-full object-cover rounded-lg  aspect-[3.5/4] xl:aspect-[4/3.5]"
+              class="w-full h-full object-cover "
             />
           </div>
         ))
       }
     </div>
 
-    <div>
+    <div class="dark">
       <h1
         id={id}
-        class="mb-4 block text-balance text-3xl lg:text-4xl font-bold tracking-tight"
+        class="mb-4 block text-balance text-3xl lg:text-4xl font-bold tracking-tight text-primary-800"
       >
         {title}
       </h1>
@@ -55,8 +60,7 @@ import { Image } from "astro:assets";
                 "px-4 py-2 w-[33.4%] -mb-px font-semibold border-b-2 transition-colors text-lg",
                 {
                   "tab-active": index === 0,
-                  "border-transparent text-primary-800 hover:text-primary-600":
-                    index !== 0,
+                  tab: index !== 0,
                 },
               ]}
             >
@@ -66,28 +70,44 @@ import { Image } from "astro:assets";
         }
       </div>
 
-      <div class="mt-4">
+      <div
+        class="mt-4 w-full aspect-[4/3.5] overflow-hidden md:hidden rounded-md"
+      >
         {
           tabs.map((tab, index) => (
             <div
               data-tab-panel={index}
               class:list={[
-                "transition-opacity duration-300",
-                { "opacity-100": index === 0 },
+                "transition-[max-height] w-full aspect-[4/3.5] duration-300",
+                { "panel-active": index === 0 },
                 {
-                  "opacity-0 h-0 overflow-hidden pointer-events-none":
-                    index !== 0,
+                  panel: index !== 0,
                 },
               ]}
             >
-              <div class="relative w-full aspect-[4/3.5] mb-4 md:hidden">
-                <Image
-                  src={tab.image}
-                  alt={tab.name}
-                  class="w-full h-full object-cover rounded-lg"
-                />
-              </div>
-              <p class="text-primary-700 text-base ">{tab.description}</p>
+              <Image
+                src={tab.image}
+                alt={tab.name}
+                class="w-full h-full object-cover "
+              />
+            </div>
+          ))
+        }
+      </div>
+      <div class="mt-6 md:mt-4 relative">
+        {
+          tabs.map((tab, index) => (
+            <div
+              data-tab-text={index}
+              class:list={[
+                "transition-opacity  duration-300 absolute inset-0 ",
+                { " opacity-100": index === 0 },
+                {
+                  " opacity-0": index !== 0,
+                },
+              ]}
+            >
+              <p class="text-primary-400 dark:text-primary-700 md:text-primary-700 text-base ">{tab.description}</p>
             </div>
           ))
         }
@@ -103,6 +123,7 @@ import { Image } from "astro:assets";
     containers.forEach((container) => {
       const buttons = container.querySelectorAll("[data-tab-button]");
       const panels = container.querySelectorAll("[data-tab-panel]");
+      const texts = container.querySelectorAll("[data-tab-text]");
 
       buttons.forEach((button) => {
         button.addEventListener("click", () => {
@@ -111,28 +132,31 @@ import { Image } from "astro:assets";
           buttons.forEach((btn) => {
             const btnIndex = btn.getAttribute("data-tab-button");
             btn.classList.toggle("tab-active", btnIndex === tabIndex);
-            btn.classList.toggle("border-transparent", btnIndex !== tabIndex);
-            btn.classList.toggle("text-primary-800", btnIndex !== tabIndex);
-            btn.classList.toggle(
-              "hover:text-primary-600",
-              btnIndex !== tabIndex
-            );
+            btn.classList.toggle("tab", btnIndex !== tabIndex);
           });
 
           panels.forEach((panel) => {
             const panelIndex = panel.getAttribute("data-tab-panel");
-            panel.classList.toggle("opacity-100", panelIndex === tabIndex);
-            panel.classList.toggle("z-10", panelIndex === tabIndex);
-            panel.classList.toggle("opacity-0", panelIndex !== tabIndex);
-            panel.classList.toggle("h-0", panelIndex !== tabIndex);
-            panel.classList.toggle("overflow-hidden", panelIndex !== tabIndex);
-            panel.classList.toggle(
-              "pointer-events-none",
-              panelIndex !== tabIndex
-            );
+            panel.classList.toggle("panel-active", panelIndex === tabIndex);
+            panel.classList.toggle("panel", panelIndex !== tabIndex);
+          });
+
+          texts.forEach((text) => {
+            const textIndex = text.getAttribute("data-tab-text");
+            text.classList.toggle("opacity-100", textIndex === tabIndex);
+            text.classList.toggle("opacity-0", textIndex !== tabIndex);
           });
         });
       });
     });
   });
 </script>
+
+<style>
+  .curved-background {
+    clip-path: ellipse(100% 60% at 50% 0%);
+    @media (width >= 48rem /* 768px */) {
+      clip-path: ellipse(100% 60% at 70% 0%);
+    }
+  }
+</style>

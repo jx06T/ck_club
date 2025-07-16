@@ -97,9 +97,9 @@ const testTabs = [
   subTitle="探索超過 60 個精彩社團"
   imgAlt="建中紅樓"
   imgSrc={CKRed}
-  primaryBtn="查看社團資料庫"
+  primaryBtn="社團博覽會"
   primaryBtnURL="/clubs"
-  secondaryBtn="近期活動"
+  secondaryBtn="社團資料庫"
   secondaryBtnURL="#event"
   SectionId="hero"
 />
@@ -112,6 +112,8 @@ const testTabs = [
   <News id="news" client:visible />
 </div>
 
+<Tabs tabs={testTabs} title="紀念品介紹" />
+
 <div>
   <AutoPlayVideo
     src={MapVideo}
@@ -121,6 +123,5 @@ const testTabs = [
   />
 </div>
 
-<Tabs tabs={testTabs} title="紀念品介紹" />
 
 <FAQ title="常見問題" faqs={faqs} />
