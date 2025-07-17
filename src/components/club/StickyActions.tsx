@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Star, Share2, MapPin } from 'lucide-react';
 import { useLocalStorage } from '@/scripts/useLocalStorage';
-<<<<<<< HEAD
-=======
 import { motion, useScroll, useTransform } from 'framer-motion';
->>>>>>> master
 
 interface StickyActionsProps {
     clubCode: string;
