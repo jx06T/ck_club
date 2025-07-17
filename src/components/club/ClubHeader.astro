@@ -13,8 +13,10 @@ const { club } = Astro.props;
 
 <header class="relative mb-8">
   <!-- Cover Image -->
-  <div class=" md:px-[10%]">
-    <div class="w-full h-auto rounded-md overflow-hidden max-h-[70vh] border border-accent-600">
+  <div class="md:px-[10%]">
+    <div
+      class="w-full h-auto rounded-md overflow-hidden max-h-[70vh] scale-105 sm:scale-100 md:border border-accent-600"
+    >
       <Image
         src={club.coverImage}
         alt={`${club.name} 的封面圖片`}
