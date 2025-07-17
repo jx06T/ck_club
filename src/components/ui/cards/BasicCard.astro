@@ -1,0 +1,17 @@
+---
+import type { ImageMetadata } from "astro";
+
+type Props = {
+  title: string;
+};
+
+const { title } = Astro.props;
+---
+
+<div class="bg-accent-300 rounded-md px-5 py-6">
+  <slot name="icon" />
+  <h2 class="text-xl lg:text-2xl text-primary-900 dark:text-primary-950">{title}</h2>
+  <div class=" text-primary-900 dark:text-primary-950 mt-2">
+    <slot />
+  </div>
+</div>

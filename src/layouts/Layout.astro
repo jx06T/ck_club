@@ -16,6 +16,7 @@ const {
   customDescription = null,
   customOgTitle = null,
   customOgImage = null,
+  padding = true,
 } = Astro.props;
 
 // Interface to type-check the properties
@@ -28,6 +29,7 @@ interface Props {
   customDescription?: string | null;
   customOgTitle?: string | null;
   customOgImage?: ImageMetadata | null;
+  padding?: boolean;
 }
 ---
 
@@ -65,7 +67,6 @@ interface Props {
       }
     </script>
 
-    <!-- <link href="/pagefind/pagefind-ui.css" rel="stylesheet" /> -->
   </head>
 
   <body
@@ -73,15 +74,11 @@ interface Props {
   >
     <div class="w-full">
       <Navbar />
-      <div
-        class="w-full overflow-x-hidden mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-16"
+      <main
+        class=`mx-auto max-w-screen-2xl lg:space-y-20 md:space-y-16 sm:space-y-12 space-y-10 pt-12 md:pt-14 lg:pt-20 pb-20 ${padding?"px-6 sm:px-10 md:px-16 lg:px-[calc(5%+4rem)]":""}`
       >
-        <main
-          class="mx-auto max-w-screen-2xl px-2 sm:px-4 md:px-6 lg:px-[5%] lg:space-y-20 md:space-y-16 sm:space-y-12 space-y-10 pt-12 md:pt-14 lg:pt-20 "
-        >
-          <slot />
-        </main>
-      </div>
+        <slot />
+      </main>
     </div>
     <Footer />
 

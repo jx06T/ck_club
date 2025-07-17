@@ -22,13 +22,13 @@ const allClubs = await Promise.all(
 ---
 
 <Layout title="社團資料庫 | CKClubHub" description="探索所有社團！">
-  <div class="max-w-6xl mx-auto px-4">
-    <div class="text-center mb-16">
-      <h1 class="text-4xl sm:text-5xl font-bold text-primary-800 mb-4">
-        社團資料庫
-      </h1>
-      <p class="text-lg text-neutral-600">探索建中超過 60 個精彩社團</p>
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl sm:text-5xl font-bold text-primary-800 mb-4">
+          社團資料庫
+        </h1>
+        <p class="text-lg text-neutral-600">探索建中超過 60 個精彩社團</p>
+      </div>
     </div>
-  </div>
-  <SearchPage allClubs={allClubs} client:load />
+    <SearchPage allClubs={allClubs} client:load />
 </Layout>

@@ -38,9 +38,9 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
         const handleResize = () => {
             const width = window.innerWidth;
             if (width < MOBILE_BREAKPOINT) {
-                setResponsiveSettings({ threshold: 0.9, scale: 1.8 });
+                setResponsiveSettings({ threshold: 0.9, scale: 0.65 });
             } else {
-                setResponsiveSettings({ threshold: 0.5, scale: 1.35 });
+                setResponsiveSettings({ threshold: 0.65, scale: 0.65 });
             }
         };
 
@@ -96,12 +96,12 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
     return (
         <section
             onClick={() => setShowCTA(!showCTA)}
-            className=" py-24 px-6 sm:px-8 lg:px-10"
+            className=" overflow-x-hidden"
             ref={videoDivRef}
         >
             <div
-                className=" relative w-full aspect-video rounded-lg overflow-hidden group transform transition-transform duration-700"
-                style={{ transform: isPlaying ? `scale(${responsiveSettings.scale})` : "scale(1)" }}
+                className=" relative -ml-[15%] w-[130%] md:w-full md:ml-0 aspect-video rounded-lg overflow-hidden group transform transition-transform duration-700"
+                style={{ transform: isPlaying ? "scale(1)" : `scale(${responsiveSettings.scale})` }}
             >
 
                 <video
@@ -113,10 +113,9 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
                     playsInline
                     className="w-full h-full object-cover"
                 />
-
                 <div
                     className={`
-    absolute inset-0 md:inset-[18%] bg-black/30 md:outline-[240px] md:outline-black/30
+    absolute inset-0 md:inset-[18%] bg-black/30 md:outline-[280px] md:outline-black/30
     flex flex-col items-center justify-center 
     transition-opacity duration-300
     ${isPlaying ? (showCTA ? 'opacity-100' : 'opacity-0 hover:opacity-100') : 'opacity-100'}
