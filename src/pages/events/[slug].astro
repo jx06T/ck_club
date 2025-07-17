@@ -9,7 +9,7 @@ import Layout from "../../layouts/Layout.astro";
 export async function getStaticPaths() {
   const events = await getCollection("events");
   return events.map((post) => ({
-    params: { slug: post.slug},
+    params: { slug: post.slug },
   }));
 }
 
@@ -25,7 +25,7 @@ if (post === undefined) {
 }
 
 const { Content } = await post.render();
-const { title, date, image, organizer, link } = post.data;
+const { title, date, image, organizer, link, ctaTitle } = post.data;
 ---
 
 <Layout title={title + " | CKClubHub"}>
@@ -51,6 +51,10 @@ const { title, date, image, organizer, link } = post.data;
       </time>
     </div>
 
+    <div class=" -mb-2">
+      <ExternalCTA title={ctaTitle} url={link} />
+    </div>
+    
     <Image
       src={image}
       alt={`Cover image for ${title}`}
@@ -59,10 +63,6 @@ const { title, date, image, organizer, link } = post.data;
 
     <div class="mt-8 my-10">
       <Content />
-    </div>
-
-    <div class="my-10">
-      <ExternalCTA title="了解詳細訊息" url={link} />
     </div>
   </article>
 </Layout>

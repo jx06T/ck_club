@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Star, Share2, MapPin } from 'lucide-react';
 import { useLocalStorage } from '@/scripts/useLocalStorage';
+<<<<<<< HEAD
+=======
+import { motion, useScroll, useTransform } from 'framer-motion';
+>>>>>>> master
 
 interface StickyActionsProps {
     clubCode: string;
@@ -52,21 +56,35 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
         }
     };
 
+    const { scrollYProgress } = useScroll();
+    const y = useTransform(scrollYProgress, [0, 1], [0, 70]);
+
     return (
-        <div className="fixed bottom-4 right-2 sm:right-[5%] sm:top-[5.5rem] z-40 flex flex-col gap-2">
+        <motion.div
+            className="fixed top-20 right-2 sm:right-[5%] sm:top-[5.5rem] z-40 flex flex-col gap-2"
+            style={{ y }}
+        >
             <button
                 onClick={handleToggleFavorite}
                 disabled={!isClient}
 
-                className={`w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center hover:bg-accent-200/70 transition-colors ${isFavorite ? "text-accent-500" : "text-white"}`}
+                className={`w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center hover:scale-105 hover:bg-accent-200/70 transition-colors ${isFavorite ? "text-accent-500" : "text-white"}`}
                 aria-label={isFavorite ? '取消收藏' : '加入收藏'}
             >
-                <Star size={20} fill={isFavorite ? 'currentColor' : 'none'} />
+                <motion.div
+                    animate={{
+                        scale: isFavorite ? [1, 2, 1] : 1,
+                        rotate: isFavorite ? [0, 10, 0] : 0
+                    }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                    <Star size={20} fill={isFavorite ? 'currentColor' : 'none'} />
+                </motion.div>
             </button>
 
             <button
                 onClick={handleShare}
-                className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center hover:bg-accent-200/70 transition-colors text-white"
+                className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center hover:scale-105 hover:bg-accent-200/70 transition-colors text-white"
                 aria-label="分享"
             >
                 <Share2 size={24} />
@@ -75,12 +93,12 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                 <a
                     href={`/map?club=${clubCode}`}
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center hover:bg-accent-200/70 transition-colors text-white"
+                    className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center hover:scale-105 hover:bg-accent-200/70 transition-colors text-white"
                     aria-label="地圖位置"
                 >
                     <MapPin size={24} />
                 </a>
             }
-        </div>
+        </motion.div >
     );
 }

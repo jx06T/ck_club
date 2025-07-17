@@ -1,6 +1,9 @@
 ---
 import CKRed from "@images/home/ck_red.jpg";
-import MapVideo from "@assets/t1.mp4";
+import Badge from "@images/home/badge.jpg";
+import Bag from "@images/home/bag.jpg";
+import Card from "@images/home/card.jpg";
+import MapVideo from "@assets/map.mp4";
 
 import Hero from "@components/sections/Hero.astro";
 import EventCarousel from "@components/sections/EventCarousel";
@@ -74,17 +77,17 @@ const testTabs = [
   {
     name: "束口袋",
     description: "黑色的束口袋，方便收納各種小物",
-    image: CKRed,
+    image: Bag,
   },
   {
     name: "徽章",
     description: "專屬於社團博覽會的獨一無二徽章，金屬材質自帶高級感",
-    image: CKRed,
+    image: Badge,
   },
   {
     name: "悠遊卡套",
     description: "新拿到的學生證最好的收納方式！",
-    image: CKRed,
+    image: Card,
   },
 ];
 ---
@@ -94,9 +97,9 @@ const testTabs = [
   subTitle="探索超過 60 個精彩社團"
   imgAlt="建中紅樓"
   imgSrc={CKRed}
-  primaryBtn="查看社團資料庫"
+  primaryBtn="社團博覽會"
   primaryBtnURL="/clubs"
-  secondaryBtn="近期活動"
+  secondaryBtn="社團資料庫"
   secondaryBtnURL="#event"
   SectionId="hero"
 />
@@ -109,6 +112,8 @@ const testTabs = [
   <News id="news" client:visible />
 </div>
 
+<Tabs tabs={testTabs} title="紀念品介紹" />
+
 <div>
   <AutoPlayVideo
     src={MapVideo}
@@ -118,6 +123,5 @@ const testTabs = [
   />
 </div>
 
-<Tabs tabs={testTabs} title="紀念品介紹" />
 
 <FAQ title="常見問題" faqs={faqs} />

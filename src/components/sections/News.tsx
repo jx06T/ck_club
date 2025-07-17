@@ -57,22 +57,6 @@ const testData = [
         "clubName": "西樂社",
         "content": "歡迎參加音樂交流會！",
         "link": "https://music-club.ck.edu.tw"
-    },
-    {
-        "timestamp": "2025-07-07T20:20:00",
-        "email": "ck11300444@gl.ck.tp.edu.tw",
-        "clubId": "C03",
-        "clubName": "桌遊社",
-        "content": "明天中午在圖書館二樓玩狼人殺！",
-        "link": ""
-    },
-    {
-        "timestamp": "2025-07-07T20:35:50",
-        "email": "ck11300088@gl.ck.tp.edu.tw",
-        "clubId": "A09",
-        "clubName": "天文社",
-        "content": "本週五晚上觀星活動，請準時到校門口集合。",
-        "link": "https://ck-astro.example.com"
     }
 ]
 
@@ -93,7 +77,7 @@ function News({ id }: Props) {
     const [currentPage, setCurrentPage] = useState(0);
     const [newsInPage, setNewsInPage] = useState(testData.slice(0, 5));
 
-    const itemsPerPage = 5;
+    const itemsPerPage = 4;
     const totalPages = Math.ceil(testData.length / itemsPerPage);
 
     useEffect(() => {
@@ -115,10 +99,10 @@ function News({ id }: Props) {
     return (
         <section className=' pt-6 pb-10'>
             <h1 id={id} className='block text-balance text-3xl lg:text-4xl font-bold tracking-tight mb-6'>
-                即時訊息
+                最新訊息
             </h1>
 
-            <div className="rounded-md /bg-primary-50/50 overflow-hidden ">
+            <div className="rounded-md /bg-primary-50/50 overflow-hidden h-[66vh]">
                 <div className="px-4 md:px-6 py-4 border-b border-accent-600">
                     <div className="grid grid-cols-[2.4fr_1.2fr_1fr] items-center text-base font-semibold text-primary-700 ">
                         <span >內容</span>
@@ -141,13 +125,13 @@ function News({ id }: Props) {
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-1 text-accent-600 hover:text-accent-500 text-base mt-1 hover:underline"
                                 >
-                                    <ExternalLink className="w-3 h-3" />
                                     詳細訊息
+                                    <ExternalLink className="w-3.5 h-3.5" />
                                 </a>
                             )}
                         </div>
                         <div className="pr-4">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-primary-100 text-primary-700 ">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium border border-accent-600 text-primary-700 ">
                                 {news.clubName}
                             </span>
                         </div>
@@ -158,7 +142,7 @@ function News({ id }: Props) {
             </div>
 
             <div className="mt-5 px-4 md:px-6 flex justify-between items-center">
-                <div className="text-sm text-gray-500 ">
+                <div className="text-base text-gray-500 ">
                     第 {currentPage * itemsPerPage + 1} - {Math.min((currentPage + 1) * itemsPerPage, testData.length)} 筆，
                     共 {testData.length} 筆
                 </div>
@@ -171,7 +155,7 @@ function News({ id }: Props) {
                         <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
                         <span className=" hidden md:block">上一頁</span>
                     </button>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-base text-gray-500">
                         {currentPage + 1} / {totalPages}
                     </span>
                     <button
