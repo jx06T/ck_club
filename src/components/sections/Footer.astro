@@ -3,8 +3,9 @@ import { SITE } from "@data/constants";
 import BrandLogo from "@components/BrandLogo.astro";
 import Strings from "@/data/navigation";
 import FooterSocialLink from "@components/ui/links/FooterSocialLink.astro";
-
+import FeedbackWidget from "@components/ui/inputs/FeedbackWidget";
 import { MdiGithub, MdiInstagram } from "@components/ui/Icons.tsx";
+import { MessageSquare } from "lucide-react";
 ---
 
 <footer class="w-full bg-primary-300">
@@ -37,11 +38,7 @@ import { MdiGithub, MdiInstagram } from "@components/ui/Icons.tsx";
       }
 
       <div class="col-span-2">
-        <div
-          class="w-full h-14 bg-accent-300 outline-none px-10 p-4 rounded-md"
-        >
-          feedback
-        </div>
+        <FeedbackWidget client:idle />
       </div>
     </div>
 
