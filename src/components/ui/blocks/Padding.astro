@@ -1,0 +1,11 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"section">;
+
+const { ...rest } = Astro.props;
+---
+
+<div class="w-full px-6 sm:px-10 md:px-16 lg:px-[calc(5%+4rem)]" {...rest}>
+  <slot />
+</div>

@@ -24,13 +24,11 @@ const clubsIndex = allClubsData.map((club) => ({
 ---
 
 <Layout>
-  <div class="text-center max-w-6xl mx-auto px-4 mt-12 sm:mt-12 md:mt-0">
-    <h1 class="text-4xl sm:text-5xl font-bold text-primary-800 mb-4">
-      社團博覽會地圖
-    </h1>
-    <p class="text-lg text-neutral-600">探索感興趣的社團！</p>
-  </div>
-  <div>
+    <div class="text-center max-w-6xl mx-auto px-4 mt-12 sm:mt-12 md:mt-0">
+      <h1 class="text-4xl sm:text-5xl font-bold text-primary-800 mb-4">
+        社團博覽會地圖
+      </h1>
+      <p class="text-lg text-neutral-600">探索感興趣的社團！</p>
+    </div>
     <InteractiveMap client:load clubs={clubsIndex} />
-  </div>
 </Layout>

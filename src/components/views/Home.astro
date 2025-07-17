@@ -4,19 +4,35 @@ import Badge from "@images/home/badge.jpg";
 import Bag from "@images/home/bag.jpg";
 import Card from "@images/home/card.jpg";
 import MapVideo from "@assets/map.mp4";
+import CollectionCard from "@images/home/collection-card.png";
+import AllStamp from "@images/home/all-stamp.png";
 
 import Hero from "@components/sections/Hero.astro";
+import Padding from "@components/ui/blocks/Padding.astro";
+import BigSection from "@components/sections/BigSection.astro";
 import EventCarousel from "@components/sections/EventCarousel";
 import News from "@components/sections/News";
 import AutoPlayVideo from "@components/sections/VideoPlayer";
 import FAQ from "@components/sections/FAQ.astro";
 import Tabs from "@components/sections/Tabs.astro";
+import BasicCard from "@components/ui/cards/BasicCard.astro";
+import PrimaryCTA from "@components/ui/buttons/PrimaryCTA.astro";
 
 import { getCollection } from "astro:content";
 import { getImage } from "astro:assets";
+import Image from "astro/components/Image.astro";
 
 import type { Slide } from "@components/sections/EventCarousel.tsx";
 import type { CollectionEntry } from "astro:content";
+
+import {
+  TableOfContents,
+  Flag,
+  Gem,
+  CreditCard,
+  Map,
+  Stamp,
+} from "lucide-react";
 
 const allEvents = await getCollection("events");
 
@@ -92,25 +108,90 @@ const testTabs = [
 ];
 ---
 
-<Hero
-  title='建中出才子，才子躍<span class="text-accent-300 ">社團</span>！'
-  subTitle="探索超過 60 個精彩社團"
-  imgAlt="建中紅樓"
-  imgSrc={CKRed}
-  primaryBtn="社團博覽會"
-  primaryBtnURL="/clubs"
-  secondaryBtn="社團資料庫"
-  secondaryBtnURL="#event"
-  SectionId="hero"
-/>
+<Padding>
+  <Hero
+    title='建中出才子，才子躍<span class="text-accent-300 ">社團</span>！'
+    subTitle="探索超過 60 個精彩社團"
+    imgAlt="建中紅樓"
+    imgSrc={CKRed}
+    SectionId="hero"
+    primaryBtn="社團博覽會"
+    primaryBtnURL="#fair"
+    secondaryBtn="社團資料庫"
+    secondaryBtnURL="/clubs"
+  />
+</Padding>
 
-<div>
+<Padding>
   <EventCarousel id="event" slides={slidesForCarousel} client:visible />
-</div>
+</Padding>
 
-<div>
+<Padding>
   <News id="news" client:visible />
-</div>
+</Padding>
+
+  <BigSection
+    id="fair"
+    title=" 社團博覽會介紹"
+    describe="今年的社團博覽會規劃了集章活動！以下是活動的詳細辦法"
+  >
+    <BasicCard title="簡介">
+      <TableOfContents
+        slot="icon"
+        className=" text-primary-600 dark:text-primary-900 w-6 h-6"
+      />
+      社團博覽會是指在新生訓練的第二天下午，校園中會架起帳棚攤位，全校幾乎所有的社團都會在自己的攤位擺出最吸引人的東西，吸引學弟們的目光。
+    </BasicCard>
+    <BasicCard title="目的">
+      <Flag
+        slot="icon"
+        className=" text-primary-600 dark:text-primary-900 w-6 h-6"
+      />
+      除了讓社團介紹自己給新生外，社團也會藉此機會宣傳自己，廣發傳單來壯大自己的社團歸模。
+    </BasicCard>
+    <BasicCard title="今年的特別之處">
+      <Gem
+        slot="icon"
+        className=" text-primary-600 dark:text-primary-900 w-6 h-6"
+      />
+      今年相較於往年單純的展覽會，新增了集章卡的活動。新生們會拿到一張有六個空格的集章卡，對應的參展的社團也會依照位置或性質保管六種印章中的其中一種。新生只需要持集章卡分別蒐集到六種印章後即可至班聯會攤位兌換限量紀念品！
+    </BasicCard>
+
+    <BasicCard title="集章卡">
+      <CreditCard
+        slot="icon"
+        className=" text-primary-600 dark:text-primary-900 w-6 h-6"
+      />
+      <Image
+        src={CollectionCard}
+        alt={"集章卡"}
+        class="rounded-md overflow-hidden"
+      />
+    </BasicCard>
+
+    <BasicCard title="社團分類地圖">
+      <Map
+        slot="icon"
+        className=" text-primary-600 dark:text-primary-900 w-6 h-6"
+      />
+      社團所保管的印章種類會標示在各社團攤位的專屬 QR code 上，也可以查看此網頁的線上社團地圖尋找想要了解的社團！
+      <div class="py-2">
+        <PrimaryCTA title="線上地圖連結" url="/map" />
+      </div>
+    </BasicCard>
+
+    <BasicCard title="六種印章">
+      <Stamp
+        slot="icon"
+        className=" text-primary-600 dark:text-primary-900 w-6 h-6"
+      />
+      <Image
+        src={AllStamp}
+        alt={"集章卡"}
+        class="rounded-md overflow-hidden"
+      />
+    </BasicCard>
+  </BigSection>
 
 <Tabs tabs={testTabs} title="紀念品介紹" />
 
@@ -123,5 +204,6 @@ const testTabs = [
   />
 </div>
 
-
-<FAQ title="常見問題" faqs={faqs} />
+<Padding>
+  <FAQ title="常見問題" faqs={faqs} />
+</Padding>

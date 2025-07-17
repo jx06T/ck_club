@@ -11,11 +11,12 @@ interface Props {
 const { club } = Astro.props;
 ---
 
-<header class="relative mb-8">
+<header class="relative mb-8 w-full ">
   <!-- Cover Image -->
-  <div class="md:px-[10%]">
+
+  <div class="md:px-[10%] overflow-x-hidden">
     <div
-      class="w-full h-auto rounded-md overflow-hidden max-h-[70vh] scale-105 sm:scale-100 md:border border-accent-600"
+      class="w-full h-auto rounded-md max-h-[70vh] md:border border-accent-600"
     >
       <Image
         src={club.coverImage}
