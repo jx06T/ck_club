@@ -125,7 +125,7 @@ function FeedbackWidget() {
                                     提交成功！
                                 </motion.h4>
                                 <motion.p variants={successItemVariants} className="text-sm text-primary-700">
-                                    感謝您的反饋，確認信已寄送至您的信箱。
+                                    感謝您的回饋，確認信已寄送至您的信箱。
                                 </motion.p>
                             </motion.div>
                         ) : (
