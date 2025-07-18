@@ -12,8 +12,9 @@ const { id, title, describe } = Astro.props;
   class="w-full md:grid md:grid-cols-[1fr_1.5fr] md:gap-8 lg:gap-12 py-12 md:px-16 lg:px-[calc(5%+4rem)]"
 >
   <aside
-    class="sticky top-0 w-full md:self-start bg-primary-100 rounded-md px-4 py-5 z-50"
-    style={{ boxShadow: "0 0 15px 15px var(--color-primary-100)" }}
+    id="sticky-aside"
+    class="sticky top-0 w-full md:self-start bg-primary-100 rounded-md px-4 py-5 z-50 cursor-pointer transition-top duration-500 ease-in-out"
+    style={{ boxShadow: "0 0 10px 10px var(--color-primary-100)" }}
   >
     <div class="rounded-lg">
       <h1
@@ -32,3 +33,37 @@ const { id, title, describe } = Astro.props;
     <slot />
   </main>
 </div>
+
+<style>
+  #sticky-aside.is-toggled {
+    top: 6rem;
+  }
+  #sticky-aside.is-toggled1 {
+    top: 8rem;
+  }
+  #sticky-aside.is-toggled0 {
+    z-index: 0;
+  }
+</style>
+
+<script>
+  const asideElement = document.getElementById("sticky-aside");
+
+  if (asideElement) {
+    asideElement.addEventListener("click", () => {
+      if (asideElement.classList.contains("is-toggled0")) {
+        asideElement.classList.toggle("is-toggled0");
+        asideElement.classList.toggle("is-toggled1");
+        setTimeout(() => {
+          asideElement.classList.toggle("is-toggled1");
+          asideElement.classList.toggle("is-toggled");
+        }, 300);
+      } else {
+        asideElement.classList.toggle("is-toggled");
+        setTimeout(() => {
+          asideElement.classList.toggle("is-toggled0");
+        }, 300);
+      }
+    });
+  }
+</script>

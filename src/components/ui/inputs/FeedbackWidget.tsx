@@ -1,7 +1,8 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { MessageSquare, X, Send, Loader, CheckCircle, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-const GAS_WEB_APP_URL = process.env.FEEDBACK_URL||'https://script.google.com/macros/s/AKfycbzLDsCMel79qbRmU1Q0JosjghVhtRZOeAXgJ1abV2d6s9TzEJzk0BR5j30jvtxqFCjJ/exec';
+const GAS_WEB_APP_URL = import.meta.env.PUBLIC_FEEDBACK_URL || '';
+
 
 const FEEDBACK_TYPES = ["內文更正", "Bug 回報", "改善建議", "其他"];
 
