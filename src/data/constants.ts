@@ -1,7 +1,7 @@
 import ogImageSrc from "@images/branding/icon.png";
 
 export const SITE = {
-  title: "CKClubHub",
+  title: "建中社團資料庫",
   tagline: "一個整合了標籤系統以及收藏功能的建中社團線上資料庫",
   description: "CKClubHub 是一個整合了標籤系統以及收藏功能的建中社團線上資料庫",
   description_short: "一個整合了標籤系統以及收藏功能的建中社團線上資料庫",

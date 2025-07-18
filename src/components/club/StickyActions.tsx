@@ -33,7 +33,7 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
 
     const handleShare = async () => {
         const shareData = {
-            title: `${clubName} | CKClubHub`,
+            title: `${clubName} | CKClubHub 建中社團資料庫`,
             text: `來看看建中 ${clubName} 的介紹！`,
             url: window.location.href,
         };
