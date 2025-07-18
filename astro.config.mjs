@@ -4,6 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 import svgr from "vite-plugin-svgr"
 
+import sitemap from '@astrojs/sitemap';
+
 // import vercel from '@astrojs/vercel/serverless';
 // import cloudflare from '@astrojs/cloudflare';
 
@@ -46,7 +48,7 @@ export default defineConfig({
         },
       })],
   },
-  integrations: [react()],
+  integrations: [react(), sitemap()],
   
   // @ts-ignore
   // output: output,
