@@ -1,14 +1,14 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "../layouts/ClubLayout.astro";
+import Layout from "../layouts/Layout.astro";
 import { House, List } from "lucide-react";
 
 const allClubs = await getCollection("clubs");
 const sampleClubs = allClubs.slice(0, 7);
 ---
 
-<Layout title="404 | CKClubHub">
-  <div class="">
+<Layout title="404 | CKClubHub" padding={false}>
+  <div class=" -mb-20">
     <div
       class="w-full h-[max(80vh,28rem)] bg-transparent relative overflow-hidden"
     >
@@ -156,7 +156,7 @@ const sampleClubs = allClubs.slice(0, 7);
         fallenContent.appendChild(el);
         await delay(10);
 
-        const groundY = boxRect.bottom - 200;
+        const groundY = boxRect.height * 0.5 + 185;
         const endX =
           type === "digit"
             ? random(
