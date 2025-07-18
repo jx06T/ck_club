@@ -28,7 +28,13 @@ const { Content } = await post.render();
 const { title, date, image, organizer, link, ctaTitle } = post.data;
 ---
 
-<Layout title={title + " | CKClubHub"}>
+<Layout
+  title={title + " | CKClubHub"}
+  description={post.body}
+  customOgTitle={`查看有關 ${title} 的最新消息`}
+  customOgImage={image}
+  customOgDescription={post.body.slice(0, 30) + "..."}
+>
   <article
     class="prose prose-neutral dark:prose-invert max-w-3xl mx-auto py-8 px-4 sm:py-12"
   >
@@ -51,10 +57,10 @@ const { title, date, image, organizer, link, ctaTitle } = post.data;
       </time>
     </div>
 
-    <div class=" -mb-2">
+    <div class="-mb-2">
       <ExternalCTA title={ctaTitle} url={link} />
     </div>
-    
+
     <Image
       src={image}
       alt={`Cover image for ${title}`}

@@ -10,10 +10,9 @@ import "@styles/map.css";
 const {
   title = SITE.title,
   description = SITE.description,
-  meta,
   structuredData,
   lang = "zh-Hant",
-  customDescription = null,
+  customOgDescription = null,
   customOgTitle = null,
   customOgImage = null,
   padding = true,
@@ -23,10 +22,9 @@ const {
 interface Props {
   title?: string;
   description?: string;
-  meta?: string;
   structuredData?: object;
   lang?: string;
-  customDescription?: string | null;
+  customOgDescription?: string | null;
   customOgTitle?: string | null;
   customOgImage?: ImageMetadata | null;
   padding?: boolean;
@@ -37,12 +35,11 @@ interface Props {
 <html lang={lang} class="scrollbar-hide lenis lenis-smooth scroll-pt-16">
   <head>
     <Meta
-      meta={meta}
+      meta={description}
       structuredData={structuredData}
-      customDescription={customDescription}
-      customOgTitle={customOgTitle}
+      customOgTitle={customOgTitle || title}
+      customOgDescription={customOgDescription || description}
       customOgImage={customOgImage}
-      description={description}
     />
 
     <title data-pagefind-meta="title">{title}</title>
@@ -66,7 +63,6 @@ interface Props {
         metaThemeColor.setAttribute("content", "#c0c2d1");
       }
     </script>
-
   </head>
 
   <body

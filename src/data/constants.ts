@@ -3,9 +3,9 @@ import ogImageSrc from "@images/branding/icon.png";
 export const SITE = {
   title: "CKClubHub",
   tagline: "一個整合了標籤系統以及收藏功能的建中社團線上資料庫",
-  description: "一個整合了標籤系統以及收藏功能的建中社團線上資料庫",
+  description: "CKClubHub 是一個整合了標籤系統以及收藏功能的建中社團線上資料庫",
   description_short: "一個整合了標籤系統以及收藏功能的建中社團線上資料庫",
-  url: "https://ck-club.vercel.app/",
+  url: "https://club.cksc.tw/",
   author: "https://github.com/jx06T",
 };
 
@@ -34,6 +34,6 @@ export const OG = {
   type: "website",
   url: SITE.url,
   title: `${SITE.title} : 一個整合了標籤系統以及收藏功能的建中社團線上資料庫`,
-  description: "一個整合了標籤系統以及收藏功能的建中社團線上資料庫",
+  description: " CKClubHub 是一個整合了標籤系統以及收藏功能的建中社團線上資料庫...",
   image: ogImageSrc,
 };

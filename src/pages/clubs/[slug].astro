@@ -1,6 +1,6 @@
 ---
 import { getCollection, getEntry, type CollectionEntry } from "astro:content";
-import Layout from "../../layouts/ClubLayout.astro";
+import Layout from "../../layouts/Layout.astro";
 import { Image } from "astro:assets";
 
 import ClubHeader from "@/components/club/ClubHeader.astro";
@@ -10,7 +10,7 @@ import ClubInfoPanel from "@/components/club/ClubInfoPanel.astro";
 export async function getStaticPaths() {
   const clubs = await getCollection("clubs");
   return clubs.map((post) => ({
-    params: { slug: post.slug }, // Astro 會自動使用 id 作為 slug
+    params: { slug: post.slug },
   }));
 }
 
@@ -30,19 +30,27 @@ const { data } = post;
 
 <Layout
   title={`${data.name} | CKClubHub`}
-  customDescription={data.summary}
+  description={data.summary}
+  customOgTitle={`查看 建中${data.name} 在 CKClubHub 上的專屬頁面`}
   customOgImage={data.profileImage}
+  customOgDescription={data.summary.slice(0, 30) + "..."}
+  padding={false}
 >
   <ClubHeader club={data} />
 
   <article class="max-w-3xl mx-auto pb-8 py-4 px-4 sm:px-6 lg:px-16">
-    <StickyActions client:load clubCode={data.clubCode} clubName={data.name} attendsExpo={data.attendsExpo}/>
+    <StickyActions
+      client:load
+      clubCode={data.clubCode}
+      clubName={data.name}
+      attendsExpo={data.attendsExpo}
+    />
 
     <ClubInfoPanel club={data} />
 
     <main
       data-pagefind-body
-      class="mt-6  prose prose-base dark:prose-invert mb-20 max-w-none  py-8 px-4 sm:px-4 md:px-6 lg:px-[5%]"
+      class="mt-6 prose prose-base dark:prose-invert mb-20 max-w-none py-8 px-4 sm:px-4 md:px-6 lg:px-[5%]"
     >
       <Content />
     </main>
@@ -71,11 +79,10 @@ const { data } = post;
     {data.tags.map((tag) => <span data-pagefind-filter="tag">{tag}</span>)}
 
     <p data-pagefind-filter={`members`}>{data.members.previousYear}</p>
-    
+
     {data.attendsExpo && <p data-pagefind-filter={`other`}>社團博覽會攤位</p>}
     {data.hasClubStamp && <p data-pagefind-filter={`other`}>社團博覽會印章</p>}
     {data.acceptsUnofficial && <p data-pagefind-filter={`other`}>可地社</p>}
-
   </div>
 
   <div data-pagefind-ignore class="hidden">
