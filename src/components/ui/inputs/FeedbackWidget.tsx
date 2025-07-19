@@ -1,8 +1,6 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { MessageSquare, X, Send, Loader, CheckCircle, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-const GAS_WEB_APP_URL = import.meta.env.PUBLIC_FEEDBACK_URL || '';
-
 
 const FEEDBACK_TYPES = ["內文更正", "Bug 回報", "改善建議", "其他"];
 
@@ -66,29 +64,37 @@ function FeedbackWidget() {
 
         const pageUrl = pageType === 'current' ? window.location.href : otherPage;
 
-        const params = new URLSearchParams({
+        const payload = {
             type,
             pageUrl,
             feedbackText,
             email,
-        });
+        };
 
         try {
-            const response = await fetch(`${GAS_WEB_APP_URL}?${params.toString()}`);
-            if (!response.ok) {
-                throw new Error(`伺服器錯誤: ${response.statusText}`);
-            }
-            const result = await response.json();
-            if (result.status === 'success') {
+            const response = await fetch('/api/feedback', { // API 路由
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload), // 將數據作為 JSON body 發送
+            });
+
+            if (response.status === 201) { // 201 Created 表示成功
                 setStatus('success');
+                // 成功後 5 秒自動關閉視窗並重設表單
                 setTimeout(() => {
                     setIsOpen(false);
                     setStatus('idle');
                     setFeedbackText('');
                     setEmail('');
+                    setOtherPage('');
+                    setPageType('current');
+                    setType(FEEDBACK_TYPES[0]);
                 }, 5000);
             } else {
-                throw new Error(result.message || '發生未知錯誤');
+                const errorData = await response.json();
+                throw new Error(errorData.message || `伺服器錯誤: ${response.status}`);
             }
         } catch (error: any) {
             setStatus('error');
@@ -126,7 +132,7 @@ function FeedbackWidget() {
                                     提交成功！
                                 </motion.h4>
                                 <motion.p variants={successItemVariants} className="text-sm text-primary-700">
-                                    感謝您的回饋，確認信已寄送至您的信箱。
+                                    感謝您的回饋，確認信會在幾分鐘內寄出，謝謝！
                                 </motion.p>
                             </motion.div>
                         ) : (

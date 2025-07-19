@@ -1,0 +1,196 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { auth, db } from "../../firebase/server";
+
+export const prerender = false;
+
+type StringCountMap = {
+  [key: string]: number;
+};
+
+type FeedbackResponse = {
+  submittedAt: { seconds: number; nanoseconds: number };
+  type: string;
+  feedbackText: string;
+  pageUrl: string;
+  userEmail: string;
+};
+
+let isAuthorized = false;
+let user = null;
+
+const sessionCookie = Astro.cookies.get("__session")?.value;
+
+if (sessionCookie) {
+  try {
+    const decodedToken = await auth.verifySessionCookie(sessionCookie, true);
+    user = { uid: decodedToken.uid, email: decodedToken.email };
+    const adminRef = db.collection("admins").doc(user.uid);
+    const adminDoc = await adminRef.get();
+    if (adminDoc.exists) {
+      isAuthorized = true;
+    }
+  } catch (error) {
+    console.warn("Admin access attempt with invalid session cookie.");
+  }
+}
+
+if (!isAuthorized) {
+  return new Response(null, { status: 404 });
+}
+
+const tableHeaders = [
+  { key: "submittedAt", label: "提交時間" },
+  { key: "type", label: "反饋類型" },
+  { key: "feedbackText", label: "反饋內文" },
+  { key: "pageUrl", label: "反饋頁面" },
+  { key: "userEmail", label: "Gmail" },
+];
+
+const feedbackSnapshot = await db.collection("feedbackSubmissions").get();
+
+const responses = feedbackSnapshot.docs.map((doc) => {
+  const data = doc.data();
+  return {
+    ...data,
+    pageUrl: data.pageUrl ? decodeURIComponent(data.pageUrl) : "N/A",
+  } as FeedbackResponse;
+});
+const totalResponses = responses.length;
+
+const pageUrlCounts = responses.reduce((acc: StringCountMap, res) => {
+  const pageUrl = res.pageUrl || "未填寫";
+  acc[pageUrl] = (acc[pageUrl] || 0) + 1;
+  return acc;
+}, {});
+
+const typeCounts = responses.reduce((acc: StringCountMap, res) => {
+  const type = res.type || "未填寫";
+  acc[type] = (acc[type] || 0) + 1;
+  return acc;
+}, {});
+---
+
+<Layout title="反饋結果儀表板" padding={false}>
+  <div class="container mx-auto p-8 -mt-12">
+    <h1 class="text-3xl font-bold mb-6">反饋彙整</h1>
+    <p class="mb-8 text-lg">
+      總共收到 <span class="font-bold text-accent-500">{totalResponses}</span> 份反饋
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-primary-50 p-6 rounded-lg">
+        <h2 class="text-xl font-semibold mb-4">類型分佈</h2>
+        <ul>
+          {
+            Object.entries(typeCounts).map(([type, count]) => (
+              <li class="flex justify-between py-1">
+                <span>{type}</span>
+                <span class="font-mono">{count}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="bg-primary-50 p-6 rounded-lg">
+        <h2 class="text-xl font-semibold mb-4">頁面分佈</h2>
+        <ul>
+          {
+            Object.entries(pageUrlCounts).map(([page, count]) => (
+              <li class="flex justify-between py-1 text-sm break-all">
+                <span>{page}</span>
+                <span class="font-mono ml-4 shrink-0">{count}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="text-2xl font-bold mt-12 mb-4">原始數據</h2>
+    <div
+      class="w-full overflow-x-auto bg-primary-50 rounded-lg no-scrollbar"
+      id="sheet-div"
+    >
+      <table class="w-full text-sm text-left text-primary-700">
+        <thead
+          class="text-base text-primary-800 uppercase bg-primary-50 sticky top-0 border-b border-accent-500"
+        >
+          <tr>
+            {
+              tableHeaders.map((header) => (
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                  {header.label}
+                </th>
+              ))
+            }
+          </tr>
+        </thead>
+        <tbody>
+          {
+            responses.map((response, index) => (
+              <tr
+                class={`bg-primary-50 not-last:border-b border-neutral-100 hover:bg-primary-100/20`}
+              >
+                {tableHeaders.map((header) => {
+                  const key = header.key as keyof FeedbackResponse;
+                  return (
+                    <td
+                      class="px-6 py-4 whitespace-nowrap max-w-sm truncate"
+                      title={response[key]?.toString()}
+                    >
+                      {key === "submittedAt" && response[key]
+                        ? new Date(
+                            (response[key] as { seconds: number }).seconds *
+                              1000
+                          ).toLocaleString("zh-TW", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : response[key] || "N/A"}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))
+          }
+          {
+            responses.length === 0 && (
+              <tr>
+                <td
+                  colspan={tableHeaders.length}
+                  class="text-center py-8 text-primary-800"
+                >
+                  目前沒有任何反饋。
+                </td>
+              </tr>
+            )
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const scrollContainer = document.getElementById("sheet-div");
+
+  if (scrollContainer) {
+    scrollContainer.addEventListener(
+      "wheel",
+      (event) => {
+        const wheelEvent = event as WheelEvent;
+        if (wheelEvent.deltaY !== 0 && wheelEvent.shiftKey) {
+          wheelEvent.stopPropagation();
+          wheelEvent.preventDefault();
+          scrollContainer.scrollLeft += wheelEvent.deltaY;
+        }
+      },
+      { passive: false }
+    );
+  }
+</script>

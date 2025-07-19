@@ -1,6 +1,7 @@
 ---
 import Navbar from "@components/sections/Navbar.astro";
 import Footer from "@components/sections/Footer.astro";
+import SurveyWidget from "@components/ui/blocks/SurveyWidget";
 import Meta from "@components/Meta.astro";
 import { SITE } from "@data/constants";
 import "@styles/global.css";
@@ -93,6 +94,7 @@ interface Props {
 
       requestAnimationFrame(raf);
     </script>
+    <SurveyWidget client:idle />
   </body>
 </html>
 <style>
