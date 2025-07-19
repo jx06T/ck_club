@@ -33,7 +33,7 @@ export default defineConfig({
       external: ['node:worker_threads'],
     },
     define: {
-      'global.MessageChannel': 'undefined' 
+      // 'global.MessageChannel': 'undefined'
     },
     plugins: [
       tailwindcss(),
@@ -51,7 +51,7 @@ export default defineConfig({
         },
       })],
   },
-
+ 
   integrations: [react(), sitemap()],
 
   build: {
