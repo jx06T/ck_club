@@ -1,28 +1,34 @@
 import type { APIRoute } from 'astro';
 import { db } from '../../firebase/server';
 
+export const prerender = false;
+
 export const POST: APIRoute = async ({ request }) => {
   try {
-    console.log("問卷後端被戳")
-    const surveyData = await request.json();
+      const surveyData = await request.json();
+      console.log(surveyData);
 
-    // 可以加上一些基本的驗證
-    if (!surveyData || Object.keys(surveyData).length === 0) {
-      return new Response("Survey data cannot be empty", { status: 400 });
+    const requiredFields = ['school', 'grade', 'gender', 'source', 'attendedExhibition', 'attendedFair'];
+    const missingFields = requiredFields.filter(field => surveyData[field] === undefined);
+
+    if (missingFields.length > 0) {
+      return new Response(
+        JSON.stringify({ message: `缺少必要欄位: ${missingFields.join(', ')}` }),
+        { status: 400 }
+      );
     }
-
-    // 將數據寫入 Firestore
-    const surveyCollection = db.collection('surveyResponses');
-    await surveyCollection.add({
+    
+    await db.collection('surveyResponses').add({
       ...surveyData,
       submittedAt: new Date(),
     });
 
-    return new Response(JSON.stringify({ message: "Survey submitted successfully" }), {
+    return new Response(JSON.stringify({ message: "問卷提交成功" }), {
       status: 201, // 201 Created
     });
+
   } catch (error) {
-    console.error("Error submitting survey:", error);
-    return new Response("Internal Server Error", { status: 500 });
+    console.error("提交問卷時發生錯誤:", error);
+    return new Response(JSON.stringify({ message: "伺服器內部錯誤" }), { status: 500 });
   }
 };
