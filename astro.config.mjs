@@ -9,7 +9,7 @@ import sitemap from '@astrojs/sitemap';
 import cloudflare from '@astrojs/cloudflare';
 import vercel from '@astrojs/vercel/serverless';
 
-const isVercel = process.env.VERCEL === '1' || true;
+const isVercel = process.env.VERCEL === '1';
 const isCloudflare = process.env.CF_PAGES === '1';
 
 let adapter
@@ -29,11 +29,11 @@ export default defineConfig({
   site: process.env.PUBLIC_SITE || 'http://localhost:4321',
 
   vite: {
-    // resolve: {
-    //   alias: {
-    //     "react-dom/server": "react-dom/server.edge",
-    //   },
-    // },
+    resolve: {
+      alias: {
+        "react-dom/server": "react-dom/server.edge",
+      },
+    },
     ssr: {
       // external: ['node:worker_threads'],
     },
