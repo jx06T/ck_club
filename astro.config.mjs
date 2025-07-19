@@ -27,18 +27,12 @@ if (isVercel) {
 
 export default defineConfig({
   site: process.env.PUBLIC_SITE || 'http://localhost:4321',
-
+  output: "server",
   vite: {
-    // resolve: {
-    //   alias: {
-    //     "react-dom/server": "react-dom/server.edge",
-    //   },
-    // },
-    ssr: {
-      external: ['node:worker_threads'],
-    },
-    define: {
-      // 'global.MessageChannel': 'undefined'
+    resolve: {
+      alias: {
+        "react-dom/server": "react-dom/server.edge",
+      },
     },
     plugins: [
       tailwindcss(),
