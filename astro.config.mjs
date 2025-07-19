@@ -6,31 +6,28 @@ import svgr from "vite-plugin-svgr"
 
 import sitemap from '@astrojs/sitemap';
 
-// import vercel from '@astrojs/vercel/serverless';
-// import cloudflare from '@astrojs/cloudflare';
+import cloudflare from '@astrojs/cloudflare';
+import vercel from '@astrojs/vercel/serverless';
 
-// const isVercel = process.env.VERCEL === '1';
-// const isCloudflare = process.env.CF_PAGES === '1';
+const isVercel = process.env.VERCEL === '1';
+const isCloudflare = process.env.CF_PAGES === '1';
 
-// // 根據環境選擇適配器
-// let adapter;
-// let output = 'static';
+let adapter;
 
-// if (isVercel) {
-//   adapter = vercel({
-//     webAnalytics: {
-//       enabled: true,
-//     },
-//     maxDuration: 8,
-//   });
-//   output = 'server';
-// } else if (isCloudflare) {
-//   adapter = cloudflare();
-//   output = 'server';
-// }
+if (isVercel) {
+  adapter = vercel({
+    webAnalytics: {
+      enabled: true,
+    },
+    maxDuration: 8,
+  });
+} else if (isCloudflare) {
+  adapter = cloudflare();
+}
 
 export default defineConfig({
   site: process.env.PUBLIC_SITE || 'http://localhost:4321',
+
   vite: {
     plugins: [
       tailwindcss(),
@@ -48,13 +45,12 @@ export default defineConfig({
         },
       })],
   },
+
   integrations: [react(), sitemap()],
-  
-  // @ts-ignore
-  // output: output,
-  // adapter: adapter,
-  
+
   build: {
     format: 'directory'
-  }
+  },
+
+  adapter: adapter
 });
