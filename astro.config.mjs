@@ -8,11 +8,14 @@ import sitemap from '@astrojs/sitemap';
 
 import cloudflare from '@astrojs/cloudflare';
 import vercel from '@astrojs/vercel/serverless';
+import node from '@astrojs/node';
 
 const isVercel = process.env.VERCEL === '1';
 const isCloudflare = process.env.CF_PAGES === '1';
 
-let adapter;
+let adapter = node({
+  mode: 'standalone'
+});
 
 if (isVercel) {
   adapter = vercel({
