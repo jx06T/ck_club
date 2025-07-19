@@ -6,7 +6,6 @@ import { getAuth, signOut, onAuthStateChanged, type User } from 'firebase/auth';
 
 function LogoutButton() {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
-    // 新增一個 loading 狀態，避免在初始檢查完成前閃爍
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const auth = getAuth(app);
