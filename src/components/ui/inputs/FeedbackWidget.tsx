@@ -64,12 +64,12 @@ function FeedbackWidget() {
 
         const pageUrl = pageType === 'current' ? window.location.href : otherPage;
 
-        const payload  = new URLSearchParams({
+        const payload = {
             type,
             pageUrl,
             feedbackText,
             email,
-        });
+        };
 
         try {
             const response = await fetch('/api/feedback', { // API 路由
@@ -80,14 +80,12 @@ function FeedbackWidget() {
                 body: JSON.stringify(payload), // 將數據作為 JSON body 發送
             });
 
-            // 處理後端的回應
             if (response.status === 201) { // 201 Created 表示成功
                 setStatus('success');
                 // 成功後 5 秒自動關閉視窗並重設表單
                 setTimeout(() => {
                     setIsOpen(false);
                     setStatus('idle');
-                    // 清空表單欄位
                     setFeedbackText('');
                     setEmail('');
                     setOtherPage('');
@@ -95,7 +93,6 @@ function FeedbackWidget() {
                     setType(FEEDBACK_TYPES[0]);
                 }, 5000);
             } else {
-                // 如果後端回傳其他錯誤狀態碼
                 const errorData = await response.json();
                 throw new Error(errorData.message || `伺服器錯誤: ${response.status}`);
             }
@@ -135,7 +132,7 @@ function FeedbackWidget() {
                                     提交成功！
                                 </motion.h4>
                                 <motion.p variants={successItemVariants} className="text-sm text-primary-700">
-                                    感謝您的回饋，確認信已寄送至您的信箱。
+                                    感謝您的回饋，確認信會在幾分鐘內寄出，謝謝！
                                 </motion.p>
                             </motion.div>
                         ) : (
