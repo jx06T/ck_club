@@ -8,14 +8,11 @@ import sitemap from '@astrojs/sitemap';
 
 import cloudflare from '@astrojs/cloudflare';
 import vercel from '@astrojs/vercel/serverless';
-import node from '@astrojs/node';
 
-const isVercel = process.env.VERCEL === '1';
+const isVercel = process.env.VERCEL === '1' || true;
 const isCloudflare = process.env.CF_PAGES === '1';
 
-let adapter = node({
-  mode: 'standalone'
-});
+let adapter
 
 if (isVercel) {
   adapter = vercel({
@@ -32,6 +29,12 @@ export default defineConfig({
   site: process.env.PUBLIC_SITE || 'http://localhost:4321',
 
   vite: {
+    ssr: {
+      external: ['node:worker_threads'],
+    },
+    define: {
+      'global.MessageChannel': 'undefined' 
+    },
     plugins: [
       tailwindcss(),
       svgr({
