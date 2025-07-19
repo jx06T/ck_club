@@ -27,7 +27,7 @@ function LogoutButton() {
     const handleClearAuth = async () => {
         try {
             await signOut(auth);
-            await fetch("/api/auth/signin", {});
+            await fetch("/api/signout", {});
             console.log("Authentication cleared successfully.");
         } catch (error) {
             console.error("Failed to clear authentication:", error);
