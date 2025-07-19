@@ -4,8 +4,6 @@ import { db, auth } from '../../../firebase/server';
 export const prerender = false;
 
 export const GET: APIRoute = async ({ params, request }) => {
-    console.log("按讚後端被戳(GET)")
-
     const { clubCode } = params;
 
     if (!clubCode) {

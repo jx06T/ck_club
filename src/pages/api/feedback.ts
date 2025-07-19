@@ -6,8 +6,6 @@ export const prerender = false;
 const GAS_WEB_APP_URL = import.meta.env.PUBLIC_FEEDBACK_URL;
 
 export const POST: APIRoute = async ({ request }) => {
-    console.log("反饋後端被戳 (GAS 版本)");
-
     try {
         const { email, feedbackText, pageUrl, type } = await request.json();
 

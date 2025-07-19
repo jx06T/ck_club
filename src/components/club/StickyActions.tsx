@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Star, Share2, MapPin, Bookmark, Heart } from 'lucide-react';
 import { useLocalStorage } from '@/scripts/useLocalStorage';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { DeviconGoogle } from '@components/ui/Icons'
+import { LogosGoogleIcon } from '@components/ui/Icons'
 
 import { app } from '../../firebase/client';
 
@@ -107,7 +107,25 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth, provider);
             user = result.user; // 登入成功，獲取 user
-            setCurrentUser(user); // 更新 state
+
+            if (user) {
+                const idToken = await user.getIdToken();
+
+                const response = await fetch('/api/signin', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${idToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create server session.');
+                }
+
+                console.log("Server session created successfully!");
+            }
+
+            setCurrentUser(user);
 
         } catch (error) {
             console.error("Google Sign-In failed:", error);
@@ -120,22 +138,18 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
         console.log("Like button clicked!");
         let user = currentUser;
 
-        // 1. 檢查登入，如果未登入，則觸發登入
         if (!user) {
             setShouldShowLoginBtn(!shouldShowLoginBtn)
             return;
         }
 
-        // 2. 準備 API 請求
         const action = isLiked ? 'unlike' : 'like';
-        const originalLikeState = { isLiked, likeCount }; // 保存原始狀態以便回滾
+        const originalLikeState = { isLiked, likeCount };
 
-        // 3. 樂觀更新 UI -> 立即反應，提升使用者體驗
         setIsLiked(!isLiked);
         setLikeCount(prevCount => (action === 'like' ? prevCount + 1 : prevCount - 1));
 
         try {
-            // 4. 獲取 Token 並發送請求到後端
             const idToken = await user.getIdToken();
             const response = await fetch(`/api/likes/${clubCode}`, {
                 method: 'POST',
@@ -146,19 +160,13 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                 body: JSON.stringify({ action }),
             });
 
-            // 5. 處理後端回應
             if (!response.ok) {
-                // 如果後端出錯，拋出錯誤，進入 catch 區塊
                 throw new Error(`API responded with status: ${response.status}`);
             }
 
-            // 可選：如果成功，可以解析後端回傳的最新數據來同步狀態，但樂觀更新通常足夠
-            // const latestData = await response.json();
-            // setLikeCount(latestData.newLikeCount);
-
         } catch (error) {
             console.error("Failed to perform like/unlike action:", error);
-            // 6. 錯誤處理：回滾 UI 到原始狀態
+            
             setIsLiked(originalLikeState.isLiked);
             setLikeCount(originalLikeState.likeCount);
         }
@@ -213,7 +221,7 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
 
                 <div onClick={handleAuth} className={`w-10 h-[9rem] -mb-2 overflow-hidden my-0  bg-accent-300/70 rounded-full  ${shouldShowLoginBtn ? " max-h-96 opacity-100" : " max-h-0 opacity-0"} transition-[max-height,opacity] duration-300`}>
                     <a className='  rounded-full h-full w-full py-1'>
-                        <DeviconGoogle className=' w-full h-5 mt-0.5' />
+                        <LogosGoogleIcon className=' w-full h-5 mt-1.5 inline-block' />
                         <span style={{ writingMode: "vertical-lr" }} className=' h-28'>點擊驗證身分</span>
                     </a>
                 </div>
