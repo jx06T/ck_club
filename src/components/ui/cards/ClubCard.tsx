@@ -1,4 +1,4 @@
-import { Star } from 'lucide-react';
+import { Star, Bookmark } from 'lucide-react';
 import type { Club } from '@/types/club';
 import { motion } from 'framer-motion';
 type ClubData = Club;
@@ -49,12 +49,11 @@ function ClubCard({ club, isFavorite, onToggleFavorite, onClick }: {
             >
                 <motion.div
                     animate={{
-                        scale: isFavorite ? [1, 1.5, 1] : 1,
-                        rotate: isFavorite ? [0, 10, 0] : 0
+                        scale: isFavorite ? [1, 1.2, 1] : [1, 1.05, 1],
                     }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
-                    <Star size={20} fill={isFavorite ? 'currentColor' : 'none'} />
+                    <Bookmark size={20} fill={isFavorite ? 'currentColor' : 'none'} />
                 </motion.div>
             </button>
         </div >

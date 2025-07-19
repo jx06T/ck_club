@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Star, Share2, MapPin } from 'lucide-react';
+import { Star, Share2, MapPin, Bookmark, Heart } from 'lucide-react';
 import { useLocalStorage } from '@/scripts/useLocalStorage';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { DeviconGoogle } from '@components/ui/Icons'
+
+import { app } from '../../firebase/client';
+
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, type User } from 'firebase/auth';
 
 interface StickyActionsProps {
     clubCode: string;
@@ -14,10 +19,48 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
     const [isFavorite, setIsFavorite] = useState(false);
     const [isClient, setIsClient] = useState(false);
 
+    const [likeCount, setLikeCount] = useState<number>(0);
+    const [isLiked, setIsLiked] = useState<boolean>(false);
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
+    const [shouldShowLoginBtn, setShouldShowLoginBtn] = useState<boolean>(false);
+
+    const auth = getAuth(app);
+
     useEffect(() => {
         setIsClient(true);
         setIsFavorite(favorites.has(clubCode));
     }, [favorites, clubCode]);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setCurrentUser(user);
+            fetchInitialData(user);
+        });
+
+        fetchInitialData(auth.currentUser);
+
+        return () => unsubscribe();
+    }, [clubCode]);
+
+    const fetchInitialData = async (user: User | null) => {
+        try {
+            const headers: HeadersInit = {};
+            if (user) {
+                const idToken = await user.getIdToken();
+                headers['Authorization'] = `Bearer ${idToken}`;
+            }
+
+            const response = await fetch(`/api/likes/${clubCode}`, { headers });
+            if (!response.ok) throw new Error('Failed to fetch initial data');
+
+            const data = await response.json();
+            setLikeCount(data.likeCount);
+            setIsLiked(data.isLikedByCurrentUser);
+        } catch (error) {
+            console.error(error);
+        } finally {
+        }
+    };
 
     const handleToggleFavorite = () => {
         setFavorites(prev => {
@@ -53,8 +96,79 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
         }
     };
 
+    const handleAuth = async () => {
+        let user = currentUser;
+        if (user) {
+            console.log("已經登入")
+            return;
+        }
+
+        try {
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            user = result.user; // 登入成功，獲取 user
+            setCurrentUser(user); // 更新 state
+
+        } catch (error) {
+            console.error("Google Sign-In failed:", error);
+            return;
+        }
+
+    }
+
+    const handleLike = async () => {
+        console.log("Like button clicked!");
+        let user = currentUser;
+
+        // 1. 檢查登入，如果未登入，則觸發登入
+        if (!user) {
+            setShouldShowLoginBtn(!shouldShowLoginBtn)
+            return;
+        }
+
+        // 2. 準備 API 請求
+        const action = isLiked ? 'unlike' : 'like';
+        const originalLikeState = { isLiked, likeCount }; // 保存原始狀態以便回滾
+
+        // 3. 樂觀更新 UI -> 立即反應，提升使用者體驗
+        setIsLiked(!isLiked);
+        setLikeCount(prevCount => (action === 'like' ? prevCount + 1 : prevCount - 1));
+
+        try {
+            // 4. 獲取 Token 並發送請求到後端
+            const idToken = await user.getIdToken();
+            const response = await fetch(`/api/likes/${clubCode}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ action }),
+            });
+
+            // 5. 處理後端回應
+            if (!response.ok) {
+                // 如果後端出錯，拋出錯誤，進入 catch 區塊
+                throw new Error(`API responded with status: ${response.status}`);
+            }
+
+            // 可選：如果成功，可以解析後端回傳的最新數據來同步狀態，但樂觀更新通常足夠
+            // const latestData = await response.json();
+            // setLikeCount(latestData.newLikeCount);
+
+        } catch (error) {
+            console.error("Failed to perform like/unlike action:", error);
+            // 6. 錯誤處理：回滾 UI 到原始狀態
+            setIsLiked(originalLikeState.isLiked);
+            setLikeCount(originalLikeState.likeCount);
+        }
+    };
+
     const { scrollYProgress } = useScroll();
     const y = useTransform(scrollYProgress, [0, 1], [0, 70]);
+    if (!isClient) {
+        return null
+    }
 
     return (
         <motion.div
@@ -65,23 +179,52 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                 onClick={handleToggleFavorite}
                 disabled={!isClient}
 
-                className={`w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center hover:scale-105 hover:bg-accent-200/70 transition-colors ${isFavorite ? "text-accent-500" : "text-white"}`}
+                className={`w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center  hover:bg-accent-200/70 transition-colors duration-300 ${isFavorite ? "text-accent-500" : "text-white"}`}
                 aria-label={isFavorite ? '取消收藏' : '加入收藏'}
             >
                 <motion.div
                     animate={{
-                        scale: isFavorite ? [1, 2, 1] : 1,
-                        rotate: isFavorite ? [0, 10, 0] : 0
+                        scale: isFavorite ? [1, 1.2, 1] : [1, 1.05, 1],
                     }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
-                    <Star size={20} fill={isFavorite ? 'currentColor' : 'none'} />
+                    <Bookmark size={20} fill={isFavorite ? 'currentColor' : 'none'} />
                 </motion.div>
             </button>
 
             <button
+                onClick={handleLike}
+                disabled={!isClient}
+
+                className={`w-10 py-2 rounded-full bg-accent-300/70 shadow-md  hover:bg-accent-200/70 transition-color duration-300 ${isLiked ? "text-[#ff3040]" : "text-white"}`}
+                aria-label={isLiked ? '取消按讚' : '按讚'}
+            >
+                <div className=' w-full flex items-center justify-center '>
+                    <motion.div
+                        animate={{
+                            scale: isLiked ? [1, 1.2, 1] : [1, 1.05, 1],
+                        }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                    >
+                        <Heart size={20} fill={isLiked ? 'currentColor' : 'none'} />
+                        <span className=' text-white '>{likeCount}</span>
+                    </motion.div>
+                </div>
+
+                <div onClick={handleAuth} className={`w-10 h-[9rem] -mb-2 overflow-hidden my-0  bg-accent-300/70 rounded-full  ${shouldShowLoginBtn ? " max-h-96 opacity-100" : " max-h-0 opacity-0"} transition-[max-height,opacity] duration-300`}>
+                    <a className='  rounded-full h-full w-full py-1'>
+                        <DeviconGoogle className=' w-full h-5 mt-0.5' />
+                        <span style={{ writingMode: "vertical-lr" }} className=' h-28'>點擊驗證身分</span>
+                    </a>
+                </div>
+
+
+            </button>
+
+
+            <button
                 onClick={handleShare}
-                className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center hover:scale-105 hover:bg-accent-200/70 transition-colors text-white"
+                className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center  hover:bg-accent-200/70 transition-colors duration-300 text-white"
                 aria-label="分享"
             >
                 <Share2 size={24} />
@@ -90,7 +233,7 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                 <a
                     href={`/map?club=${clubCode}`}
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center hover:scale-105 hover:bg-accent-200/70 transition-colors text-white"
+                    className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center  hover:bg-accent-200/70 transition-colors duration-300 text-white"
                     aria-label="地圖位置"
                 >
                     <MapPin size={24} />
