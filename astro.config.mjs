@@ -30,9 +30,9 @@ export default defineConfig({
 
   vite: {
     resolve: {
-      alias: {
+      alias: isCloudflare ? {
         "react-dom/server": "react-dom/server.edge",
-      },
+      } : {},
     },
     plugins: [
       tailwindcss(),
@@ -49,6 +49,9 @@ export default defineConfig({
           },
         },
       })],
+    optimizeDeps: {
+      exclude: ['functions'],
+    },
   },
 
   integrations: [react(), sitemap()],
