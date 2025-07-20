@@ -4,9 +4,10 @@ import { useLocalStorage } from '@/scripts/useLocalStorage';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { LogosGoogleIcon } from '@components/ui/Icons'
 
-import { app } from '../../firebase/client';
+import { useAuth } from '@/scripts/useAuth';
+import { createDocument, deleteDocument, readDocument } from '@/firebase/services';
+import { type User } from 'firebase/auth';
 
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, type User } from 'firebase/auth';
 
 interface StickyActionsProps {
     clubCode: string;
@@ -21,10 +22,9 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
 
     const [likeCount, setLikeCount] = useState<number>(0);
     const [isLiked, setIsLiked] = useState<boolean>(false);
-    const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [shouldShowLoginBtn, setShouldShowLoginBtn] = useState<boolean>(false);
 
-    const auth = getAuth(app);
+    const { isLoggedIn, user, signIn, getIdToken, isLoading } = useAuth();
 
     useEffect(() => {
         setIsClient(true);
@@ -32,35 +32,30 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
     }, [favorites, clubCode]);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setCurrentUser(user);
-            fetchInitialData(user);
-        });
+        const fetchInitialData = async () => {
+            try {
+                const clubData = await readDocument('clubs', clubCode);
+                if (clubData) {
+                    setLikeCount(clubData.likeCount || 0);
+                }
 
-        fetchInitialData(auth.currentUser);
-
-        return () => unsubscribe();
-    }, [clubCode]);
-
-    const fetchInitialData = async (user: User | null) => {
-        try {
-            const headers: HeadersInit = {};
-            if (user) {
-                const idToken = await user.getIdToken();
-                headers['Authorization'] = `Bearer ${idToken}`;
+                if (user) {
+                    const likeDocId = `${user.uid}_${clubCode}`;
+                    const likeDoc = await readDocument('likes', likeDocId);
+                    setIsLiked(!!likeDoc);
+                } else {
+                    setIsLiked(false);
+                }
+            } catch (error) {
+                console.error("Failed to fetch initial like data:", error);
             }
+        };
 
-            const response = await fetch(`/api/likes/${clubCode}`, { headers });
-            if (!response.ok) throw new Error('Failed to fetch initial data');
-
-            const data = await response.json();
-            setLikeCount(data.likeCount);
-            setIsLiked(data.isLikedByCurrentUser);
-        } catch (error) {
-            console.error(error);
-        } finally {
+        if (!isLoading) {
+            fetchInitialData();
         }
-    };
+
+    }, [clubCode, user, isLoading]);
 
     const handleToggleFavorite = () => {
         setFavorites(prev => {
@@ -97,76 +92,42 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
     };
 
     const handleAuth = async () => {
-        let user = currentUser;
-        if (user) {
-            console.log("已經登入")
+        if (isLoggedIn) {
+            console.log("已經登入");
             return;
         }
 
-        try {
-            const provider = new GoogleAuthProvider();
-            const result = await signInWithPopup(auth, provider);
-            user = result.user; // 登入成功，獲取 user
+        await signIn();
+    };
 
-            if (user) {
-                const idToken = await user.getIdToken();
 
-                const response = await fetch('/api/signin', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${idToken}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to create server session.');
-                }
-
-                console.log("Server session created successfully!");
-            }
-
-            setCurrentUser(user);
-
-        } catch (error) {
-            console.error("Google Sign-In failed:", error);
-            return;
-        }
-
-    }
 
     const handleLike = async () => {
-        console.log("Like button clicked!");
-        let user = currentUser;
-
-        if (!user) {
-            setShouldShowLoginBtn(!shouldShowLoginBtn)
+        if (!isLoggedIn || !user) {
+            setShouldShowLoginBtn(!shouldShowLoginBtn);
             return;
         }
 
-        const action = isLiked ? 'unlike' : 'like';
+        const newLikedState = !isLiked;
         const originalLikeState = { isLiked, likeCount };
+        // 直接從 hook 提供的 user 物件中獲取 uid
+        const likeDocId = `${user.uid}_${clubCode}`;
 
-        setIsLiked(!isLiked);
-        setLikeCount(prevCount => (action === 'like' ? prevCount + 1 : prevCount - 1));
-
+        console.log(likeDocId)
+        setIsLiked(newLikedState);
+        setLikeCount(prev => newLikedState ? prev + 1 : prev - 1);
         try {
-            const idToken = await user.getIdToken();
-            const response = await fetch(`/api/likes/${clubCode}`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${idToken}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ action }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`API responded with status: ${response.status}`);
+            if (newLikedState) {
+                await createDocument('likes', likeDocId, {
+                    userId: user.uid,
+                    clubCode: clubCode,
+                    createdAt: new Date(),
+                });
+            } else {
+                await deleteDocument('likes', likeDocId);
             }
-
         } catch (error) {
-            console.error("Failed to perform like/unlike action:", error);
-            
+            console.error("Like/Unlike operation failed:", error);
             setIsLiked(originalLikeState.isLiked);
             setLikeCount(originalLikeState.likeCount);
         }
@@ -174,8 +135,8 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
 
     const { scrollYProgress } = useScroll();
     const y = useTransform(scrollYProgress, [0, 1], [0, 70]);
-    if (!isClient) {
-        return null
+    if (!isClient || isLoading) {
+        return null;
     }
 
     return (
