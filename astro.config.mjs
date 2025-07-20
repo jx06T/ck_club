@@ -29,6 +29,11 @@ export default defineConfig({
   site: process.env.PUBLIC_SITE || 'http://localhost:4321',
 
   vite: {
+    resolve: {
+      alias: {
+        "react-dom/server": "react-dom/server.edge",
+      },
+    },
     plugins: [
       tailwindcss(),
       svgr({
@@ -52,5 +57,5 @@ export default defineConfig({
     format: 'directory'
   },
 
-  adapter:adapter ,
+  adapter: adapter,
 });
