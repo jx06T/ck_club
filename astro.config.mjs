@@ -52,5 +52,5 @@ export default defineConfig({
     format: 'directory'
   },
 
-  // adapter:adapter ,
+  adapter:adapter ,
 });
