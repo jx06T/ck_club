@@ -26,13 +26,12 @@ import {
     where,
     addDoc,
     getCountFromServer,
-    Timestamp, // 引入 Timestamp 以便在新增時使用伺服器時間
+    Timestamp, 
     type DocumentData,
     type QueryDocumentSnapshot
 } from "firebase/firestore";
 
-// --- 現有類型定義 ---
-export type { User }; // 從 firebase/auth 重新導出 User 類型，方便組件引用
+export type { User }; 
 
 export interface NewsData {
     id: string;
@@ -45,7 +44,6 @@ export interface NewsData {
     link?: string;
 }
 
-// --- 新增的類型定義，與組件中的保持一致 ---
 export interface BroadcastInput {
     clubId: string;
     clubName: string;
@@ -272,4 +270,12 @@ export const readNewsCollectionWithPagination = (
 ) => {
     console.warn("readNewsCollectionWithPagination is deprecated. Please use readCollectionWithPagination.");
     return readCollectionWithPagination(collectionName, itemsPerPage, lastVisibleDoc);
+};
+
+export const getSurveyTotalCount = async (): Promise<number> => {
+    const surveyStats = await readDocument('stats', 'survey');
+    if (surveyStats && typeof surveyStats.count === 'number') {
+        return surveyStats.count;
+    }
+    return 0; 
 };

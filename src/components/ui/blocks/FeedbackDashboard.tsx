@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/scripts/useAuth';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import {triggerSignIn} from '../../../firebase/services'
-import { reload } from 'firebase/auth';
 
 
 // 定義從後端獲取的數據類型
