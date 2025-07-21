@@ -1,9 +1,8 @@
 import { useState, useEffect, type MouseEvent } from 'react';
 import { useLocalStorage } from '@/scripts/useLocalStorage';
-import { ChevronRight, ChevronLeft, Send, Loader, PawPrint, AlertCircle } from "lucide-react";
+import { ChevronRight, ChevronLeft, Send, Loader, PawPrint, AlertCircle, X, Clock } from "lucide-react";
 import { motion, AnimatePresence } from 'framer-motion';
 
-// --- 組件配置 ---
 const surveySteps = [
     { id: 'school', title: '您的學校（校友可選畢業學校）' },
     { id: 'grade', title: '您的年齡' },
@@ -13,9 +12,9 @@ const surveySteps = [
     { id: 'exhibition', title: '社團聯展' },
     { id: 'exhibitionSource', title: '如何得知社團聯展這個活動（複選）' },
 ];
-const totalSteps = surveySteps.length - 1; // 實際問題步驟數
 
-// --- 動畫變體定義 ---
+const totalSteps = surveySteps.length - 1;
+
 const modalVariants = {
     hidden: { opacity: 0, scale: 0.95 },
     visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 300, damping: 30 } },
@@ -35,28 +34,82 @@ const successItemVariants = {
     visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100, damping: 12 } }
 } as const;
 
-// --- 主組件 ---
+// --- 主組件 (修改後) ---
 export default function SurveyWidget() {
     const [hasCompletedSurvey, setHasCompletedSurvey] = useLocalStorage('hasCompletedSurvey', false);
-    const [isReady, setIsReady] = useState(false);
+    const [remindLaterCount, setRemindLaterCount] = useLocalStorage('surveyRemindLaterCount', 0);
+    const [isSurveyVisible, setSurveyVisible] = useState(false);
 
     useEffect(() => {
-        setIsReady(true);
+        if (hasCompletedSurvey) return;
+
+        setRemindLaterCount(prev => prev + 1);
+
+        const REMIND_LATER_THRESHOLD = 4;
+        const shouldShowNow = remindLaterCount > REMIND_LATER_THRESHOLD;
+
+        const handleScroll = () => {
+            if (window.scrollY > 2400) {
+                setSurveyVisible(true);
+                window.removeEventListener('scroll', handleScroll);
+            }
+        };
+
+        if (remindLaterCount === 0) {
+            window.addEventListener('scroll', handleScroll, { passive: true });
+        }
+
+        if (shouldShowNow) {
+            const timer = setTimeout(() => {
+                setSurveyVisible(true);
+                setRemindLaterCount(0);
+            }, 2000);
+
+            return () => clearTimeout(timer);
+
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
     }, []);
 
-    if (!isReady || hasCompletedSurvey) {
+
+    if (typeof window === 'undefined' || !isSurveyVisible) {
         return null;
     }
 
-    return <SurveyForm onComplete={() => setHasCompletedSurvey(true)} />;
+    const handleComplete = () => {
+        setHasCompletedSurvey(true);
+        setSurveyVisible(false);
+    };
+
+    const handleDismiss = () => {
+        setSurveyVisible(false);
+        setRemindLaterCount(-2)
+        // 考慮將關閉視為永久完成，避免使用者感到煩擾
+        // setHasCompletedSurvey(true);
+    };
+
+    const handleRemindLater = () => {
+        setSurveyVisible(false);
+        setRemindLaterCount(1); // 開始計數
+    };
+
+    return <SurveyForm onComplete={handleComplete} onDismiss={handleDismiss} onRemindLater={handleRemindLater} />;
 }
 
-// --- 表單組件 ---
-function SurveyForm({ onComplete }: { onComplete: () => void }) {
+
+// --- 表單組件 (修改與修正後) ---
+function SurveyForm({ onComplete, onDismiss, onRemindLater }: {
+    onComplete: () => void;
+    onDismiss: () => void;
+    onRemindLater: () => void;
+}) {
     const [currentStep, setCurrentStep] = useState(0);
     const [formData, setFormData] = useState({
-        school: '', schoolOther: '不該存在!', grade: '', gender: '', genderOther: '不該存在!',
-        source: [] as string[], sourceOther: '', attendedFair: '', attendedExhibition: '', exhibitionSource: [] as string[], exhibitionSourceOther: ''
+        school: '', grade: '', gender: '',
+        source: [] as string[], sourceOther: '',
+        attendedFair: '', attendedExhibition: '',
+        exhibitionSource: [] as string[], exhibitionSourceOther: ''
     });
     const [status, setStatus] = useState<'idle' | 'start' | 'loading' | 'success' | 'error'>('start');
     const [validationError, setValidationError] = useState<string | null>(null);
@@ -65,33 +118,22 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
         setValidationError(null);
         const stepId = surveySteps[stepIndex].id;
         switch (stepId) {
-            case 'school':
-                if (!formData.school) return false;
-                if (formData.school === '其他' && !formData.schoolOther.trim()) return false;
-                return true;
-            case 'grade':
-                return !!formData.grade;
-            case 'gender':
-                if (!formData.gender) return false;
-                if (formData.gender === '其他' && !formData.genderOther.trim()) return false;
-                return true;
-            case 'source':
-                return formData.source.length > 0 || !!formData.sourceOther.trim();
-            case 'fair':
-                return !!formData.attendedFair;
-            case 'exhibition':
-                return !!formData.attendedExhibition;
-            case 'exhibitionSource':
-                return formData.exhibitionSource.length > 0 || !!formData.exhibitionSourceOther.trim();
-            default:
-                return true;
+            case 'school': return !!formData.school;
+            case 'grade': return !!formData.grade;
+            case 'gender': return !!formData.gender;
+            case 'source': return formData.source.length > 0 || !!formData.sourceOther.trim();
+            case 'fair': return !!formData.attendedFair;
+            case 'exhibition': return !!formData.attendedExhibition;
+            case 'exhibitionSource': return formData.exhibitionSource.length > 0 || !!formData.exhibitionSourceOther.trim();
+            default: return true;
         }
     };
 
     const handleNext = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (validateStep(currentStep)) {
-            setCurrentStep(prev => Math.min(prev + 1, surveySteps.length - 1));
+            let nextStep = currentStep + 1;
+            setCurrentStep(prev => Math.min(nextStep, totalSteps));
         } else {
             setValidationError('請完成此題再繼續');
         }
@@ -99,14 +141,19 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
 
     const handleBack = () => {
         setValidationError(null);
-        setCurrentStep(prev => Math.max(prev - 1, 0));
+        let prevStep = currentStep - 1;
+        // 跳題邏輯：如果返回的前一題是 exhibitionSource 且使用者不參加聯展，則再往前一格
+        if (surveySteps[prevStep]?.id === 'exhibitionSource' && formData.attendedExhibition !== '有') {
+            prevStep--;
+        }
+        setCurrentStep(prev => Math.max(prevStep, 0));
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
         if (validationError) setValidationError(null);
 
-        if (['source', 'exhibitionSource'].includes(name)) {
+        if (type === 'checkbox') {
             const { checked } = e.target as HTMLInputElement;
             setFormData(prev => ({
                 ...prev,
@@ -116,7 +163,12 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
             }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
-            setCurrentStep(prev => Math.min(prev + 1, surveySteps.length - 1));
+            if (type === 'radio') {
+                setTimeout(() => {
+                    let nextStep = currentStep + 1;
+                    setCurrentStep(Math.min(nextStep, totalSteps));
+                }, 50);
+            }
         }
     };
 
@@ -132,9 +184,9 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
             grade: formData.grade,
             gender: formData.gender,
             source: [...formData.source, formData.sourceOther].filter(Boolean).join(', '),
-            exhibitionSource: [...formData.exhibitionSource, formData.exhibitionSourceOther].filter(Boolean).join(', '),
             attendedFair: formData.attendedFair,
             attendedExhibition: formData.attendedExhibition,
+            exhibitionSource: [...formData.exhibitionSource, formData.exhibitionSourceOther].filter(Boolean).join(', ')
         };
 
         try {
@@ -147,6 +199,7 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
             setStatus('success');
             setTimeout(onComplete, 3000);
         } catch (error) {
+            console.error("Survey submission failed:", error);
             setStatus('error');
             setTimeout(() => setStatus('idle'), 3000);
         }
@@ -154,16 +207,17 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
 
     if (status === 'success') {
         return (
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                 <motion.div
                     className="bg-primary-100 rounded-xl p-12 text-center max-w-md mx-4"
-                    variants={successContainerVariants}
-                    initial="hidden" animate="visible"
+                    variants={successContainerVariants} initial="hidden" animate="visible"
                 >
                     <motion.div variants={successItemVariants}><PawPrint className="w-16 h-16 text-accent-500 inline-block mb-4" /></motion.div>
                     <motion.h2 variants={successItemVariants} className="text-2xl font-bold text-gray-800 mb-4">感謝您的填寫！</motion.h2>
                     <motion.p variants={successItemVariants} className="text-gray-600">您的寶貴意見是我們改進的動力。</motion.p>
-                    {formData.exhibitionSource.includes("還不清楚這個活動") && <motion.a href="/events/社團聯展" target='_blenk' variants={successItemVariants} className=' text-primary-900 inline-block mt-1'>立刻了解社團聯展<ChevronRight className=' inline-block  mb-0.5 w-5' /></motion.a>}
+                    {formData.attendedExhibition === '有' && formData.exhibitionSource.includes("還不清楚這個活動") && (
+                        <motion.a href="/events/社團聯展" target='_blank' rel="noopener noreferrer" variants={successItemVariants} className=' text-primary-900 inline-block mt-1'>立刻了解社團聯展<ChevronRight className=' inline-block  mb-0.5 w-5' /></motion.a>
+                    )}
                 </motion.div>
             </div>
         );
@@ -171,22 +225,21 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
 
     if (status === 'start') {
         return (
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                 <motion.div
-                    className="bg-primary-100 rounded-xl px-7 py-6 max-w-md mx-4"
-                    variants={successContainerVariants}
-                    initial="hidden" animate="visible"
+                    className="bg-primary-100 rounded-xl px-7 py-6 max-w-md mx-4 relative"
+                    variants={successContainerVariants} initial="hidden" animate="visible"
                 >
+                    {/* <button onClick={onDismiss} className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors z-10"><X size={20} /></button> */}
                     <motion.h2 variants={successItemVariants} className="text-2xl font-bold text-primary-800 mb-4">邀請您填寫問卷</motion.h2>
                     <motion.p variants={successItemVariants} className="text-primary-700">為了讓我們更了解使用者，並持續優化網站體驗，我們誠摯邀請您花費約 30 秒 的時間填寫這份問卷。</motion.p>
                     <motion.p variants={successItemVariants} className="text-primary-700 mt-1">所有蒐集到的資料皆不會與您本人關聯，僅用於數據統計與分析，感謝。</motion.p>
-                    <motion.div className=' flex w-full gap-4'>
-                        <button onClick={() => setStatus('idle')} className="w-1/4 px-3 py-2 h-10 mt-4 text-sm bg-primary-300 text-white rounded-md transition-transform hover:-translate-y-0.5 hover:scale-[1.02]">
-                            稍後提醒我
+                    <motion.div variants={successItemVariants} className='flex w-full gap-3 mt-4'>
+                        <button onClick={onRemindLater} className="w-1/3 px-3 py-2 h-10 text-sm bg-primary-50 hover:bg-primary-100 text-primary-700 rounded-md transition-colors flex items-center justify-center gap-1">
+                            <Clock size={16} /> 稍後
                         </button>
-                        <button onClick={() => setStatus('idle')} className="w-3/4 px-4 py-2 h-10 mt-4 text-base bg-accent-500 text-white rounded-md transition-transform hover:-translate-y-0.5 hover:scale-[1.02]">
-                            開始填寫
-                            <ChevronRight className='inline-block mb-0.5' />
+                        <button onClick={() => setStatus('idle')} className="w-2/3 px-4 py-2 h-10 text-base bg-accent-500 text-white rounded-md transition-transform hover:-translate-y-0.5 hover:scale-[1.02]">
+                            開始填寫 <ChevronRight className='inline-block mb-0.5' />
                         </button>
                     </motion.div>
                 </motion.div>
@@ -198,10 +251,10 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <motion.div
                 className="bg-primary-100 rounded-md shadow-2xl w-full max-w-lg mx-4 overflow-hidden"
-                variants={modalVariants}
-                initial="hidden" animate="visible" exit="exit"
+                variants={modalVariants} initial="hidden" animate="visible" exit="exit"
             >
-                <div className="bg-primary-100 px-6 ">
+                <div className="bg-primary-100 px-6 relative">
+                    <button onClick={onDismiss} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"><X size={22} /></button>
                     <div className="flex items-center justify-center mb-3 space-x-8 pt-5 ">
                         <div className="w-full bg-primary-50 rounded-full h-2 mt-1">
                             <motion.div
@@ -209,21 +262,20 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
                                 initial={{ width: 0 }}
                                 animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
                                 transition={{ type: "spring", stiffness: 50, damping: 15 }}
-                            ></motion.div>
+                            />
                         </div>
                         <div className="text-sm text-primary-600 shrink-0">
                             {Math.round((currentStep / totalSteps) * 100)}%
                         </div>
                     </div>
-                    <h2 className="text-xl font-bold text-primary-900 pt-6 sm:pt-0">{surveySteps[currentStep].title}</h2>
+                    <h2 className="text-xl font-bold text-primary-900 pt-6 sm:pt-0">{surveySteps[currentStep]?.title}</h2>
                 </div>
 
                 <div className="p-6 h-[50vh] sm:h-[60vh] overflow-y-auto relative">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={currentStep}
-                            variants={contentVariants}
-                            initial="hidden" animate="visible" exit="exit"
+                            variants={contentVariants} initial="hidden" animate="visible" exit="exit"
                         >
 
                             {currentStep === 0 && (
@@ -234,7 +286,6 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
                                         ))}
                                     </div>
                                     <label className={`flex items-center p-3 rounded-md border hover:border-accent-500 ${formData.school === "其他" ? " bg-primary-50 border-accent-500" : "  border-primary-50"} cursor-pointer transition-colors`}><input type="radio" name="school" value="其他" checked={formData.school === '其他'} onChange={handleInputChange} className=" hidden" /><span className="ml-3 text-primary-800 font-medium">其他</span></label>
-                                    {/* {formData.school === '其他' && (<input type="text" name="schoolOther" value={formData.schoolOther} onChange={handleInputChange} placeholder="請輸入您的學校" className="w-full p-3 rounded-md outline-hidden border border-accent-500 focus:ring-1 focus:ring-accent-500 focus:border-accent-500 transition-colors" />)} */}
                                 </div>
                             )}
                             {currentStep === 1 && (
@@ -291,7 +342,6 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
                             )}
                         </motion.div>
                     </AnimatePresence>
-
                     <AnimatePresence>
                         {validationError && (
                             <motion.p
@@ -308,18 +358,15 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
 
                 <hr className=' mx-4 text-white' />
                 <div className="px-6 pb-5 pt-4 flex items-center justify-between gap-4">
-                    {currentStep === 0 ? (
-                        <div className="w-1/5"></div>
-                    ) : (
-                        <button type="button" onClick={handleBack} disabled={currentStep === 0} className={`w-1/5 px-4 py-2 h-10 text-sm font-medium rounded-md bg-primary-50 transition-transform hover:-translate-y-0.5 hover:scale-[1.01] ${currentStep === 0 ? 'opacity-0 cursor-not-allowed' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'}`}>
+                    {currentStep === 0 ? <div className="w-1/5"></div> : (
+                        <button type="button" onClick={handleBack} className="w-1/5 px-4 py-2 h-10 text-sm font-medium rounded-md bg-primary-50 transition-transform hover:-translate-y-0.5 hover:scale-[1.01] text-gray-600 hover:text-gray-800 hover:bg-gray-100">
                             <ChevronLeft className='inline-block' />
                         </button>
                     )}
 
                     {currentStep < totalSteps ? (
                         <button onClick={handleNext} className="w-4/5 px-4 py-2 h-10 text-base bg-accent-500 text-white rounded-md transition-transform hover:-translate-y-0.5 hover:scale-[1.02]">
-                            下一題
-                            <ChevronRight className='inline-block mb-0.5' />
+                            下一題 <ChevronRight className='inline-block mb-0.5' />
                         </button>
                     ) : (
                         <button type="button" onClick={handleSubmit} disabled={status === 'loading'} className={`w-4/5 px-4 py-2 h-10 text-base rounded-md transition-transform hover:-translate-y-0.5 hover:scale-[1.02] ${status === 'loading' ? 'bg-gray-400 text-gray-200 cursor-not-allowed' : 'bg-accent-500 text-white'}`}>
