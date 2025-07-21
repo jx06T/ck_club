@@ -254,7 +254,7 @@ function SurveyForm({ onComplete, onDismiss, onRemindLater }: {
                 variants={modalVariants} initial="hidden" animate="visible" exit="exit"
             >
                 <div className="bg-primary-100 px-6 relative">
-                    <button onClick={onDismiss} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"><X size={22} /></button>
+                    {/* <button onClick={onDismiss} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"><X size={22} /></button> */}
                     <div className="flex items-center justify-center mb-3 space-x-8 pt-5 ">
                         <div className="w-full bg-primary-50 rounded-full h-2 mt-1">
                             <motion.div
