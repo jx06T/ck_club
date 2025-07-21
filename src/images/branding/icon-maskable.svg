@@ -2,17 +2,14 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="193.58435mm"
-   height="193.58435mm"
-   viewBox="0 0 193.58436 193.58436"
+   width="233.09135mm"
+   height="233.09135mm"
+   viewBox="0 0 233.09136 233.09136"
    version="1.1"
    id="svg1"
    xml:space="preserve"
-   sodipodi:docname="icon.svg"
+   sodipodi:docname="icon-maskable.svg"
    inkscape:version="1.4 (86a8ad7, 2024-10-11)"
-   inkscape:export-filename="icon.png"
-   inkscape:export-xdpi="300"
-   inkscape:export-ydpi="300"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -27,8 +24,8 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="0.33485621"
-     inkscape:cx="88.097515"
-     inkscape:cy="416.59673"
+     inkscape:cx="162.75643"
+     inkscape:cy="491.25564"
      inkscape:window-width="1920"
      inkscape:window-height="991"
      inkscape:window-x="-9"
@@ -36,15 +33,15 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="svg1" /><defs
      id="defs1" /><rect
-     style="fill:#edb381;fill-opacity:1;stroke:none;stroke-width:0.59965;stroke-linecap:round;stroke-linejoin:round"
+     style="fill:#edb381;fill-opacity:1;stroke:none;stroke-width:0.722028;stroke-linecap:round;stroke-linejoin:round"
      id="rect1"
-     width="193.58435"
-     height="193.58435"
-     x="0"
-     y="0"
+     width="233.09135"
+     height="233.09135"
+     x="3.5527137e-15"
+     y="3.5527137e-15"
      ry="0" /><g
      id="layer3"
-     transform="translate(-1310.0338,255.55556)"><path
+     transform="translate(-1290.2803,275.30906)"><path
        id="rect42"
        style="display:inline;fill:#edb381;stroke-width:0.499999;stroke-linecap:square;paint-order:stroke fill markers"
        d="m 1318.8405,-250.61436 h 175.971 c 0.9688,0 1.7488,0.77997 1.7488,1.74883 v 175.970947 c 0,0.968852 -0.78,1.748831 -1.7488,1.748831 h -175.971 c -0.9688,0 -1.7488,-0.779979 -1.7488,-1.748831 V -248.86553 c 0,-0.96886 0.78,-1.74883 1.7488,-1.74883 z" /><path
