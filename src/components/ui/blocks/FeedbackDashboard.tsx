@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/scripts/useAuth';
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import {triggerSignIn} from '../../../firebase/services'
+import { reload } from 'firebase/auth';
+
 
 // 定義從後端獲取的數據類型
 interface Statistics {
@@ -100,6 +103,16 @@ export default function FeedbackDashboard() {
     };
 
     if (isFetching) return <div className="p-8 min-h-[60vh] text-center">正在載入儀表板數據...</div>;
+    if (!user) return <div className="p-8 min-h-[60vh] text-center text-red-500">請先 <button className=' underline underline-offset-2 cursor-pointer' onClick={async ()=>{
+        const user = await triggerSignIn();
+        if (user) {
+            window.location.reload();
+        }else{
+            console.log("登入失敗")
+            // alert();
+        }
+
+    }}>登入</button>以查看此頁面</div>
     if (error) return <div className="p-8 min-h-[60vh] text-center text-red-500">{error}</div>;
     if (!stats) return <div className="p-8 min-h-[60vh] text-center">沒有可顯示的數據。</div>;
 
