@@ -44,6 +44,68 @@ exports.updateLikeCount = onDocumentWritten("likes/{likeId}", async (event) => {
 });
 
 
+// -------------------------------------
+
+function convertJsonToCsv(data) {
+    if (!data || data.length === 0) {
+        return "";
+    }
+
+    const headers = Object.keys(data[0]);
+    let csv = headers.join(',') + '\n';
+
+    data.forEach(row => {
+        const values = headers.map(header => {
+            let cell = row[header] === undefined || row[header] === null ? "" : row[header];
+            if (cell.toDate && typeof cell.toDate === 'function') {
+                cell = cell.toDate().toISOString();
+            }
+            let cellString = String(cell);
+            if (cellString.includes(',') || cellString.includes('"') || cellString.includes('\n')) {
+                cellString = '"' + cellString.replace(/"/g, '""') + '"';
+            }
+            return cellString;
+        });
+        csv += values.join(',') + '\n';
+    });
+    return csv;
+}
+
+
+
+exports.updateSurveyCount = onDocumentCreated("surveyResponses/{docId}", async (event) => {
+    const statsRef = db.collection("stats").doc("survey"); // 目標文件是 stats/survey
+    // 原子性地將 count 欄位加 1
+    await statsRef.set(
+        {
+            count: FieldValue.increment(1),
+        },
+        { merge: true }
+    );
+
+    console.log("Survey stats/survey count updated successfully.");
+    return null;
+});
+
+exports.exportSurveyAsCsv = onCall(async (request) => {
+    if (!request.auth) {
+        throw new HttpsError('unauthenticated', '需要認證才能執行此操作。');
+    }
+    const uid = request.auth.uid;
+    const adminDoc = await db.collection('admins').doc(uid).get();
+    if (!adminDoc.exists) {
+        throw new HttpsError('permission-denied', '您沒有管理員權限。');
+    }
+
+    const SURVEY_COLLECTION_NAME = 'surveyResponses';
+
+    const surveySnapshot = await db.collection(SURVEY_COLLECTION_NAME).orderBy('submittedAt', 'desc').get();
+    const surveyData = surveySnapshot.docs.map(doc => doc.data());
+
+    const csv = convertJsonToCsv(surveyData);
+    return { csv };
+});
+
 // ------------------------------------------------------------------
 // 函式 2: 更新回饋統計數據的觸發器
 // ------------------------------------------------------------------
@@ -123,42 +185,15 @@ exports.getAdminDashboardData = onCall(async (request) => {
 // 函式 4: 導出所有回饋為 CSV 的可呼叫函式
 // ------------------------------------------------------------------
 exports.exportFeedbackAsCsv = onCall(async (request) => {
-    // 同樣需要管理員驗證
-    if (!request.auth) {
-        throw new HttpsError('unauthenticated', '需要認證才能執行此操作。');
-    }
+    if (!request.auth) { throw new HttpsError('unauthenticated', '需要認證才能執行此操作。'); }
     const uid = request.auth.uid;
     const adminDoc = await db.collection('admins').doc(uid).get();
-    if (!adminDoc.exists) {
-        throw new HttpsError('permission-denied', '您沒有管理員權限。');
-    }
+    if (!adminDoc.exists) { throw new HttpsError('permission-denied', '您沒有管理員權限。'); }
 
     const feedbackSnapshot = await db.collection('feedbackSubmissions').orderBy('submittedAt', 'desc').get();
     const feedbackData = feedbackSnapshot.docs.map(doc => doc.data());
 
-    if (feedbackData.length === 0) {
-        return { csv: "" };
-    }
-
-    // 將 JSON 轉換為 CSV 字串
-    const headers = Object.keys(feedbackData[0]);
-    let csv = headers.join(',') + '\n';
-
-    feedbackData.forEach(row => {
-        const values = headers.map(header => {
-            let cell = row[header] === undefined ? "" : row[header];
-            if (cell instanceof Date || (cell.toDate && typeof cell.toDate === 'function')) {
-                cell = cell.toDate().toISOString();
-            }
-            // 處理包含逗號或引號的字串
-            let cellString = String(cell);
-            if (cellString.includes(',') || cellString.includes('"') || cellString.includes('\n')) {
-                cellString = '"' + cellString.replace(/"/g, '""') + '"';
-            }
-            return cellString;
-        });
-        csv += values.join(',') + '\n';
-    });
-
+    // 使用共用輔助函式
+    const csv = convertJsonToCsv(feedbackData);
     return { csv };
 });
