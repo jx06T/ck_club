@@ -12,6 +12,7 @@ import {
 } from '@/firebase/services';
 
 import { Plus, Trash2, LogOut, Loader, ShieldOff } from 'lucide-react';
+import createConfirmDialog from '@components/ConfirmDialog'
 
 // 定義表單輸入的類型，與 NewsData 區分
 interface BroadcastInput {
@@ -117,14 +118,12 @@ function BroadcastsAdmin() {
     };
 
     const handleDelete = async (id: string) => {
-        if (window.confirm("確定要刪除這則訊息嗎？")) {
-            try {
-                await deleteBroadcast(id); // 直接呼叫刪除服務
-                setBroadcasts(prev => prev.filter(b => b.id !== id)); // 從前端狀態中移除，更即時
-            } catch (err) {
-                alert("刪除失敗！");
-            }
-        }
+        createConfirmDialog("刪除這則訊息？", "這個操作無法復原", async () => {
+            await deleteBroadcast(id); 
+            setBroadcasts(prev => prev.filter(b => b.id !== id)); // 從前端狀態中移除，更即時
+        }, () => {
+
+        },"刪除","取消")
     };
 
     // --- 渲染邏輯 ---
