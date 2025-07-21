@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 // --- 組件配置 ---
 const surveySteps = [
-    { id: 'school', title: '您的學校（校友可填畢業學校）' },
+    { id: 'school', title: '您的學校（校友可選畢業學校）' },
     { id: 'grade', title: '您的年齡' },
     { id: 'gender', title: '您的性別' },
     { id: 'source', title: '如何得知本網站（複選）' },
@@ -55,7 +55,7 @@ export default function SurveyWidget() {
 function SurveyForm({ onComplete }: { onComplete: () => void }) {
     const [currentStep, setCurrentStep] = useState(0);
     const [formData, setFormData] = useState({
-        school: '', schoolOther: '', grade: '', gender: '', genderOther: '',
+        school: '', schoolOther: '不該存在!', grade: '', gender: '', genderOther: '不該存在!',
         source: [] as string[], sourceOther: '', attendedFair: '', attendedExhibition: '', exhibitionSource: [] as string[], exhibitionSourceOther: ''
     });
     const [status, setStatus] = useState<'idle' | 'start' | 'loading' | 'success' | 'error'>('start');
@@ -81,7 +81,7 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
                 return !!formData.attendedFair;
             case 'exhibition':
                 return !!formData.attendedExhibition;
-            case 'exhibition_source':
+            case 'exhibitionSource':
                 return formData.exhibitionSource.length > 0 || !!formData.exhibitionSourceOther.trim();
             default:
                 return true;
@@ -116,6 +116,7 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
             }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
+            setCurrentStep(prev => Math.min(prev + 1, surveySteps.length - 1));
         }
     };
 
@@ -127,9 +128,9 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
         setStatus('loading');
 
         const submissionData = {
-            school: formData.school === '其他' ? formData.schoolOther : formData.school,
+            school: formData.school,
             grade: formData.grade,
-            gender: formData.gender === '其他' ? formData.genderOther : formData.gender,
+            gender: formData.gender,
             source: [...formData.source, formData.sourceOther].filter(Boolean).join(', '),
             exhibitionSource: [...formData.exhibitionSource, formData.exhibitionSourceOther].filter(Boolean).join(', '),
             attendedFair: formData.attendedFair,
@@ -176,13 +177,18 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
                     variants={successContainerVariants}
                     initial="hidden" animate="visible"
                 >
-                    <motion.h2 variants={successItemVariants} className="text-2xl font-bold text-gray-800 mb-4">邀請您填寫問卷</motion.h2>
-                    <motion.p variants={successItemVariants} className="text-gray-600">為了讓我們更了解使用者，並持續優化網站體驗，我們誠摯邀請您花費約 30 秒 的時間填寫這份問卷。</motion.p>
-                    <motion.p variants={successItemVariants} className="text-gray-600 mt-1">所有蒐集到的資料皆不會與您本人關聯，僅用於數據統計與分析，感謝。</motion.p>
-                    <motion.button variants={successItemVariants} onClick={() => setStatus('idle')} className="w-full px-4 py-2 h-10 mt-4 text-base bg-accent-500 text-white rounded-md transition-transform hover:-translate-y-0.5 hover:scale-[1.02]">
-                        開始填寫
-                        <ChevronRight className='inline-block mb-0.5' />
-                    </motion.button>
+                    <motion.h2 variants={successItemVariants} className="text-2xl font-bold text-primary-800 mb-4">邀請您填寫問卷</motion.h2>
+                    <motion.p variants={successItemVariants} className="text-primary-700">為了讓我們更了解使用者，並持續優化網站體驗，我們誠摯邀請您花費約 30 秒 的時間填寫這份問卷。</motion.p>
+                    <motion.p variants={successItemVariants} className="text-primary-700 mt-1">所有蒐集到的資料皆不會與您本人關聯，僅用於數據統計與分析，感謝。</motion.p>
+                    <motion.div className=' flex w-full gap-4'>
+                        <button onClick={() => setStatus('idle')} className="w-1/4 px-3 py-2 h-10 mt-4 text-sm bg-primary-300 text-white rounded-md transition-transform hover:-translate-y-0.5 hover:scale-[1.02]">
+                            稍後提醒我
+                        </button>
+                        <button onClick={() => setStatus('idle')} className="w-3/4 px-4 py-2 h-10 mt-4 text-base bg-accent-500 text-white rounded-md transition-transform hover:-translate-y-0.5 hover:scale-[1.02]">
+                            開始填寫
+                            <ChevronRight className='inline-block mb-0.5' />
+                        </button>
+                    </motion.div>
                 </motion.div>
             </div>
         );
@@ -196,7 +202,7 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
                 initial="hidden" animate="visible" exit="exit"
             >
                 <div className="bg-primary-100 px-6 ">
-                    <div className="flex items-center justify-center mb-3 space-x-8 pt-6 ">
+                    <div className="flex items-center justify-center mb-3 space-x-8 pt-5 ">
                         <div className="w-full bg-primary-50 rounded-full h-2 mt-1">
                             <motion.div
                                 className="bg-accent-500 h-2 rounded-full"
@@ -222,35 +228,34 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
 
                             {currentStep === 0 && (
                                 <div className="space-y-3">
-                                    <div className=' grid grid-cols-2 gap-x-3 gap-y-4'>
+                                    <div className=' grid grid-cols-2 gap-x-3 gap-y-3'>
                                         {['建國中學', '北一女中', '成功高中', '中山女高', '景美女中', '師大附中'].map(school => (
                                             <label key={school} className={`flex items-center p-3 rounded-md border hover:border-accent-500 ${formData.school === school ? " bg-primary-50 border-accent-500" : " border-primary-50"} cursor-pointer transition-colors`}><input type="radio" name="school" value={school} checked={formData.school === school} onChange={handleInputChange} className="hidden" /><span className="ml-3 text-primary-800 font-medium">{school}</span></label>
                                         ))}
                                     </div>
                                     <label className={`flex items-center p-3 rounded-md border hover:border-accent-500 ${formData.school === "其他" ? " bg-primary-50 border-accent-500" : "  border-primary-50"} cursor-pointer transition-colors`}><input type="radio" name="school" value="其他" checked={formData.school === '其他'} onChange={handleInputChange} className=" hidden" /><span className="ml-3 text-primary-800 font-medium">其他</span></label>
-                                    {formData.school === '其他' && (<input type="text" name="schoolOther" value={formData.schoolOther} onChange={handleInputChange} placeholder="請輸入您的學校" className="w-full p-3 rounded-md outline-hidden border border-accent-500 focus:ring-1 focus:ring-accent-500 focus:border-accent-500 transition-colors" />)}
+                                    {/* {formData.school === '其他' && (<input type="text" name="schoolOther" value={formData.schoolOther} onChange={handleInputChange} placeholder="請輸入您的學校" className="w-full p-3 rounded-md outline-hidden border border-accent-500 focus:ring-1 focus:ring-accent-500 focus:border-accent-500 transition-colors" />)} */}
                                 </div>
                             )}
                             {currentStep === 1 && (
-                                <div className="space-y-4">
-                                    <div className=' grid grid-cols-2 gap-x-3 gap-y-4'>
-                                        {['國中/國小', '升高一', '升高二', '升高三', '升大一', '大一以上', '30 歲以上'].map(grade => (
+                                <div className="space-y-3">
+                                    <div className=' grid grid-cols-1 gap-x-3 gap-y-3'>
+                                        {['國中以下', '升高一', '升高二', '升高三', '大學', '30 歲以上'].map(grade => (
                                             <label key={grade} className={`flex items-center p-3 rounded-md border hover:border-accent-500 ${formData.grade === grade ? " bg-primary-50 border-accent-500" : " border-primary-50"} cursor-pointer transition-colors`}><input type="radio" name="grade" value={grade} checked={formData.grade === grade} onChange={handleInputChange} className="hidden" /><span className="ml-3 text-primary-800 font-medium">{grade}</span></label>
                                         ))}
                                     </div>
                                 </div>
                             )}
                             {currentStep === 2 && (
-                                <div className="space-y-4">
-                                    {['男', '女', '其他'].map(gender => (
+                                <div className="space-y-3">
+                                    {['男', '女', '不願透漏'].map(gender => (
                                         <label key={gender} className={`flex items-center p-3 rounded-md border hover:border-accent-500 ${formData.gender === gender ? " bg-primary-50 border-accent-500" : " border-primary-50"} cursor-pointer transition-colors`}><input type="radio" name="gender" value={gender} checked={formData.gender === gender} onChange={handleInputChange} className="hidden" /><span className="ml-3 text-primary-800 font-medium">{gender}</span></label>
                                     ))}
-                                    {formData.gender === '其他' && (<input type="text" name="genderOther" value={formData.genderOther} onChange={handleInputChange} placeholder="請輸入" className="w-full p-3  rounded-md outline-hidden border border-accent-500 focus:ring-1 focus:ring-accent-500 focus:border-accent-500 transition-colors" />)}
                                 </div>
                             )}
                             {currentStep === 3 && (
-                                <div className="space-y-4">
-                                    <div className=' grid grid-cols-2 gap-x-3 gap-y-4'>
+                                <div className="space-y-3">
+                                    <div className=' grid grid-cols-2 gap-x-3 gap-y-3'>
                                         {['集章卡 QR code', '其他社群媒體帳號', '攤位 QR code', '班聯會哀居', '朋友分享'].map(source => (
                                             <label key={source} className={`flex items-center p-3 rounded-md border hover:border-accent-500 ${formData.source.includes(source) ? " bg-primary-50 border-accent-500" : " border-primary-50"} cursor-pointer transition-colors`}><input type="checkbox" name="source" value={source} checked={formData.source.includes(source)} onChange={handleInputChange} className="hidden" /><span className="ml-3 text-primary-800 font-medium">{source}</span></label>
                                         ))}
@@ -262,7 +267,7 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
                                 <div className="space-y-3">
                                     <p className="text-primary-700 mb-4">您是否有（或預計要）參加社團博覽會？</p>
                                     {['有', '沒有'].map(option => (
-                                        <label key={option} className={`flex items-center p-3 rounded-md border hover:border-accent-500 ${formData.attendedFair === option ? " bg-primary-50 border-accent-500" : " border-primary-50"} cursor-pointer transition-colors`}><input type="radio" name="attendedFair" value={option} checked={formData.attendedFair === option} onChange={handleInputChange} className="hidden" /><span className="ml-3 text-gray-700 font-medium">{option}</span></label>
+                                        <label key={option} className={`flex items-center p-3 rounded-md border hover:border-accent-500 ${formData.attendedFair === option ? " bg-primary-50 border-accent-500" : " border-primary-50"} cursor-pointer transition-colors`}><input type="radio" name="attendedFair" value={option} checked={formData.attendedFair === option} onChange={handleInputChange} className="hidden" /><span className="ml-3 text-primary-800 font-medium">{option}</span></label>
                                     ))}
                                 </div>
                             )}
@@ -270,7 +275,7 @@ function SurveyForm({ onComplete }: { onComplete: () => void }) {
                                 <div className="space-y-3">
                                     <p className="text-primary-700 mb-4">您是否有（或預計要）參加社團聯展？</p>
                                     {['有', '沒有'].map(option => (
-                                        <label key={option} className={`flex items-center p-3 rounded-md border hover:border-accent-500 ${formData.attendedExhibition === option ? " bg-primary-50 border-accent-500" : " border-primary-50"} cursor-pointer transition-colors`}><input type="radio" name="attendedExhibition" value={option} checked={formData.attendedExhibition === option} onChange={handleInputChange} className="hidden" /><span className="ml-3 text-gray-700 font-medium">{option}</span></label>
+                                        <label key={option} className={`flex items-center p-3 rounded-md border hover:border-accent-500 ${formData.attendedExhibition === option ? " bg-primary-50 border-accent-500" : " border-primary-50"} cursor-pointer transition-colors`}><input type="radio" name="attendedExhibition" value={option} checked={formData.attendedExhibition === option} onChange={handleInputChange} className="hidden" /><span className="ml-3 text-primary-800 font-medium">{option}</span></label>
                                     ))}
                                 </div>
                             )}
