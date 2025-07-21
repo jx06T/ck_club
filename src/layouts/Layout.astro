@@ -94,11 +94,8 @@ interface Props {
 
       requestAnimationFrame(raf);
     </script>
-     <div transition:persist>
-      <SurveyWidget client:load />
-    </div>
-
-    <!-- <SurveyWidget client:idle /> -->
+    <SurveyWidget client:idle />
+    
   </body>
 </html>
 <style>
