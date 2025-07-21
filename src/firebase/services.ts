@@ -26,12 +26,12 @@ import {
     where,
     addDoc,
     getCountFromServer,
-    Timestamp, 
+    runTransaction,
     type DocumentData,
     type QueryDocumentSnapshot
 } from "firebase/firestore";
 
-export type { User }; 
+export type { User };
 
 export interface NewsData {
     id: string;
@@ -183,99 +183,126 @@ export const getTotalDocumentCount = async (collectionName: string): Promise<num
 };
 
 
-const BROADCASTS_COLLECTION = 'broadcasts';
-const ADMIN_COLLECTION = 'announcementAdmins'; 
+const BROADCASTS_COLLECTION = 'site_data'; // 集合名稱
+const BROADCASTS_DOC_ID = 'broadcasts';  // 固定的文件 ID
+const ADMIN_COLLECTION = 'announcementAdmins';
+const MAX_BROADCASTS = 30; // 最大訊息數量限制
 
 /**
  * 檢查當前登入使用者是否為訊息管理員
- * 實現方式：檢查 'announcementAdmins' 集合中是否存在以使用者 UID 為 ID 的文件
- * @returns {Promise<boolean>} 如果是管理員則返回 true，否則返回 false
+ * (此函式邏輯不變)
  */
 export const checkAnnouncementAdminStatus = async (): Promise<boolean> => {
     const user = auth.currentUser;
-    if (!user) {
-        return false;
-    }
+    if (!user) return false;
     try {
-        // 嘗試讀取 'announcementAdmins/{user.uid}' 這個文件
         const adminDoc = await readDocument(ADMIN_COLLECTION, user.uid);
-        // 如果文件存在(adminDoc 不為 null)，則代表該用戶是管理員
         return adminDoc !== null;
     } catch (error) {
         console.error("Error checking admin status:", error);
-        return false; // 發生錯誤時，保守地返回 false
+        return false;
+    }
+};
+
+// ==========================
+
+
+/**
+ * 讀取所有廣播訊息。
+ * 從單一文件中讀取 'messages' 陣列。
+ * @returns {Promise<NewsData[]>} 回傳排序後的訊息陣列。
+ */
+export const readAllBroadcasts = async (): Promise<NewsData[]> => {
+    try {
+        const docRef = doc(db, BROADCASTS_COLLECTION, BROADCASTS_DOC_ID);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            // 確保 messages 存在且為陣列，並在客戶端進行排序以保證順序
+            const messages: NewsData[] = data.messages || [];
+            return messages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+        }
+        return []; // 如果文件不存在，回傳空陣列
+    } catch (error) {
+        console.error("Error reading all broadcasts:", error);
+        throw error; // 拋出錯誤讓呼叫者處理
     }
 };
 
 /**
- * 新增一則訊息
- * @param broadcastData - 包含 clubName, content 等訊息內容的物件
+ * 新增一則訊息到 'messages' 陣列中。
+ * 使用 Transaction 確保讀取和寫入的原子性。
+ * @param broadcastData - 新訊息的內容。
  */
-export const addBroadcast = (broadcastData: BroadcastInput): Promise<any> => {
+export const addBroadcast = async (broadcastData: BroadcastInput): Promise<void> => {
     const user = auth.currentUser;
-    if (!user) {
-        // 這是一個保護措施，理論上組件在呼叫此函式前應已確認登入
-        return Promise.reject(new Error("User is not authenticated."));
+    if (!user) throw new Error("User not authenticated");
+
+    const broadcastDocRef = doc(db, BROADCASTS_COLLECTION, BROADCASTS_DOC_ID);
+
+    try {
+        await runTransaction(db, async (transaction) => {
+            const broadcastDoc = await transaction.get(broadcastDocRef);
+            const existingMessages: NewsData[] = broadcastDoc.exists() ? broadcastDoc.data().messages || [] : [];
+
+            const newBroadcast: NewsData = {
+                ...broadcastData,
+                id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`, // 產生唯一的 ID
+                email: user.email!,
+                timestamp: new Date().toISOString(), // 使用 ISO 8601 格式字串
+            };
+
+            // 將新訊息加到陣列最前面
+            let updatedMessages = [newBroadcast, ...existingMessages];
+
+            // 如果超過最大數量限制，則移除最舊的訊息
+            if (updatedMessages.length > MAX_BROADCASTS) {
+                updatedMessages = updatedMessages.slice(0, MAX_BROADCASTS);
+            }
+
+            // 使用 set 搭配 merge:true，如果文件不存在會自動建立
+            transaction.set(broadcastDocRef, { messages: updatedMessages }, { merge: true });
+        });
+    } catch (error) {
+        console.error("Failed to add broadcast via transaction:", error);
+        throw error;
     }
-
-    const newBroadcast = {
-        ...broadcastData,
-        email: user.email, // 記錄發布者的 email
-        uid: user.uid,     // 記錄發布者的 UID
-        timestamp: Timestamp.now(), // 使用 Firestore 伺服器時間戳，最準確
-    };
-
-    // 使用現有的通用 addDocument 函式
-    return addDocument(BROADCASTS_COLLECTION, newBroadcast);
 };
 
 /**
- * 刪除一則訊息
- * @param id - 要刪除的訊息文件 ID
+ * 從 'messages' 陣列中刪除一則訊息。
+ * 使用 Transaction 確保操作安全。
+ * @param id - 要刪除的訊息的唯一 ID。
  */
-export const deleteBroadcast = (id: string): Promise<void> => {
-    // 使用現有的通用 deleteDocument 函式
-    return deleteDocument(BROADCASTS_COLLECTION, id);
+export const deleteBroadcast = async (id: string): Promise<void> => {
+    const broadcastDocRef = doc(db, BROADCASTS_COLLECTION, BROADCASTS_DOC_ID);
+
+    try {
+        await runTransaction(db, async (transaction) => {
+            const broadcastDoc = await transaction.get(broadcastDocRef);
+            if (!broadcastDoc.exists()) return; // 文件不存在，無需操作
+
+            const existingMessages: NewsData[] = broadcastDoc.data().messages || [];
+
+            // 過濾掉要刪除的訊息
+            const updatedMessages = existingMessages.filter(msg => msg.id !== id);
+
+            // 更新文件中的陣列
+            transaction.update(broadcastDocRef, { messages: updatedMessages });
+        });
+    } catch (error) {
+        console.error("Failed to delete broadcast via transaction:", error);
+        throw error;
+    }
 };
 
-/**
- * 帶分頁地讀取訊息列表
- * 這是對通用分頁函式的一個具體封裝，方便組件直接呼叫
- * @param itemsPerPage - 每頁顯示的項目數量
- * @param lastVisibleDoc - 上一頁的最後一個文件，用於分頁
- * @returns {Promise<{ data: NewsData[], lastVisibleDoc: QueryDocumentSnapshot<DocumentData> | undefined }>}
- */
-export const readBroadcastsWithPagination = async (
-    itemsPerPage: number,
-    lastVisibleDoc: QueryDocumentSnapshot<DocumentData> | null = null
-): Promise<{ data: NewsData[], lastVisibleDoc: QueryDocumentSnapshot<DocumentData> | undefined }> => {
-    // 使用通用分頁讀取函式
-    const result = await readCollectionWithPagination(BROADCASTS_COLLECTION, itemsPerPage, lastVisibleDoc);
-    
-    // 將返回的數據斷言為 NewsData[] 類型，以符合組件的期待
-    return {
-        ...result,
-        data: result.data as NewsData[],
-    };
-};
-
-/**
- * 為了兼容舊的命名，保留 readNewsCollectionWithPagination
- * @deprecated 建議使用更通用的 readCollectionWithPagination
- */
-export const readNewsCollectionWithPagination = (
-    collectionName: string,
-    itemsPerPage: number,
-    lastVisibleDoc: QueryDocumentSnapshot<DocumentData> | null = null
-) => {
-    console.warn("readNewsCollectionWithPagination is deprecated. Please use readCollectionWithPagination.");
-    return readCollectionWithPagination(collectionName, itemsPerPage, lastVisibleDoc);
-};
+// ==========================
 
 export const getSurveyTotalCount = async (): Promise<number> => {
     const surveyStats = await readDocument('stats', 'survey');
     if (surveyStats && typeof surveyStats.count === 'number') {
         return surveyStats.count;
     }
-    return 0; 
+    return 0;
 };
