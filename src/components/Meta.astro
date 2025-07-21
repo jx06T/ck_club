@@ -2,7 +2,9 @@
 import { getImage } from "astro:assets";
 import { OG, SEO, SITE } from "@data/constants";
 import faviconSvgSrc from "@images/branding/icon.svg";
-import faviconSrc from "@images/branding/icon.png";
+// import faviconSrc from "@images/branding/icon.png";
+import maskableIconSrc from "@images/branding/icon-maskable.png";
+import maskableIconSvgSrc from "@images/branding/icon-maskable.svg";
 
 interface Props {
   customDescription?: string;
@@ -71,15 +73,27 @@ const alternateLanguageLinks: string = Object.entries(languages)
   .join("\n");
 
 // Generate and optimize the favicon images
+const maskableIconSvg = await getImage({
+  src: maskableIconSvgSrc,
+  format: "svg",
+});
+
 const faviconSvg = await getImage({
   src: faviconSvgSrc,
   format: "svg",
 });
 
 const appleTouchIcon = await getImage({
-  src: faviconSrc,
+  src: maskableIconSrc,
   width: 180,
   height: 180,
+  format: "png",
+});
+
+const maskableIcon = await getImage({
+  src: maskableIconSrc,
+  width: 144,
+  height: 144,
   format: "png",
 });
 ---
@@ -135,15 +149,18 @@ const appleTouchIcon = await getImage({
 {/* https://docs.astro.build/en/guides/integrations-guide/sitemap/ */}
 <link rel="sitemap" href="/sitemap-index.xml" />
 {/* Links for favicons */}
+
+<link href="/favicon-32.png" rel="icon" sizes="32x32" type="image/png" />
 <link href="/favicon.ico" rel="icon" sizes="any" type="image/x-icon" />
-<link href={faviconSvg.src} rel="icon" type="image/svg+xml" sizes="any" />
-<meta name="mobile-web-app-capable" content="yes" />
+
+<link href={maskableIcon.src} rel="icon" sizes="144x144" type="image/png" />
+<!-- <link href={maskableIconSvg.src} rel="icon" type="image/svg+xml" sizes="any" /> -->
 <link href={appleTouchIcon.src} rel="apple-touch-icon" />
 <link href={appleTouchIcon.src} rel="shortcut icon" />
-{/* Set theme color */}
-<meta name="theme-color" content="#c0c2d1" />
-
 <link rel="apple-touch-icon" href={socialImage} />
+
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="theme-color" content="#c0c2d1" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
