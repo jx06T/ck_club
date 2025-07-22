@@ -9,6 +9,7 @@ const eventsCollection = defineCollection({
         gradientStart: z.string(),
         gradientEnd: z.string(),
         link: z.string(),
+        pageUrl: z.string().optional(),
         ctaTitle: z.string(),
         organizer: z.string()
     }),

@@ -11,6 +11,7 @@ export interface Slide {
     organizer: string;
     description: string;
     slug: string;
+    pageUrl?: string;
 }
 
 interface Props {
@@ -189,7 +190,7 @@ function EventCarousel({ id, slides }: Props) {
                                                 </div>
                                                 <div className="">
                                                     <a
-                                                        href={slide.slug === "社團博覽會" ? "#fair" : `/events/${slide.slug}`}
+                                                        href={slide.pageUrl ? slide.pageUrl : `/events/${slide.slug}`}
                                                         className="inline-flex items-center text-accent-500 hover:text-accent-400 dark:text-accent-500 dark:hover:text-accent-600 transition-colors text-xs md:text-base lg:text-lg "
                                                     >
                                                         了解更多 <ChevronRight className="w-6 h-6 inline-block mt-0.5" />
