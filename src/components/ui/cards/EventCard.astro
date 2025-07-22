@@ -11,7 +11,7 @@ const { title, date, image, organizer } = event.data;
 ---
 
 <a
-  href={`/events/${event.slug}`}
+  href={`${event.data.pageUrl ? event.data.pageUrl : "/events/" + event.slug}`}
   class="group block overflow-hidden rounded-lg bg-primary-50 shadow-brand hover:shadow-brand-lg transition-all duration-300 hover:-translate-y-1"
 >
   <article class="h-full">
