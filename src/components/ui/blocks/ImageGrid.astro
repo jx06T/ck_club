@@ -1,0 +1,19 @@
+---
+import { type imageMetadata } from "astro/assets/utils";
+import { Image } from "astro:assets";
+
+const { images = [] } = Astro.props as { images?: ImageMetadata[] };
+---
+
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  {
+    images.map((img) => (
+      <Image
+        src={img}
+        alt="展演圖片"
+        class="rounded-lg w-full h-auto object-cover"
+        loading="lazy"
+      />
+    ))
+  }
+</div>
