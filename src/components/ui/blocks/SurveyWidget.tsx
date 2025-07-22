@@ -39,38 +39,42 @@ export default function SurveyWidget() {
     const [hasCompletedSurvey, setHasCompletedSurvey] = useLocalStorage('hasCompletedSurvey', false);
     const [remindLaterCount, setRemindLaterCount] = useLocalStorage('surveyRemindLaterCount', 0);
     const [isSurveyVisible, setSurveyVisible] = useState(false);
+    const [orScrollY, setOrScrollY] = useState(-100);
 
     useEffect(() => {
         if (hasCompletedSurvey) return;
 
         setRemindLaterCount(prev => prev + 1);
 
-        const REMIND_LATER_THRESHOLD = 4;
+        const REMIND_LATER_THRESHOLD = 5;
         const shouldShowNow = remindLaterCount > REMIND_LATER_THRESHOLD;
 
         const handleScroll = () => {
-            if (window.scrollY > 2400) {
+
+            if (orScrollY < -90) {
+                setOrScrollY(window.scrollY)
+                return;
+            }
+
+            if (Math.abs(window.scrollY - orScrollY) > 2400) {
                 setSurveyVisible(true);
                 window.removeEventListener('scroll', handleScroll);
             }
         };
 
-        if (remindLaterCount === 0) {
-            window.addEventListener('scroll', handleScroll, { passive: true });
-        }
-
         if (shouldShowNow) {
             const timer = setTimeout(() => {
                 setSurveyVisible(true);
                 setRemindLaterCount(0);
-            }, 2000);
+            }, 4500);
 
             return () => clearTimeout(timer);
-
         };
-        window.addEventListener('scroll', handleScroll, { passive: true });
+        if (remindLaterCount == 0) {
+            window.addEventListener('scroll', handleScroll, { passive: true });
+        }
 
-    }, []);
+    }, [orScrollY]);
 
 
     if (typeof window === 'undefined' || !isSurveyVisible) {

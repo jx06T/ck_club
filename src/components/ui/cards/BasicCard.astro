@@ -8,7 +8,7 @@ type Props = {
 const { title } = Astro.props;
 ---
 
-<div class="bg-accent-300 rounded-md px-5 py-6">
+<div class="bg-accent-300/70 dark:bg-accent-300/90 rounded-md px-5 py-6">
   <slot name="icon" />
   <h2 class="text-xl lg:text-2xl text-primary-900 dark:text-primary-950">{title}</h2>
   <div class=" text-primary-900 dark:text-primary-950 mt-2">

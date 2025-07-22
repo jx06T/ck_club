@@ -127,7 +127,7 @@ function AutoPlayVideo({ src, poster, ctaText, ctaLink }: Props) {
                     }}
                 >
                     <div
-                        style={{ transform: isPlaying ? `scale(${1 / responsiveSettings.scale + 0.15})` : "scale(1)" }}
+                        style={{ transform: !isPlaying ? `scale(${1 / responsiveSettings.scale - 0.1})` : "scale(1.2)" }}
                         className=' transition-transform duration-700'
                     >
                         <a

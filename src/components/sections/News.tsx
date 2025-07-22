@@ -121,7 +121,7 @@ function News({ id }: Props) {
                     {!isLoading && status === 'success' && news.length > 0 && (
                         // 這裡 map 的是從 allNews 切割出來的 `news` 陣列
                         news.map(((newsItem, i) => (
-                            <div key={newsItem.id || i} className="grid grid-cols-[2.4fr_1.2fr_1fr] items-center px-4 md:px-6 py-4 text-base hover:bg-primary-100/50">
+                            <div key={newsItem.id || i} className="grid grid-cols-[2.4fr_1.3fr_0.9fr] items-center px-4 md:px-6 py-4 text-base hover:bg-primary-100/50">
                                 <div className="pr-4 ">
                                     <p className="text-primary-700 font-medium line-clamp-2">{newsItem.content}</p>
                                     {newsItem.link && (

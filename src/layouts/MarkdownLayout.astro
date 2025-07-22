@@ -9,7 +9,6 @@ const { frontmatter } = Astro.props;
   description={frontmatter.description}
 >
   <article class="max-w-3xl mx-auto mb-36">
-
     <h1 class="mb-2 text-4xl font-bold">{frontmatter.title}</h1>
     {
       frontmatter.date && (
@@ -19,7 +18,9 @@ const { frontmatter } = Astro.props;
       )
     }
     <hr class="text-accent-400 border mb-10" />
-    <div class="prose prose-base dark:prose-invert mb-20">
+    <div
+      class="prose prose-base dark:prose-invert mb-20 max-w-none prose-img:rounded-sm"
+    >
       <slot />
     </div>
   </article>

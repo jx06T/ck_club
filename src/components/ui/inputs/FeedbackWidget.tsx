@@ -196,7 +196,7 @@ function FeedbackWidget() {
 
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full h-14 bg-accent-300 px-10 p-4 rounded-md cursor-pointer transition-transform hover:scale-[1.02] focus-visible:ring-2 outline-hidden  ring-accent-500"
+                className="w-full h-14 bg-accent-400 px-10 p-4 rounded-md cursor-pointer transition-transform hover:scale-[1.02] focus-visible:ring-2 outline-hidden  ring-accent-500"
                 aria-label="開啟反饋表單"
             >
                 <MessageSquare size={24} className=" inline-block mr-0.5 mb-0.5" />
