@@ -492,7 +492,7 @@ function SearchPage({ allClubs }: SearchPageProps) {
                                         </button>
                                     </div>
 
-                                    <img src={selectedClub.coverImage.src} alt={selectedClub.name} className="w-full h-48 object-cover rounded-md mb-4" />
+                                    <img src={selectedClub.bgImage.src} alt={selectedClub.name} className="w-full h-48 object-cover rounded-md mb-4" />
                                     {selectedClub.searchContext ? (
                                         <>
                                             <p dangerouslySetInnerHTML={{ __html: "..." + selectedClub.searchContext.sub_results.map(e => e.excerpt).join(" ... ") + "..." }} />

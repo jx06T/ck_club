@@ -9,8 +9,12 @@ const allClubs = await Promise.all(
   clubs.map(async (club) => ({
     ...club.data,
     slug: club.slug,
-    coverImage: await getImage({
-      src: club.data.coverImage,
+    cardImage: await getImage({
+      src: club.data.cardImage,
+      format: "avif",
+    }),
+    bgImage: await getImage({
+      src: club.data.bgImage,
       format: "avif",
     }),
     profileImage: await getImage({

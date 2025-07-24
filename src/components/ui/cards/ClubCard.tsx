@@ -10,25 +10,25 @@ function ClubCard({ club, isFavorite, onToggleFavorite, onClick }: {
     onClick: (club: ClubData) => void;
 }) {
     return (
-        <div className=" club-card-wrapper relative group cursor-pointer hover:scale-[1.02] transition-transform duration-300 " onClick={() => onClick(club)
+        <div className=" club-card-wrapper relative group cursor-pointer hover:scale-[1.02] transition-transform duration-300 rounded-xl overflow-hidden " onClick={() => onClick(club)
         }>
             <img
-                src={club.coverImage.src}
+                src={club.cardImage.src}
                 alt={`${club.name} 封面`}
-                className="w-full h-auto rounded-md shadow-md min-h-20 "
+                className="w-full h-auto shadow-md min-h-20 "
                 loading="lazy"
             />
-            {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-md"></div> */}
+            {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent "></div> */}
             <div
-                className="absolute  left-0 right-0 bottom-0 h-20 rounded-md"
+                className="absolute  left-0 right-10 bottom-0 h-24 "
                 style={{
-                    background: `linear-gradient(to top right,rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 50%)`,
+                    background: `linear-gradient(to top right,rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%)`,
                     clipPath: 'polygon(0 0, 100% 100%, 0 100%)',
                     transition: 'all 0.3s ease-in-out'
                 }}
             ></div>
             <div
-                className="absolute right-0 top-0 w-14 h-14 rounded-md"
+                className="absolute right-0 top-0 w-14 h-14 "
                 style={{
                     background: `linear-gradient(to bottom left ,rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 50%)`,
                     clipPath: 'polygon(0 0 , 100% 0, 100% 100%)',

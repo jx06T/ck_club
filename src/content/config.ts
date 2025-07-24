@@ -25,7 +25,8 @@ const clubsCollection = defineCollection({
         summary: z.string(),
 
         profileImage: image(),
-        coverImage: image(),
+        cardImage: image(),
+        bgImage: image(),
 
         // --- 詳細資料 ---
         members: z.object({

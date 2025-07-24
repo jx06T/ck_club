@@ -15,7 +15,8 @@ export type Club = {
     summary: string;
 
     profileImage: ImageMetadata | GetImageResult;
-    coverImage: ImageMetadata | GetImageResult;
+    bgImage: ImageMetadata | GetImageResult;
+    cardImage: ImageMetadata | GetImageResult;
 
     members: {
         current: string;

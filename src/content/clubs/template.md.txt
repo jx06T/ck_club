@@ -17,8 +17,10 @@ summary: "社團簡介社團簡介社團簡介社團簡介社團簡介社團簡�
 
 # 頭貼/Logo (1:1 比例)
 profileImage: ""
-# 背景/封面圖片 (橫向為佳)
-coverImage: ""
+# 背景圖片 (橫向為佳)
+bgImage: ""
+
+cardImage: ""
 
 # -------------------------------------
 # 詳細資料 (Detailed Information)
