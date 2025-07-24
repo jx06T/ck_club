@@ -119,21 +119,21 @@ function BroadcastsAdmin() {
     // --- 渲染邏輯 (這部分幾乎不用改！) ---
     const renderContent = () => {
         if (authStatus === 'loading') {
-            return <div className="p-2 lg:p-8 min-h-[60vh] text-center flex justify-center items-center"><Loader className="animate-spin mr-2" /> 正在確認登入狀態...</div>;
+            return <div className="p-8 min-h-[60vh] text-center flex justify-center items-center"><Loader className="animate-spin mr-2" /> 正在確認登入狀態...</div>;
         }
         if (authStatus === 'unauthenticated') {
             return (
-                <div className="p-2 lg:p-8 min-h-[60vh] text-center text-red-500">
+                <div className="p-8 min-h-[60vh] text-center text-red-500">
                     請先 <button className='underline underline-offset-2 cursor-pointer' onClick={handleSignIn}>登入</button> 以使用管理功能。
                 </div>
             );
         }
         if (permissionStatus === 'checking') {
-            return <div className="p-2 lg:p-8 min-h-[60vh] text-center flex justify-center items-center"><Loader className="animate-spin mr-2" /> 正在驗證管理員權限...</div>;
+            return <div className="p-8 min-h-[60vh] text-center flex justify-center items-center"><Loader className="animate-spin mr-2" /> 正在驗證管理員權限...</div>;
         }
         if (permissionStatus === 'denied') {
             return (
-                <div className="p-2 lg:p-8 min-h-[60vh] text-center text-red-500">
+                <div className="p-8 min-h-[60vh] text-center text-red-500">
                     <p>您的帳號 ({user?.email}) 不具備訊息管理權限。</p>
                     <p className="text-sm mt-2 text-primary-600">請聯繫網站管理員以獲取權限。</p>
                 </div>
