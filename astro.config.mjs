@@ -54,7 +54,16 @@ export default defineConfig({
     },
   },
 
-  integrations: [react(), sitemap()],
+  integrations: [react(), sitemap({
+    // 添加這個 serialize 函數來自定義輸出
+    serialize: (item) => {
+      // item.url 是 sitemap 插件初步生成的 URL
+      // 我們使用 decodeURI() 來確保路徑中的中文字符是未編碼的
+      // 這會將 ".../%E7%A7%91..." 轉回 ".../科學研習社"
+      item.url = decodeURI(item.url);
+      return item;
+    },
+  }),],
 
   build: {
     format: 'directory'

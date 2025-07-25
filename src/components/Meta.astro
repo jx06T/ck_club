@@ -34,7 +34,11 @@ const imageSource = customOgImage || OG.image;
 const URL = `${Astro.site}`; // Set the website URL in astro.config.mjs
 const author = SITE.author;
 // const canonical = Astro.url.href;
-const canonicalURL = Astro.url.origin + Astro.url.pathname;
+// const canonicalURL = Astro.url.origin + Astro.url.pathname;
+
+const decodedPathname = decodeURI(Astro.url.pathname);
+const canonicalURL = Astro.url.origin + decodedPathname;
+
 const basePath = Astro.url.pathname;
 
 const socialImageRes = await getImage({
