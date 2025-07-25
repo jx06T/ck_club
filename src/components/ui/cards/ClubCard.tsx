@@ -53,7 +53,7 @@ function ClubCard({ club, isFavorite, onToggleFavorite, onClick }: {
                     }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
-                    <Bookmark size={20} fill={isFavorite ? 'currentColor' : 'none'} />
+                    <Bookmark size={22} fill={isFavorite ? 'currentColor' : 'none'} />
                 </motion.div>
             </button>
         </div >

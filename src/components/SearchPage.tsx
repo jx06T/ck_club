@@ -272,10 +272,10 @@ function SearchPage({ allClubs }: SearchPageProps) {
     }, []);
 
     const breakpointColumnsObj = {
-        default: 4,
-        1280: 3,
-        768: 2,
-        640: 1,
+        default: 5,
+        1280: 4,
+        1024: 3,
+        620: 2,
     };
 
 
