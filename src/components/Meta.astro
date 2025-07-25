@@ -33,7 +33,8 @@ const imageSource = customOgImage || OG.image;
 // Define the metadata for your website and individual pages
 const URL = `${Astro.site}`; // Set the website URL in astro.config.mjs
 const author = SITE.author;
-const canonical = Astro.url.href;
+// const canonical = Astro.url.href;
+const canonicalURL = Astro.url.origin + Astro.url.pathname;
 const basePath = Astro.url.pathname;
 
 const socialImageRes = await getImage({
@@ -46,8 +47,7 @@ const socialImageRes = await getImage({
 const socialImage = Astro.url.origin + socialImageRes.src; // Get the full URL of the image (https://stackoverflow.com/a/9858694)
 
 const languages: { [key: string]: string } = {
-  en: "",
-  fr: "fr",
+  "zh-Hant": "/",
 };
 
 function createHref(lang: string, prefix: string, path: string): string {
@@ -121,7 +121,7 @@ const maskableIcon = await getImage({
   content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0"
 />
 <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-<link rel="canonical" href={canonical} />
+<link rel="canonical" href={canonicalURL} />
 <Fragment set:html={alternateLanguageLinks} />
 
 {/* Facebook Meta Tags */}
