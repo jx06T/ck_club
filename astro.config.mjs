@@ -8,6 +8,7 @@ import sitemap from '@astrojs/sitemap';
 
 import cloudflare from '@astrojs/cloudflare';
 import vercel from '@astrojs/vercel/serverless';
+import node from '@astrojs/node';
 
 const isVercel = process.env.VERCEL === '1';
 const isCloudflare = process.env.CF_PAGES === '1';
@@ -23,6 +24,10 @@ if (isVercel) {
   });
 } else if (isCloudflare) {
   adapter = cloudflare();
+} else {
+  adapter = node({
+    mode: 'standalone'
+  });
 }
 
 export default defineConfig({
@@ -54,16 +59,7 @@ export default defineConfig({
     },
   },
 
-  integrations: [react(), sitemap({
-    // 添加這個 serialize 函數來自定義輸出
-    serialize: (item) => {
-      // item.url 是 sitemap 插件初步生成的 URL
-      // 我們使用 decodeURI() 來確保路徑中的中文字符是未編碼的
-      // 這會將 ".../%E7%A7%91..." 轉回 ".../科學研習社"
-      item.url = decodeURI(item.url);
-      return item;
-    },
-  }),],
+  integrations: [react(), sitemap(),],
 
   build: {
     format: 'directory'
