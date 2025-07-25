@@ -196,7 +196,7 @@ function BroadcastsAdmin() {
                     {user && <p className="text-gray-500 text-sm">正在以 {user.email} 身份登入</p>}
                 </div>
                 {authStatus === 'authenticated' && (
-                    <button onClick={triggerSignOut} className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-sm rounded-md hover:bg-gray-300 transition-colors">
+                    <button onClick={triggerSignOut} className="flex items-center gap-2 px-4 py-2 bg-primary-200 text-sm rounded-md hover:bg-primary-300 transition-colors">
                         <LogOut size={16} /> 登出
                     </button>
                 )}
