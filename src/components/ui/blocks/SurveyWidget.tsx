@@ -1,4 +1,4 @@
-import { useState, useEffect, type MouseEvent } from 'react';
+import { useState, useEffect, useRef, type MouseEvent } from 'react';
 import { useLocalStorage } from '@/scripts/useLocalStorage';
 import { ChevronRight, ChevronLeft, Send, Loader, PawPrint, AlertCircle, X, Clock } from "lucide-react";
 import { motion, AnimatePresence } from 'framer-motion';
@@ -34,29 +34,31 @@ const successItemVariants = {
     visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100, damping: 12 } }
 } as const;
 
-// --- 主組件 (修改後) ---
 export default function SurveyWidget() {
     const [hasCompletedSurvey, setHasCompletedSurvey] = useLocalStorage('hasCompletedSurvey', false);
     const [remindLaterCount, setRemindLaterCount] = useLocalStorage('surveyRemindLaterCount', 0);
     const [isSurveyVisible, setSurveyVisible] = useState(false);
-    const [orScrollY, setOrScrollY] = useState(-100);
+    const startScrollY = useRef(-100);
 
     useEffect(() => {
         if (hasCompletedSurvey) return;
-
         setRemindLaterCount(prev => prev + 1);
+    }, []);
+
+    useEffect(() => {
+        if (hasCompletedSurvey) return;
 
         const REMIND_LATER_THRESHOLD = 5;
         const shouldShowNow = remindLaterCount > REMIND_LATER_THRESHOLD;
 
         const handleScroll = () => {
 
-            if (orScrollY < -90) {
-                setOrScrollY(window.scrollY)
+            if (startScrollY.current < -90) {
+                startScrollY.current = window.scrollY
                 return;
             }
 
-            if (Math.abs(window.scrollY - orScrollY) > 2400) {
+            if (Math.abs(window.scrollY - startScrollY.current) > 2400) {
                 setSurveyVisible(true);
                 window.removeEventListener('scroll', handleScroll);
             }
@@ -74,7 +76,7 @@ export default function SurveyWidget() {
             window.addEventListener('scroll', handleScroll, { passive: true });
         }
 
-    }, [orScrollY]);
+    }, [startScrollY]);
 
 
     if (typeof window === 'undefined' || !isSurveyVisible) {
