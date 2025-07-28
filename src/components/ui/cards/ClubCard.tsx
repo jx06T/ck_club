@@ -20,9 +20,16 @@ function ClubCard({ club, isFavorite, onToggleFavorite, onClick }: {
             />
             {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent "></div> */}
             <div
+                className="absolute  -left-2 -right-2 bottom-0 h-20 translate-y-2 rotate-[4deg]"
+                style={{
+                    background: `linear-gradient(to top,rgba(28, 35, 57,0.5) 0%, rgba(28, 35, 57,0) 50%)`,
+                    transition: 'all 0.3s ease-in-out'
+                }}
+            ></div>
+            <div
                 className="absolute  left-0 right-10 bottom-0 h-24 "
                 style={{
-                    background: `linear-gradient(to top right,rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%)`,
+                    background: `linear-gradient(to top right,rgba(28, 35, 57,0.8) 0%, rgba(28, 35, 57,0) 50%)`,
                     clipPath: 'polygon(0 0, 100% 100%, 0 100%)',
                     transition: 'all 0.3s ease-in-out'
                 }}
@@ -30,7 +37,7 @@ function ClubCard({ club, isFavorite, onToggleFavorite, onClick }: {
             <div
                 className="absolute right-0 top-0 w-14 h-14 "
                 style={{
-                    background: `linear-gradient(to bottom left ,rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 50%)`,
+                    background: `linear-gradient(to bottom left ,rgba(28, 35, 57,0.2) 0%, rgba(28, 35, 57,0) 50%)`,
                     clipPath: 'polygon(0 0 , 100% 0, 100% 100%)',
                     transition: 'all 0.3s ease-in-out'
                 }}

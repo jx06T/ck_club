@@ -74,10 +74,10 @@ const { club } = Astro.props;
   <div class="grid grid-cols-2">
     <InfoRow title="幹部">
       <Award slot="icon" />
-      <ul slot="content" class="-ml-7 !-space-y-0">
+      <ul slot="content" class="-ml-7 ">
         {
           club.officers.map((officer) => (
-            <li class=" marker:text-transparent">
+            <li class=" marker:text-transparent !my-0.5">
               <strong class=" text-primary-900">{officer.title}：</strong>
               {officer.name}
               {officer.contact && !officer.contact.includes(":") && (
@@ -89,7 +89,7 @@ const { club } = Astro.props;
                   }
                   target="_blank"
                 >
-                  <ExternalLink className=" w-4 inline-block ml-0.5  text-accent-800" />
+                  <ExternalLink className=" w-4 inline-block -mt-1.5  text-accent-800" />
                 </a>
               )}
             </li>

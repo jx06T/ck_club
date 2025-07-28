@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev --host",
-    "build": "astro build && npx pagefind --site dist",
+    "build": "astro build && npx pagefind --site dist/client",
     "preview": "astro preview --host",
     "astro": "astro"
   },

@@ -48,7 +48,7 @@ export default function SurveyWidget() {
     useEffect(() => {
         if (hasCompletedSurvey) return;
 
-        const REMIND_LATER_THRESHOLD = 5;
+        const REMIND_LATER_THRESHOLD = 6;
         const shouldShowNow = remindLaterCount > REMIND_LATER_THRESHOLD;
 
         const handleScroll = () => {
@@ -219,8 +219,8 @@ function SurveyForm({ onComplete, onDismiss, onRemindLater }: {
                     variants={successContainerVariants} initial="hidden" animate="visible"
                 >
                     <motion.div variants={successItemVariants}><PawPrint className="w-16 h-16 text-accent-500 inline-block mb-4" /></motion.div>
-                    <motion.h2 variants={successItemVariants} className="text-2xl font-bold text-gray-800 mb-4">感謝您的填寫！</motion.h2>
-                    <motion.p variants={successItemVariants} className="text-gray-600">您的寶貴意見是我們改進的動力。</motion.p>
+                    <motion.h2 variants={successItemVariants} className="text-2xl font-bold text-primary-800 mb-4">感謝您的填寫！</motion.h2>
+                    <motion.p variants={successItemVariants} className="text-primary-600">您的寶貴意見是我們改進的動力。</motion.p>
                     {formData.attendedExhibition === '有' && formData.exhibitionSource.includes("還不清楚這個活動") && (
                         <motion.a href="/events/社團聯展" target='_blank' rel="noopener noreferrer" variants={successItemVariants} className=' text-primary-900 inline-block mt-1'>立刻了解社團聯展<ChevronRight className=' inline-block  mb-0.5 w-5' /></motion.a>
                     )}

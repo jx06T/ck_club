@@ -38,15 +38,16 @@ const { data } = post;
 >
   <ClubHeader club={data} />
 
-  <article class="max-w-3xl mx-auto pb-8 py-4 px-6 sm:px-8 lg:px-16">
+  <article class="max-w-4xl mx-auto pb-8 py-4 px-6 sm:px-8 lg:px-16">
     <StickyActions
       client:load
       clubCode={data.clubCode}
       clubName={data.name}
       attendsExpo={data.attendsExpo}
     />
-
-    <ClubInfoPanel club={data} />
+    <div class="lg:px-8 xl:px-16">
+      <ClubInfoPanel club={data} />
+    </div>
 
     <main
       data-pagefind-body
