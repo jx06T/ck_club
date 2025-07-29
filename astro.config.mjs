@@ -58,7 +58,9 @@ export default defineConfig({
       exclude: ['functions'],
     },
   },
-
+  markdown: {
+    remarkPlugins: ['remark-breaks'],
+  },
   integrations: [react(), sitemap(),],
 
   build: {
