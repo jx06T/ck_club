@@ -62,7 +62,8 @@ function FeedbackWidget() {
         setStatus('loading');
         setErrorMessage('');
 
-        const pageUrl = pageType === 'current' ? window.location.href : otherPage;
+        const rawUrl = pageType === 'current' ? window.location.href : otherPage;
+        const pageUrl = decodeURI(rawUrl);
 
         const payload = {
             type,
@@ -82,7 +83,6 @@ function FeedbackWidget() {
 
             if (response.status === 201) { // 201 Created 表示成功
                 setStatus('success');
-                // 成功後 5 秒自動關閉視窗並重設表單
                 setTimeout(() => {
                     setIsOpen(false);
                     setStatus('idle');
@@ -91,7 +91,7 @@ function FeedbackWidget() {
                     setOtherPage('');
                     setPageType('current');
                     setType(FEEDBACK_TYPES[0]);
-                }, 5000);
+                }, 3500);
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.message || `伺服器錯誤: ${response.status}`);
@@ -132,7 +132,7 @@ function FeedbackWidget() {
                                     提交成功！
                                 </motion.h4>
                                 <motion.p variants={successItemVariants} className="text-sm text-primary-700">
-                                    感謝您的回饋，確認信會在幾分鐘內寄出，謝謝！
+                                    感謝您的回饋，若有進一步的問題會再跟您聯繫，謝謝！
                                 </motion.p>
                             </motion.div>
                         ) : (
@@ -151,7 +151,7 @@ function FeedbackWidget() {
                                         {FEEDBACK_TYPES.map(t => (
                                             <label key={t} className="cursor-pointer">
                                                 <input type="radio" name="type" value={t} checked={type === t} onChange={() => setType(t)} className="sr-only" />
-                                                <span className={`px-3 py-1 text-sm rounded-full transition-colors ${type === t ? 'bg-accent-500 text-white font-semibold' : 'bg-primary-200  hover:bg-primary-300 '}`}>{t}</span>
+                                                <span className={`px-3 py-1 text-sm rounded-full transition-colors ${type === t ? 'bg-accent-500 text-white h-1/5font-semibold' : 'bg-primary-200  hover:bg-primary-300 '}`}>{t}</span>
                                             </label>
                                         ))}
                                     </div>
@@ -161,11 +161,11 @@ function FeedbackWidget() {
                                     <div className="flex items-center flex-wrap gap-2">
                                         <label className="cursor-pointer shrink-0 ">
                                             <input type="radio" name="pageType" value="當前頁面" checked={pageType === 'current'} onChange={() => setPageType('current')} className="sr-only" />
-                                            <span className={`px-3 py-1 text-sm rounded-full transition-colors ${pageType === 'current' ? 'bg-accent-500 text-white font-semibold' : 'bg-primary-200  hover:bg-primary-300 '}`}>當前頁面</span>
+                                            <span className={`px-3 py-1 text-sm rounded-full transition-colors ${pageType === 'current' ? 'bg-accent-500 text-white /font-semibold' : 'bg-primary-200  hover:bg-primary-300 '}`}>當前頁面</span>
                                         </label>
                                         <label className="cursor-pointer  shrink-0 ">
                                             <input type="radio" name="pageType" value="other" checked={pageType === 'other'} onChange={() => setPageType('other')} className="sr-only" />
-                                            <span className={`px-3 py-1 text-sm rounded-full transition-colors ${pageType === 'other' ? 'bg-accent-500 text-white font-semibold' : 'bg-primary-200  hover:bg-primary-300 '}`}>其他</span>
+                                            <span className={`px-3 py-1 text-sm rounded-full transition-colors ${pageType === 'other' ? 'bg-accent-500 text-white /font-semibold' : 'bg-primary-200  hover:bg-primary-300 '}`}>其他</span>
                                         </label>
                                     </div>
                                 </div>
@@ -173,12 +173,12 @@ function FeedbackWidget() {
                                     <input type="text" value={otherPage} onChange={(e) => setOtherPage(e.target.value)} placeholder="請輸入頁面網址或名稱" required className="w-full bg-primary-50 rounded-md px-3 py-2 text-base outline-hidden inline-block" />
                                 )}
                                 <div>
-                                    <label htmlFor="feedbackText" className="text-sm font-medium text-primary-800  block mb-1.5">反饋內容</label>
+                                    <label htmlFor="feedbackText" className="text-sm font-medium text-primary-800  block mb-1.5">反饋內容<br /><span className=' text-xs'>（若要更正所屬社團資料請在內文註明自己的社團和幹部職位方便我們確認）</span></label>
                                     <textarea id="feedbackText" value={feedbackText} onChange={(e) => setFeedbackText(e.target.value)} rows={4} required className="w-full bg-primary-50 outline-hidden  rounded-md px-3 py-2 text-base focus:ring-accent-500 focus:border-accent-500 max-h-40" placeholder="請詳細描述您的問題或建議..."></textarea>
                                 </div>
                                 <div>
                                     <label htmlFor="email" className="text-sm font-medium text-primary-800  block mb-1.5">您的 Email</label>
-                                    <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full bg-primary-50  outline-hidden rounded-md px-3 py-2 text-base focus:ring-accent-500 focus:border-accent-500" placeholder="方便我們寄送確認信" />
+                                    <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full bg-primary-50  outline-hidden rounded-md px-3 py-2 text-base focus:ring-accent-500 focus:border-accent-500" placeholder="填寫常用信箱，讓我們能夠連繫您" />
                                 </div>
                                 <div className="pt-2">
                                     <button type="submit" disabled={status === 'loading'} className="w-full bg-accent-600 hover:bg-accent-700 text-white font-bold py-2 px-4 rounded-md flex items-center justify-center transition-opacity disabled:opacity-70 disabled:cursor-not-allowed">

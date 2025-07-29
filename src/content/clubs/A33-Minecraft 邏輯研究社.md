@@ -9,7 +9,10 @@ hasClubStamp: false
 
 clubCode: A33
 
-officers: []
+officers:
+- title: 社長
+  name: 王彥鈞
+  contact: gmail：ck11300028.gl.ck.tp.edu.tw
 
 links:
 - platform: gmail

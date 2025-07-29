@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/scripts/useAuth';
 import { getFunctions, httpsCallable } from 'firebase/functions';
-import {triggerSignIn} from '../../../firebase/services'
+import { triggerSignIn } from '../../../firebase/services'
 
 
 // 定義從後端獲取的數據類型
@@ -46,6 +46,16 @@ export default function FeedbackDashboard() {
 
                 setStats(data.statistics);
                 setLatestFeedback(data.latestFeedback);
+
+                setTimeout(() => {
+                    // @ts-ignore
+                    if (window.lenis) {
+                        // @ts-ignore
+                        window.lenis.resize();
+                    }
+
+                }, 100);
+
             } catch (e) {
                 console.error(e);
                 if (typeof e === "string") {
@@ -102,11 +112,11 @@ export default function FeedbackDashboard() {
     };
 
     if (isFetching) return <div className="p-8 min-h-[60vh] text-center">正在載入儀表板數據...</div>;
-    if (!user) return <div className="p-8 min-h-[60vh] text-center text-red-500">請先 <button className=' underline underline-offset-2 cursor-pointer' onClick={async ()=>{
+    if (!user) return <div className="p-8 min-h-[60vh] text-center text-red-500">請先 <button className=' underline underline-offset-2 cursor-pointer' onClick={async () => {
         const user = await triggerSignIn();
         if (user) {
             window.location.reload();
-        }else{
+        } else {
             console.log("登入失敗")
             // alert();
         }
@@ -178,11 +188,11 @@ export default function FeedbackDashboard() {
                     </thead>
                     <tbody>
                         {latestFeedback.map((fb) => (
-                            <tr key={fb.id} className="not-last:border-b border-neutral-100 hover:bg-primary-100/20">
+                            <tr key={fb.id} className="not-last:border-b border-neutral-100 hover:bg-primary-100/20 h-32">
                                 <td className="px-6 py-4 whitespace-nowrap">{new Date(fb.submittedAt).toLocaleString('zh-TW')}</td>
                                 <td className="px-6 py-4">{fb.type}</td>
-                                <td className="px-6 py-4 max-w-sm truncate" title={fb.feedbackText}>{fb.feedbackText}</td>
-                                <td className="px-6 py-4 max-w-xs truncate" title={fb.pageUrl}>{fb.pageUrl}</td>
+                                <td className="px-6 py-4 max-w-sm min-w-72 wrap-break-word" title={fb.feedbackText}>{fb.feedbackText}</td>
+                                <td className="px-6 py-4 max-w-sm min-w-72 wrap-break-word" title={fb.pageUrl}>{fb.pageUrl}</td>
                                 <td className="px-6 py-4">{fb.userEmail}</td>
                             </tr>
                         ))}

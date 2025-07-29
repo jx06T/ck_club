@@ -35,12 +35,19 @@ const successItemVariants = {
 } as const;
 
 export default function SurveyWidget() {
+    const [isAllowedEnvironment, setIsAllowedEnvironment] = useState(false);
+
     const [hasCompletedSurvey, setHasCompletedSurvey] = useLocalStorage('hasCompletedSurvey', false);
     const [remindLaterCount, setRemindLaterCount] = useLocalStorage('surveyRemindLaterCount', 0);
     const [isSurveyVisible, setSurveyVisible] = useState(false);
     const startScrollY = useRef(-100);
 
     useEffect(() => {
+        const allowedHostnames = ['club.cksc.tw', 'localhost'];
+        if (allowedHostnames.includes(window.location.hostname)) {
+            setIsAllowedEnvironment(true);
+        }
+
         if (hasCompletedSurvey) return;
         setRemindLaterCount(prev => prev + 1);
     }, []);
@@ -82,6 +89,9 @@ export default function SurveyWidget() {
     if (typeof window === 'undefined' || !isSurveyVisible) {
         return null;
     }
+    if (!isAllowedEnvironment) {
+        return null;
+    }
 
     const handleComplete = () => {
         setHasCompletedSurvey(true);
@@ -91,8 +101,6 @@ export default function SurveyWidget() {
     const handleDismiss = () => {
         setSurveyVisible(false);
         setRemindLaterCount(-2)
-        // 考慮將關閉視為永久完成，避免使用者感到煩擾
-        // setHasCompletedSurvey(true);
     };
 
     const handleRemindLater = () => {

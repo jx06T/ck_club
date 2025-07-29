@@ -176,6 +176,17 @@ function SearchPage({ allClubs }: SearchPageProps) {
                         .filter((c) => !!c);
 
                     setSearchResults(clubsFromSearch);
+
+                    setTimeout(() => {
+                        // @ts-ignore
+                        if (window.lenis) {
+                            // @ts-ignore
+                            window.lenis.resize();
+                        }
+
+                    }, 100);
+
+
                 } else {
                     setSearchResults([])
                 }

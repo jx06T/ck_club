@@ -1,0 +1,35 @@
+---
+import {
+  Line,
+  MdiInstagram,
+  MdiYoutube,
+  IcBaselineDiscord,
+  MaterialSymbolsAttachFile,
+  BxlGmail,
+  TablerBrandThreads
+} from "./Icons";
+
+import type { JSX } from "react";
+import type { SVGProps } from "react";
+
+interface Props {
+  platform: string;
+  class?: string;
+}
+
+const { platform, class: className } = Astro.props;
+
+const iconMap: Record<string, (props: SVGProps<SVGSVGElement>) => JSX.Element> =
+  {
+    instagram: MdiInstagram,
+    youtube: MdiYoutube,
+    line: Line,
+    discord: IcBaselineDiscord,
+    gmail: BxlGmail,
+    threads  : TablerBrandThreads
+  };
+
+const IconComponent = iconMap[platform] || MaterialSymbolsAttachFile;
+---
+
+<IconComponent className={className} />

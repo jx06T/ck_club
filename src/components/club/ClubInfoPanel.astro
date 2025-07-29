@@ -1,7 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import InfoRow from "./InfoRow.astro";
-import { MdiInstagram } from "@components/ui/Icons";
+import SocialIcon from "@components/ui/SocialIcon.astro";
+
 // 從 astro-lucide 靜態引入所有需要的 Icon
 import {
   Users,
@@ -50,7 +51,7 @@ const { club } = Astro.props;
 
   <!-- <hr class="outline-0 border-accent-600" /> -->
 
-  <div class="grid grid-cols-2">
+  <div class="grid grid-cols-[1fr_1fr]">
     <InfoRow title="人數">
       <Users slot="icon" />
       <p slot="content">
@@ -71,26 +72,33 @@ const { club } = Astro.props;
   </div>
 
   <!-- <hr class="outline-0 border-accent-600" /> -->
-  <div class="grid grid-cols-2">
+  <div class="grid grid-cols-[1fr_1fr]">
     <InfoRow title="幹部">
       <Award slot="icon" />
-      <ul slot="content" class="-ml-7 ">
+      <ul slot="content" class="-ml-7">
         {
           club.officers.map((officer) => (
             <li class=" marker:text-transparent !my-0.5">
               <strong class=" text-primary-900">{officer.title}：</strong>
               {officer.name}
-              {officer.contact && !officer.contact.includes(":") && (
-                <a
-                  class=" inline-block "
-                  href={
-                    "https://www.instagram.com/" +
-                    officer.contact.replaceAll("@", "")
-                  }
-                  target="_blank"
-                >
-                  <ExternalLink className=" w-4 inline-block -mt-1.5  text-accent-800" />
-                </a>
+              {officer.contact && (
+                <>
+                  {!officer.contact.includes(":") &&
+                  !officer.contact.includes("：") ? (
+                    <a
+                      class=" inline-block "
+                      href={
+                        "https://www.instagram.com/" +
+                        officer.contact.replaceAll("@", "")
+                      }
+                      target="_blank"
+                    >
+                      <ExternalLink className=" w-4 inline-block -mt-1.5  text-accent-800" />
+                    </a>
+                  ) : (
+                    <span>｜{officer.contact}</span>
+                  )}
+                </>
               )}
             </li>
           ))
@@ -104,17 +112,21 @@ const { club } = Astro.props;
         {
           club.links.map((link) => (
             <li class=" marker:text-transparent">
-              {link.platform == "Instagram" && (
-                <MdiInstagram className=" inline-block w-4 h-4" />
+              <SocialIcon platform={link.platform} class=" w-5 h-5 inline-block" />
+              {link.platform === "gmail" ? (
+                <p class="text-accent-800  dark:text-accent-300">
+                  {link.handle}
+                </p>
+              ) : (
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-accent-800 hover:underline dark:text-accent-300"
+                >
+                  {link.handle}
+                </a>
               )}
-              <a
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-accent-800 hover:underline dark:text-accent-300"
-              >
-                {link.handle}
-              </a>
             </li>
           ))
         }

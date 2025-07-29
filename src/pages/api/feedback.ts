@@ -55,7 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
         return new Response(
             JSON.stringify({ message: "回饋已成功接收" }), 
             {
-                status: 201, // 201 Created
+                status: 201,
                 headers: { 'Content-Type': 'application/json' }
             }
         );

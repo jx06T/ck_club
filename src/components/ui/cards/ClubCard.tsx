@@ -20,7 +20,7 @@ function ClubCard({ club, isFavorite, onToggleFavorite, onClick }: {
             />
             {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent "></div> */}
             <div
-                className="absolute  -left-2 -right-2 bottom-0 h-20 translate-y-2 rotate-[4deg]"
+                className="absolute  -left-2 -right-2 -bottom-2 h-24  rotate-[4deg]"
                 style={{
                     background: `linear-gradient(to top,rgba(28, 35, 57,0.5) 0%, rgba(28, 35, 57,0) 50%)`,
                     transition: 'all 0.3s ease-in-out'
