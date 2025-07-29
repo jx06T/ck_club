@@ -173,7 +173,7 @@ function FeedbackWidget() {
                                     <input type="text" value={otherPage} onChange={(e) => setOtherPage(e.target.value)} placeholder="請輸入頁面網址或名稱" required className="w-full bg-primary-50 rounded-md px-3 py-2 text-base outline-hidden inline-block" />
                                 )}
                                 <div>
-                                    <label htmlFor="feedbackText" className="text-sm font-medium text-primary-800  block mb-1.5">反饋內容<br /><span className=' text-xs'>（若要更正所屬社團資料請在內文註明自己的社團和幹部職位方便我們確認）</span></label>
+                                    <label htmlFor="feedbackText" className="text-sm font-medium text-primary-800  block mb-1.5">反饋內容<br /><span className=' text-xs text-primary-700'>若要更正社團資料請在內文註明自己的社團和幹位方便我們確認</span></label>
                                     <textarea id="feedbackText" value={feedbackText} onChange={(e) => setFeedbackText(e.target.value)} rows={4} required className="w-full bg-primary-50 outline-hidden  rounded-md px-3 py-2 text-base focus:ring-accent-500 focus:border-accent-500 max-h-40" placeholder="請詳細描述您的問題或建議..."></textarea>
                                 </div>
                                 <div>
