@@ -184,7 +184,7 @@ function SearchPage({ allClubs }: SearchPageProps) {
                             window.lenis.resize();
                         }
 
-                    }, 100);
+                    }, 350);
 
 
                 } else {

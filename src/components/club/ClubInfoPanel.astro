@@ -75,10 +75,10 @@ const { club } = Astro.props;
   <div class="grid grid-cols-[1fr_1fr]">
     <InfoRow title="幹部">
       <Award slot="icon" />
-      <ul slot="content" class="-ml-7">
+      <ul slot="content" class="-ml-7 break-all">
         {
           club.officers.map((officer) => (
-            <li class=" marker:text-transparent !my-0.5">
+            <li class=" marker:text-transparent !my-0.5 ">
               <strong class=" text-primary-900">{officer.title}：</strong>
               {officer.name}
               {officer.contact && (
