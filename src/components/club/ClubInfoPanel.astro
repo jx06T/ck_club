@@ -108,7 +108,7 @@ const { club } = Astro.props;
 
     <InfoRow title="外部連結">
       <LinkIcon slot="icon" />
-      <ul slot="content" class="-ml-7 !-space-y-0">
+      <ul slot="content" class="-ml-7 break-all">
         {
           club.links.map((link) => (
             <li class=" marker:text-transparent">
