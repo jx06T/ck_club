@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Star, Share2, MapPin, Bookmark, Heart } from 'lucide-react';
+import { Star, Share2, MapPin, Bookmark, Heart, X, Send } from 'lucide-react';
+
 import { useLocalStorage } from '@/scripts/useLocalStorage';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { LogosGoogleIcon } from '@components/ui/Icons'
@@ -220,27 +221,31 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center"
+                    className="fixed top-0 left-0 h-screen right-0 z-50 py-8 px-2 md:px-16 lg:px-[16%] bg-black/50 backdrop-blur-xs "
                     onClick={() => setIsShareModalOpen(false)}
                 >
                     <div
-                        className="bg-white p-4 rounded-lg shadow-2xl relative"
-                        onClick={(e) => e.stopPropagation()}
+                        className=" p-4 rounded-lg shadow-2xl relative h-full"
                     >
-                        <h3 onClick={handleShare} className="text-center font-bold mb-2">長按或右鍵下載圖片分享</h3>
-                        <img
-                            src={`/api/share-card?clubCode=${clubCode}&&width=${768}`}
-                            alt={`分享卡片 - ${clubName}`}
-                            width={600}
-                            height={400}
-                            className="rounded-md"
-                        />
+                        
+                        <div onClick={(e) => e.stopPropagation()} className=' flex flex-col md:flex-row justify-center space-y-2 md:space-x-3 mb-5 md:mb-3 items-center w-full'>
+                            <h3 className="text-center text-sm md:text-base ">長按或右鍵點擊圖片分享</h3>
+                            <h3 className="hidden md:inline-block text-center font-bold -mt-[1px]">|</h3>
+                            <h3 onClick={handleShare} className=" text-sm md:text-base cursor-pointer bg-accent-500 hover:bg-accent-400 text-gray-900 transition-colors duration-100 rounded-full py-1 text-center  w-fit px-3">僅分享此網頁<Send className=' inline-block ml-1 w-4 -mt-0.5' /></h3>
+                        </div>
+                        <div onClick={(e) => e.stopPropagation()} className=' max-h-[96%] h-fit w-fit rounded-2xl overflow-hidden mx-auto'>
+                            <img
+                                src={`/api/share-card?clubCode=${clubCode}&&width=${768}`}
+                                alt={`分享卡片-${clubName}`}
+                                className="h-full w-full object-contain object-center"
+                            />
+                        </div>
                         <button
                             onClick={() => setIsShareModalOpen(false)}
-                            className="absolute -top-3 -right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center text-black shadow-lg"
+                            className="absolute cursor-pointer -top-2 -right-2 w-8 h-8 bg-accent-500 hover:bg-accent-400 rounded-full flex items-center justify-center text-gray-900 shadow-lg"
                             aria-label="關閉"
                         >
-                            X
+                            <X />
                         </button>
                     </div>
                 </motion.div>
