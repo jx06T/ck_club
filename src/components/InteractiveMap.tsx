@@ -239,6 +239,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         const bbox = pathElement.getBBox();
         const targetX = bbox.x + bbox.width / 2;
         const targetY = bbox.y + bbox.height / 2;
+        console.log(bbox)
 
         const targetScale = 6;
 
@@ -248,10 +249,10 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         const divH = mapContainer.offsetHeight;
         const divW = mapContainer.offsetWidth;
 
-        const scale = (divW < 640 || divH < 640) ? Math.min(divH / 640, divW / 640) : 1;
-
-        let rawPanX = (-targetX + 320) * scale;
-        let rawPanY = (-targetY + 320) * scale;
+        const scale = (divW < 700 || divH < 700) ? Math.min(divH / 700, divW / 700) : 1.1875;
+        // const scale = 1.1875;
+        let rawPanX = (-targetX + 350) * scale;
+        let rawPanY = (-targetY + 350) * scale;
 
         let panX = rawPanX;
         let panY = rawPanY;
@@ -301,7 +302,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                             id="interactive-map-label-svg"
                             style={{ rotate: rotate * 90 + "deg" }}
                             className={`absolute inset-0 w-full h-full pointer-events-none ${isZoomedIn ? 'is-zoomed-in' : ''} transition-transform duration-300`}
-                            viewBox="0 0 640 640"
+                            viewBox="0 0 700 700"
                         >
                             {clubLabels.map(label => {
                                 const isXAxis = label.id.startsWith('club-x-');
