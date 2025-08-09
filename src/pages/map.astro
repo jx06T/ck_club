@@ -3,32 +3,53 @@ import { getCollection } from "astro:content";
 
 import Layout from "../layouts/Layout.astro";
 import InteractiveMap from "@components/InteractiveMap.tsx";
-
+import { clubMappings } from "@data/clubFair";
+import type { ClubInfoForMap } from "@types/club";
 const allClubsData = await getCollection("clubs");
 
-const clubCodeToMapId: { [key: string]: string } = {
-  E04: "club-x-0",
-  A01: "club-x-1",
-  B14: "club-y-0",
-  D04: "club-y-1",
-};
+const clubsDataByCode = new globalThis.Map(
+  allClubsData.map((club) => [club.data.clubCode, club])
+);
 
-const clubsIndex = allClubsData.map((club) => ({
-  clubCode: club.data.clubCode,
-  mapId: clubCodeToMapId[club.data.clubCode],
-  name: club.data.name,
-  summary: club.data.summary,
-  slug: club.slug,
-  tags: club.data.tags,
-}));
+const clubsForMap = Object.entries(clubMappings).map(
+  ([clubCode, mappingInfo]): ClubInfoForMap => {
+    if (clubCode.endsWith("_")) {
+      clubCode = clubCode.slice(0,-1)
+    }
+    const clubData = clubsDataByCode.get(clubCode);
+    if (clubData) {
+      return {
+        clubCode: clubCode,
+        mapId: mappingInfo.mapId,
+        stampId: mappingInfo.stampId,
+        name: clubData.data.name,
+        summary: clubData.data.summary,
+        slug: clubData.slug,
+        tags: clubData.data.tags,
+        isPlaceholder: false,
+      };
+    } else {
+      return {
+        clubCode: clubCode,
+        mapId: mappingInfo.mapId,
+        stampId: mappingInfo.stampId,
+        name: mappingInfo.name,
+        summary: "此社團尚未提供詳細資訊。",
+        slug: null,
+        tags: [],
+        isPlaceholder: true,
+      };
+    }
+  }
+);
 ---
 
 <Layout>
-    <div class="text-center max-w-6xl mx-auto px-4 mt-12 sm:mt-12 md:mt-0">
-      <h1 class="text-4xl sm:text-5xl font-bold text-primary-800 mb-4">
-        社團博覽會地圖
-      </h1>
-      <p class="text-lg text-neutral-600">探索感興趣的社團！</p>
-    </div>
-    <InteractiveMap client:load clubs={clubsIndex} />
+  <div class="text-center max-w-6xl mx-auto px-4 mt-12 sm:mt-12 md:mt-0">
+    <h1 class="text-4xl sm:text-5xl font-bold text-primary-800 mb-4">
+      社團博覽會地圖
+    </h1>
+    <p class="text-lg text-neutral-600">探索感興趣的社團！</p>
+  </div>
+  <InteractiveMap client:load clubs={clubsForMap} />
 </Layout>

@@ -9,7 +9,7 @@ import type { PanzoomObject } from '@panzoom/panzoom';
 import MapSVG from '@assets/mapppp.svg?react';
 import FuzzySearch from '@/components/ui/inputs/FuzzySearch';
 import ClubInfoCard from '@/components/ui/cards/ClubInfoCard'
-import type { ClubInfo } from '@/types/club';
+import type { ClubInfoForMap } from '@/types/club';
 
 
 interface ClubLabel {
@@ -20,12 +20,12 @@ interface ClubLabel {
 }
 
 interface InteractiveMapProps {
-    clubs: ClubInfo[];
+    clubs: ClubInfoForMap[];
 }
 
 function InteractiveMap({ clubs }: InteractiveMapProps) {
     const [selectedClubId, setSelectedClubId] = useState<string | null>(null);
-    const [selectedClubInfo, setSelectedClubInfo] = useState<ClubInfo | null>(null);
+    const [selectedClubInfo, setSelectedClubInfo] = useState<ClubInfoForMap | null>(null);
     const [isZoomedIn, setIsZoomedIn] = useState(false);
     const [clubLabels, setClubLabels] = useState<ClubLabel[]>([]);
     const [rotate, setRotate] = useState<number>(0);
@@ -181,7 +181,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         }
     }
 
-    const handleSelectClubFromSearch = (club: ClubInfo) => {
+    const handleSelectClubFromSearch = (club: ClubInfoForMap) => {
         zoomToClub(club.mapId)
         setSelectedClubId(club.mapId);
     };
@@ -325,7 +325,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                     </div>
                 </div>
                 <div className={`absolute ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "}  right-4 top-3 md:right-6 md:top-5 w-72 md:w-[40rem] max-w-[70%] flex flex-col md:flex-row gap-2 md:gap-4 items-start pointer-events-none`}>
-                    <FuzzySearch<ClubInfo>
+                    <FuzzySearch<ClubInfoForMap>
                         items={clubs}
                         searchKeys={['name', 'summary', 'tags', 'clubCode']}
                         onSelect={handleSelectClubFromSearch}

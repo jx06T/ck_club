@@ -1,10 +1,10 @@
 
 import { useState } from 'react';
 import { SquareArrowOutUpRight, ChevronDown, Tag } from 'lucide-react';
-import type { ClubInfo } from '@/types/club';
+import type { ClubInfoForMap } from '@/types/club';
 
 interface ClubInfoCardProps {
-    clubInfo: ClubInfo;
+    clubInfo: ClubInfoForMap;
     onZoomToClub: (mapId: string) => void;
     onTagClick?: (tag: string) => void;
     className?: string;

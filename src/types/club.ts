@@ -1,11 +1,13 @@
 import type { GetImageResult } from 'astro';
-export interface ClubInfo {
+export interface ClubInfoForMap {
     mapId: string;
     clubCode: string;
+    stampId: number;
     name: string;
     summary: string;
-    slug: string;
+    slug: string | null;
     tags?: string[];
+    isPlaceholder?: boolean,
 }
 
 export type Club = {
@@ -23,7 +25,7 @@ export type Club = {
         previousYear: string;
     };
 
-    membershipFee?: string;
+    membershipFee?: string; 
 
     activities: string[];
     workshops: {
