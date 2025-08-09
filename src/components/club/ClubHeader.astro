@@ -6,12 +6,13 @@ import { Flag, Stamp } from "lucide-react";
 
 interface Props {
   club: CollectionEntry<"clubs">["data"];
+  stampId: number | null;
 }
 
-const { club } = Astro.props;
+const { club, stampId } = Astro.props;
 ---
 
-<header class="relative mb-8 w-full -mt-12 md:-mt-14 lg:-mt-20 ">
+<header class="relative mb-8 w-full -mt-12 md:-mt-14 lg:-mt-20">
   <!-- Cover Image -->
 
   <div class="md:px-[10%] overflow-hidden">
@@ -60,7 +61,7 @@ const { club } = Astro.props;
             club.hasClubStamp && (
               <span class="flex items-center gap-1.5 text-sm bg-orange-200 text-yellow-800 px-2 py-0.5 rounded-full">
                 <Stamp className="w-4 h-4" />
-                保管印章
+                保管印章 {stampId&&["Ⅰ","Ⅱ","Ⅲ","Ⅳ","Ⅴ"][stampId]}
               </span>
             )
           }

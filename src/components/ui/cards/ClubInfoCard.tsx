@@ -21,7 +21,7 @@ function ClubInfoCard({
 
     return (
         <div className={`p-0 flex flex-col gap-2 ${className}`}>
-            <div   title={`縮放到 ${name}`} onClick={() => onZoomToClub(mapId)} className=" cursor-pointer flex justify-between items-center">
+            <div title={`縮放到 ${name}`} onClick={() => onZoomToClub(mapId)} className=" cursor-pointer flex justify-between items-center">
                 <h4
                     className="font-bold text-xl text-black hover:text-gray-700 transition-colors"
                 >
@@ -68,15 +68,17 @@ function ClubInfoCard({
                 </div>
             )}
 
-            <a
-                href={`/clubs/${slug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className=" -mt-1 pt-2 text-primary-600 font-semibold hover:underline text-base flex items-center gap-1"
-            >
-                <span>查看詳情</span>
-                <SquareArrowOutUpRight size={16} />
-            </a>
+            {slug &&
+                <a
+                    href={`/clubs/${slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className=" -mt-1 pt-2 text-primary-600 font-semibold hover:underline text-base flex items-center gap-1"
+                >
+                    <span>查看詳情</span>
+                    <SquareArrowOutUpRight size={16} />
+                </a>
+            }
         </div>
     );
 }

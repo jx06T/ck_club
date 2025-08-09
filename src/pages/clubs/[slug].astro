@@ -6,6 +6,8 @@ import { Image } from "astro:assets";
 import ClubHeader from "@/components/club/ClubHeader.astro";
 import StickyActions from "@/components/club/StickyActions.tsx";
 import ClubInfoPanel from "@/components/club/ClubInfoPanel.astro";
+import { clubMappings } from "@data/clubFair";
+import { date } from "astro:schema";
 
 export async function getStaticPaths() {
   const clubs = await getCollection("clubs");
@@ -26,6 +28,7 @@ if (post === undefined) {
 
 const { Content } = await post.render();
 const { data } = post;
+const stampId = clubMappings[data.clubCode].stampId || null;
 ---
 
 <Layout
@@ -36,7 +39,7 @@ const { data } = post;
   customOgDescription={data.summary.slice(0, 30) + "..."}
   padding={false}
 >
-  <ClubHeader club={data} />
+  <ClubHeader club={data} stampId={stampId} />
 
   <article class="max-w-4xl mx-auto pb-8 py-4 px-6 sm:px-8 lg:px-16">
     <StickyActions
