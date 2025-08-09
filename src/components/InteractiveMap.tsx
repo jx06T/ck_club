@@ -7,6 +7,7 @@ const Panzoom = PanzoomModule.default;
 import type { PanzoomObject } from '@panzoom/panzoom';
 
 import MapSVG from '@assets/mapppp.svg?react';
+import LegendSVG from '@assets/legend.svg?react';
 import FuzzySearch from '@/components/ui/inputs/FuzzySearch';
 import ClubInfoCard from '@/components/ui/cards/ClubInfoCard'
 import type { ClubInfoForMap } from '@/types/club';
@@ -15,6 +16,7 @@ import type { ClubInfoForMap } from '@/types/club';
 interface ClubLabel {
     id: string;
     name: string;
+    stampId: number;
     x: number;
     y: number;
 }
@@ -22,6 +24,20 @@ interface ClubLabel {
 interface InteractiveMapProps {
     clubs: ClubInfoForMap[];
 }
+
+const calculateLabelWidth = (text: string): number => {
+    const cjkRegex = /[\u4e00-\u9fa5\u3000-\u303f\uff00-\uffef]/;
+
+    let totalWidth = 0;
+    for (const char of text) {
+        if (cjkRegex.test(char)) {
+            totalWidth += 5;
+        } else {
+            totalWidth += 2.5;
+        }
+    }
+    return totalWidth + 2 * 2;
+};
 
 function InteractiveMap({ clubs }: InteractiveMapProps) {
     const [selectedClubId, setSelectedClubId] = useState<string | null>(null);
@@ -133,6 +149,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                     labels.push({
                         id: clubId,
                         name: clubData.name,
+                        stampId: clubData.stampId,
                         x,
                         y
                     });
@@ -253,7 +270,6 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         // const scale = 1.1875;
         let rawPanX = (-targetX + 350) * scale;
         let rawPanY = (-targetY + 350) * scale;
-
         let panX = rawPanX;
         let panY = rawPanY;
 
@@ -287,10 +303,13 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
     return (
         <div className="map-wrapper mb-12">
             <div ref={mapDivRef} id='map-div' className="relative map-svg-container h-screen bg-primary-100">
-                <div ref={mapViewportRef} className={`map-viewport w-full ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "} overflow-hidden rounded-lg border-2 border-accent-400`}>
+                <div ref={mapViewportRef} className={`map-viewport w-full ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "} overflow-hidden rounded-lg border-2 border-accent-400 relative`}>
+                    <div className=' absolute z-40 left-2  bottom-2 w-[min(12%,5rem)] /bg-red-400'>
+                        <LegendSVG className=' w-full h-full' />
+                    </div>
                     <div
                         ref={containerRef}
-                        className="relative w-full h-full /w-[1600px] /h-[1600px] /bg-red-300/50"
+                        className={`relative w-full h-full /w-[1600px] /h-[1600px] /bg-red-300/50  ${isZoomedIn ? 'is-zoomed-in' : ''} `}
                     >
                         <MapSVG
                             id="interactive-map-svg"
@@ -301,27 +320,41 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                         <svg
                             id="interactive-map-label-svg"
                             style={{ rotate: rotate * 90 + "deg" }}
-                            className={`absolute inset-0 w-full h-full pointer-events-none ${isZoomedIn ? 'is-zoomed-in' : ''} transition-transform duration-300`}
+                            className={`absolute inset-0 w-full h-full pointer-events-none transition-transform duration-300`}
                             viewBox="0 0 700 700"
                         >
                             {clubLabels.map(label => {
                                 const isXAxis = label.id.startsWith('club-x-');
+                                // const w = Math.min(65, label.name.length * 5 + 4)
+                                const w = calculateLabelWidth(label.name)
+                                const h = 8
+                                const f = ((rotate % 4 === 3) || (rotate % 4 === 2))
                                 return (
-                                    <text
-                                        key={
-                                            label.id
-                                        }
-                                        x={label.x}
-                                        y={label.y}
-                                        className="club-label"
-                                        textAnchor="middle"
-                                        dominantBaseline="middle"
-                                        transform={`rotate(${((((rotate % 4 === 3) || (rotate % 4 === 2)) ? 2 : 0) + (isXAxis ? -1 : 0)) * 90}, ${label.x}, ${label.y})`}
+                                    <g
+                                        key={label.id}
+                                        transform={`rotate(${((f ? 2 : 0) + (isXAxis ? -1 : 0)) * 90}, ${label.x}, ${label.y})`}
                                     >
-                                        {label.name}
-                                    </text>)
-                            }
-                            )}
+                                        <rect
+                                            x={label.x + ((f ? 1 : -1) * (w + 6)) - (f ? w : 0)}
+                                            y={label.y + ((f ? -1 : -1) * (h / 2))}
+                                            width={w}
+                                            height={h}
+                                            rx="2"
+                                            ry="2"
+                                            className={`club-label-bg stampId-${label.stampId}`}
+                                        />
+                                        <text
+                                            x={label.x + ((f ? 1 : -1) * 8)}
+                                            y={label.y + 0.5}
+                                            className="club-label"
+                                            textAnchor={f ? "start" : "end"}
+                                            dominantBaseline="middle"
+                                        >
+                                            {label.name}
+                                        </text>
+                                    </g>
+                                )
+                            })}
                         </svg>
                     </div>
                 </div>

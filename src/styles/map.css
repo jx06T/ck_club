@@ -1,24 +1,31 @@
 #interactive-map-svg path[id^="club-"] {
   cursor: pointer;
-  transition: fill 0.2s ease-in-out;
+  transition: fill 0.1s ease-in-out;
+  transition: stroke-width 0.1s ease-in-out !important;
+  fill: transparent !important;
+  stroke-width: 1 !important;
+}
+
+.is-zoomed-in #interactive-map-svg path[id^="club-"] {
+  stroke-width: 0.35 !important;
 }
 
 #interactive-map-svg path[id^="club-"]:not(.selected):hover {
-  fill: #ff8036 !important;
-  stroke-width: 0.3 !important;
-  stroke: #fbcb98 !important;
-  transition: stroke-width 0.2s ease !important;
-  transition: fill 0.2s ease !important;
+  /* fill: #ff8036 !important; */
+  fill: transparent !important;
+  stroke-width: 0.45 !important;
+  stroke: #ffc261 !important;
   z-index: 1000;
 }
 
 #interactive-map-svg path.selected[id^="club-"]:hover {
-  fill: #e93131 !important;
+  fill: #ff8d4b !important;
+  /* fill: #fff !important; */
 }
 
 #interactive-map-svg path.selected {
-  fill: #ff4e4e !important;
-  stroke: #fbcb98 !important;
+  fill: #ff8036 !important;
+  /* stroke: #fbcb98 !important; */
 }
 
 .club-label {
@@ -34,6 +41,24 @@
   transition: opacity 0.3s ease-in-out;
 }
 
-#interactive-map-label-svg.is-zoomed-in .club-label {
+.is-zoomed-in #interactive-map-label-svg .club-label {
   opacity: 1;
 }
+
+
+.club-label-bg {
+    opacity: 0.6;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.is-zoomed-in .club-label-bg {
+    opacity: 0.5;
+}
+
+
+.club-label-bg.stampId-0 { fill: #868686; }
+.club-label-bg.stampId-1 { fill: #4285F4; }
+.club-label-bg.stampId-2 { fill: #34A853; }
+.club-label-bg.stampId-3 { fill: #FBBC05; }
+.club-label-bg.stampId-4 { fill: #EA4335; }
+.club-label-bg.stampId-5 { fill: #9840a0; }
