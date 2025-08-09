@@ -27,8 +27,11 @@ await initWasm(resvgWasm);
 export const prerender = false;
 
 const mmToPx = (mm: number) => mm * 3.78;
-const toBase64Uri = (svgString: string) => `data:image/svg+xml;base64,${Buffer.from(svgString).toString('base64')}`;
 
+const toBase64Uri = (svgString: string) => {
+    const base64 = btoa(unescape(encodeURIComponent(svgString)));
+    return `data:image/svg+xml;base64,${base64}`;
+}
 const backgroundDataUri = toBase64Uri(backgroundSvg);
 const stamps = [null, s1, s2, s3, s4, s5].map(svg => svg ? toBase64Uri(svg) : null);
 
