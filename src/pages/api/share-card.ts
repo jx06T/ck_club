@@ -1,7 +1,9 @@
 import type { APIRoute } from 'astro';
 import satori from 'satori';
-import { Resvg } from '@resvg/resvg-js';
 import QRCode from 'qrcode';
+
+import { initWasm, Resvg } from '@resvg/resvg-wasm';
+import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm?module';
 
 // import fs from 'node:fs/promises';
 // import { fileURLToPath } from 'node:url';
@@ -21,6 +23,7 @@ import s5 from '@/assets/stamps/s5.svg?raw';
 import fontBoldUrl from '@/assets/NotoSansTC-Bold.ttf?url';
 import fontRegularUrl from '@/assets/NotoSansTC-Regular.ttf?url';
 
+await initWasm(resvgWasm);
 export const prerender = false;
 
 const mmToPx = (mm: number) => mm * 3.78;

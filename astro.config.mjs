@@ -39,11 +39,6 @@ export default defineConfig({
         "react-dom/server": "react-dom/server.edge",
       } : {},
     },
-    ssr: {
-      noExternal: [
-        '@resvg/resvg-js'
-      ]
-    },
     plugins: [
       tailwindcss(),
       svgr({
