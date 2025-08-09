@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import satori from 'satori';
 import QRCode from 'qrcode';
+import { toString as qrCodeToString } from 'qrcode';
 
 import { initWasm, Resvg } from '@resvg/resvg-wasm';
 import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm?module';
@@ -74,11 +75,16 @@ export const GET: APIRoute = async ({ request }) => {
         }
 
 
-        const qrCodeDataURL = await QRCode.toDataURL(shareUrl, {
-            width: mmToPx(124.4),
+        const qrCodeSvgString = await qrCodeToString(shareUrl, {
+            type: 'svg', 
+            width: 768,
             margin: 0,
-            color: { dark: "#171e2a", light: "#fcfcfc" }
+            color: {
+                dark: "#171e2a",
+                light: "#fcfcfc"
+            }
         });
+        const qrCodeDataURL = toBase64Uri(qrCodeSvgString);
 
         const html = {
             type: 'div',
