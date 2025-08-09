@@ -6,8 +6,6 @@ import { LogosGoogleIcon } from '@components/ui/Icons'
 
 import { useAuth } from '@/scripts/useAuth';
 import { createDocument, deleteDocument, readDocument } from '@/firebase/services';
-import { type User } from 'firebase/auth';
-
 
 interface StickyActionsProps {
     clubCode: string;
@@ -24,7 +22,9 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
     const [isLiked, setIsLiked] = useState<boolean>(false);
     const [shouldShowLoginBtn, setShouldShowLoginBtn] = useState<boolean>(false);
 
-    const { isLoggedIn, user, signIn, getIdToken, isLoading } = useAuth();
+    const { isLoggedIn, user, signIn, isLoading } = useAuth();
+
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
@@ -91,6 +91,10 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
         }
     };
 
+    const handleShowCard = () => {
+        setIsShareModalOpen(true);
+    };
+
     const handleAuth = async () => {
         if (isLoggedIn) {
             console.log("已經登入");
@@ -140,74 +144,107 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
     }
 
     return (
-        <motion.div
-            className="fixed top-20 right-2 sm:right-[5%] sm:top-[5.5rem] z-40 flex flex-col gap-2"
-            style={{ y }}
-        >
-            <button
-                onClick={handleToggleFavorite}
-                disabled={!isClient}
-
-                className={`w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center  hover:bg-accent-200/70 transition-colors duration-300 ${isFavorite ? "text-accent-500" : "text-white"}`}
-                aria-label={isFavorite ? '取消收藏' : '加入收藏'}
+        <>
+            <motion.div
+                className="fixed top-20 right-2 sm:right-[5%] sm:top-[5.5rem] z-40 flex flex-col gap-2"
+                style={{ y }}
             >
-                <motion.div
-                    animate={{
-                        scale: isFavorite ? [1, 1.2, 1] : [1, 1.05, 1],
-                    }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                <button
+                    onClick={handleToggleFavorite}
+                    disabled={!isClient}
+
+                    className={`w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center  hover:bg-accent-200/70 transition-colors duration-300 ${isFavorite ? "text-accent-500" : "text-white"}`}
+                    aria-label={isFavorite ? '取消收藏' : '加入收藏'}
                 >
-                    <Bookmark size={20} fill={isFavorite ? 'currentColor' : 'none'} />
-                </motion.div>
-            </button>
-
-            <button
-                onClick={handleLike}
-                disabled={!isClient}
-
-                className={`w-10 py-2 rounded-full bg-accent-300/70 shadow-md  hover:bg-accent-200/70 transition-color duration-300 ${isLiked ? "text-[#ff3040]" : "text-white"}`}
-                aria-label={isLiked ? '取消按讚' : '按讚'}
-            >
-                <div className=' w-full flex items-center justify-center '>
                     <motion.div
                         animate={{
-                            scale: isLiked ? [1, 1.2, 1] : [1, 1.05, 1],
+                            scale: isFavorite ? [1, 1.2, 1] : [1, 1.05, 1],
                         }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                     >
-                        <Heart size={20} fill={isLiked ? 'currentColor' : 'none'} />
-                        <span className=' text-white '>{likeCount}</span>
+                        <Bookmark size={20} fill={isFavorite ? 'currentColor' : 'none'} />
                     </motion.div>
-                </div>
+                </button>
 
-                <div onClick={handleAuth} className={`w-10 h-[9rem] -mb-2 overflow-hidden my-0  bg-accent-300/70 rounded-full  ${shouldShowLoginBtn ? " max-h-96 opacity-100" : " max-h-0 opacity-0"} transition-[max-height,opacity] duration-300`}>
-                    <a className='  rounded-full h-full w-full py-1'>
-                        <LogosGoogleIcon className=' w-full h-5 mt-1.5 inline-block' />
-                        <span style={{ writingMode: "vertical-lr" }} className=' h-28'>點擊驗證身分</span>
-                    </a>
-                </div>
+                <button
+                    onClick={handleLike}
+                    disabled={!isClient}
 
-
-            </button>
-
-
-            <button
-                onClick={handleShare}
-                className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center  hover:bg-accent-200/70 transition-colors duration-300 text-white"
-                aria-label="分享"
-            >
-                <Share2 size={24} />
-            </button>
-            {attendsExpo &&
-                <a
-                    href={`/map?club=${clubCode}`}
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center  hover:bg-accent-200/70 transition-colors duration-300 text-white"
-                    aria-label="地圖位置"
+                    className={`w-10 py-2 rounded-full bg-accent-300/70 shadow-md  hover:bg-accent-200/70 transition-color duration-300 ${isLiked ? "text-[#ff3040]" : "text-white"}`}
+                    aria-label={isLiked ? '取消按讚' : '按讚'}
                 >
-                    <MapPin size={24} />
-                </a>
-            }
-        </motion.div >
+                    <div className=' w-full flex items-center justify-center '>
+                        <motion.div
+                            animate={{
+                                scale: isLiked ? [1, 1.2, 1] : [1, 1.05, 1],
+                            }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                        >
+                            <Heart size={20} fill={isLiked ? 'currentColor' : 'none'} />
+                            <span className=' text-white '>{likeCount}</span>
+                        </motion.div>
+                    </div>
+
+                    <div onClick={handleAuth} className={`w-10 h-[9rem] -mb-2 overflow-hidden my-0  bg-accent-300/70 rounded-full  ${shouldShowLoginBtn ? " max-h-96 opacity-100" : " max-h-0 opacity-0"} transition-[max-height,opacity] duration-300`}>
+                        <a className='  rounded-full h-full w-full py-1'>
+                            <LogosGoogleIcon className=' w-full h-5 mt-1.5 inline-block' />
+                            <span style={{ writingMode: "vertical-lr" }} className=' h-28'>點擊驗證身分</span>
+                        </a>
+                    </div>
+
+
+                </button>
+
+
+                <button
+                    onClick={handleShowCard}
+                    className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center  hover:bg-accent-200/70 transition-colors duration-300 text-white"
+                    aria-label="分享"
+                >
+                    <Share2 size={24} />
+                </button>
+                {attendsExpo &&
+                    <a
+                        href={`/map?club=${clubCode}`}
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-full  bg-accent-300/70 shadow-md flex items-center justify-center  hover:bg-accent-200/70 transition-colors duration-300 text-white"
+                        aria-label="地圖位置"
+                    >
+                        <MapPin size={24} />
+                    </a>
+                }
+            </motion.div >
+
+            {isShareModalOpen && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center"
+                    onClick={() => setIsShareModalOpen(false)}
+                >
+                    <div
+                        className="bg-white p-4 rounded-lg shadow-2xl relative"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h3 onClick={handleShare} className="text-center font-bold mb-2">長按或右鍵下載圖片分享</h3>
+                        <img
+                            src={`/api/share-card?clubCode=${clubCode}&&width=${768}`}
+                            alt={`分享卡片 - ${clubName}`}
+                            width={600}
+                            height={400}
+                            className="rounded-md"
+                        />
+                        <button
+                            onClick={() => setIsShareModalOpen(false)}
+                            className="absolute -top-3 -right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center text-black shadow-lg"
+                            aria-label="關閉"
+                        >
+                            X
+                        </button>
+                    </div>
+                </motion.div>
+            )}
+        </>
     );
 }

@@ -28,7 +28,9 @@ if (post === undefined) {
 
 const { Content } = await post.render();
 const { data } = post;
-const stampId = clubMappings[data.clubCode].stampId || null;
+const stampId = clubMappings[data.clubCode]
+  ? clubMappings[data.clubCode].stampId || null
+  : null;
 ---
 
 <Layout
