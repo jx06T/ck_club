@@ -52,7 +52,7 @@ export const GET: APIRoute = async ({ request }) => {
 
         const allClubs = await getCollection('clubs');
         const clubContent = allClubs.find(club => club.slug.startsWith(clubCode.toLowerCase()));
-        const clubMapInfo = clubMappings[clubCode];
+        const clubMapInfo = clubMappings[clubCode.toUpperCase()];
 
         if (!clubContent || !clubMapInfo) {
             return new Response(`Club data not found for ${clubCode}`, { status: 404 });
@@ -158,7 +158,7 @@ export const GET: APIRoute = async ({ request }) => {
                     {
                         type: 'div',
                         props: {
-                            children: [{
+                            children: [stamps[stampId]&&{
                                 type: 'img',
                                 props: {
                                     src: stamps[stampId],

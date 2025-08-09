@@ -26,6 +26,7 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
     const { isLoggedIn, user, signIn, isLoading } = useAuth();
 
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+    const [isShareCardLoading, setIsShareCardLoading] = useState(true);
 
     useEffect(() => {
         setIsClient(true);
@@ -93,6 +94,7 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
     };
 
     const handleShowCard = () => {
+        setIsShareCardLoading(true);
         setIsShareModalOpen(true);
     };
 
@@ -227,22 +229,29 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                     <div
                         className=" p-4 rounded-lg shadow-2xl relative h-full"
                     >
-                        
+
                         <div onClick={(e) => e.stopPropagation()} className=' flex flex-col md:flex-row justify-center space-y-2 md:space-x-3 mb-5 md:mb-3 items-center w-full'>
                             <h3 className="text-center text-sm md:text-base ">長按或右鍵點擊圖片分享</h3>
                             <h3 className="hidden md:inline-block text-center font-bold -mt-[1px]">|</h3>
                             <h3 onClick={handleShare} className=" text-sm md:text-base cursor-pointer bg-accent-500 hover:bg-accent-400 text-gray-900 transition-colors duration-100 rounded-full py-1 text-center  w-fit px-3">僅分享此網頁<Send className=' inline-block ml-1 w-4 -mt-0.5' /></h3>
                         </div>
-                        <div onClick={(e) => e.stopPropagation()} className=' max-h-[96%] h-fit w-fit rounded-2xl overflow-hidden mx-auto'>
+                        <div onClick={(e) => e.stopPropagation()} className='h-[90%] md:h-[96%] min-w-96 min-h-96 w-fit rounded-2xl overflow-hidden mx-auto'>
+                            {isShareCardLoading && (
+                                <div className="text-white flex flex-col items-center gap-2">
+                                    <div className="loader mx-auto mt-[30vh]"></div>
+                                    <span>卡片生成中...</span>
+                                </div>
+                            )}
                             <img
-                                src={`/api/share-card?clubCode=${clubCode}&&width=${768}`}
+                                src={`/api/share-card?clubCode=${clubCode}&width=${768}`}
                                 alt={`分享卡片-${clubName}`}
                                 className="h-full w-full object-contain object-center"
+                                onLoad={()=>setIsShareCardLoading(false)}
                             />
                         </div>
                         <button
                             onClick={() => setIsShareModalOpen(false)}
-                            className="absolute cursor-pointer -top-2 -right-2 w-8 h-8 bg-accent-500 hover:bg-accent-400 rounded-full flex items-center justify-center text-gray-900 shadow-lg"
+                            className="absolute cursor-pointer -top-0 -right-0 w-8 h-8 bg-accent-500 hover:bg-accent-400 rounded-full flex items-center justify-center text-gray-900 shadow-lg"
                             aria-label="關閉"
                         >
                             <X />
