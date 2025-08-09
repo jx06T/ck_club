@@ -40,7 +40,7 @@ export default defineConfig({
       } : {},
     },
     ssr: {
-      external: [
+      noExternal: [
         '@resvg/resvg-js'
       ]
     },
