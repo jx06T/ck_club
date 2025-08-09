@@ -3,9 +3,9 @@ import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import QRCode from 'qrcode';
 
-import fs from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+// import fs from 'node:fs/promises';
+// import { fileURLToPath } from 'node:url';
+// import { dirname, join } from 'node:path';
 
 import { clubMappings } from '@/data/clubFair';
 import { getCollection } from 'astro:content';
@@ -18,26 +18,22 @@ import s3 from '@/assets/stamps/s3.svg?raw';
 import s4 from '@/assets/stamps/s4.svg?raw';
 import s5 from '@/assets/stamps/s5.svg?raw';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-const fontPath = join(__dirname, '../../assets/NotoSansTC-Bold.ttf');
-const fontData = await fs.readFile(fontPath);
-const fontLiPath = join(__dirname, '../../assets/NotoSansTC-Regular.ttf');
-const fontLiData = await fs.readFile(fontLiPath);
+import fontBoldUrl from '@/assets/NotoSansTC-Bold.ttf?url';
+import fontRegularUrl from '@/assets/NotoSansTC-Regular.ttf?url';
 
 export const prerender = false;
 
 const mmToPx = (mm: number) => mm * 3.78;
+const toBase64Uri = (svgString: string) => `data:image/svg+xml;base64,${Buffer.from(svgString).toString('base64')}`;
 
-const backgroundDataUri = `data:image/svg+xml;base64,${Buffer.from(backgroundSvg).toString('base64')}`;
-const stamps = [null, s1, s2, s3, s4, s5].map(svg =>
-    svg ? `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}` : null
-);
+const backgroundDataUri = toBase64Uri(backgroundSvg);
+const stamps = [null, s1, s2, s3, s4, s5].map(svg => svg ? toBase64Uri(svg) : null);
 
 // let cachedFontData: ArrayBuffer | null = null;
 // let cachedBackground: string | null = null;
 // const cachedStamps: (string | null)[] = [null, null, null, null, null];
-
+let fontBoldData: ArrayBuffer | null = null;
+let fontRegularData: ArrayBuffer | null = null;
 
 export const GET: APIRoute = async ({ request }) => {
     try {
@@ -61,6 +57,16 @@ export const GET: APIRoute = async ({ request }) => {
         const { name: clubName, summary } = clubContent.data;
         const { mapId, stampId } = clubMapInfo;
         const shareUrl = `${SITE.url}/clubs/${clubContent.slug}`;
+
+        if (!fontBoldData) {
+            const fullFontUrl = new URL(fontBoldUrl, requestUrl.origin);
+            fontBoldData = await fetch(fullFontUrl).then(res => res.arrayBuffer());
+        }
+        if (!fontRegularData) {
+            const fullFontUrl = new URL(fontRegularUrl, requestUrl.origin);
+            fontRegularData = await fetch(fullFontUrl).then(res => res.arrayBuffer());
+        }
+
 
         const qrCodeDataURL = await QRCode.toDataURL(shareUrl, {
             width: mmToPx(124.4),
@@ -158,7 +164,7 @@ export const GET: APIRoute = async ({ request }) => {
                     {
                         type: 'div',
                         props: {
-                            children: [stamps[stampId]&&{
+                            children: [stamps[stampId] && {
                                 type: 'img',
                                 props: {
                                     src: stamps[stampId],
@@ -256,13 +262,13 @@ export const GET: APIRoute = async ({ request }) => {
             fonts: [
                 {
                     name: 'Noto Sans TC',
-                    data: fontData,
+                    data: fontBoldData,
                     style: 'normal',
                     weight: 700,
                 },
                 {
                     name: 'Noto Sans TC',
-                    data: fontLiData,
+                    data: fontRegularData,
                     style: 'normal',
                     weight: 300,
                 },

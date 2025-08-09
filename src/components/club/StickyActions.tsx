@@ -231,7 +231,7 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                     >
 
                         <div onClick={(e) => e.stopPropagation()} className=' flex flex-col md:flex-row justify-center space-y-2 md:space-x-3 mb-5 md:mb-3 items-center w-full'>
-                            <h3 className="text-center text-sm md:text-base ">長按或右鍵點擊圖片分享</h3>
+                            <h3 className="text-center text-sm md:text-base text-gray-100 ">長按或右鍵點擊圖片分享</h3>
                             <h3 className="hidden md:inline-block text-center font-bold -mt-[1px]">|</h3>
                             <h3 onClick={handleShare} className=" text-sm md:text-base cursor-pointer bg-accent-500 hover:bg-accent-400 text-gray-900 transition-colors duration-100 rounded-full py-1 text-center  w-fit px-3">僅分享此網頁<Send className=' inline-block ml-1 w-4 -mt-0.5' /></h3>
                         </div>
