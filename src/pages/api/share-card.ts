@@ -6,7 +6,7 @@ import { initWasm, Resvg } from '@resvg/resvg-wasm';
 // import wasmModule from '@resvg/resvg-wasm/index_bg.wasm';
 // import wasmModule from '@assets/index_bg.wasm';
 
-import { clubMappings } from '@/data/clubFair';
+import { clubMappings } from '@data/clubFair';
 import { getCollection } from 'astro:content';
 import { SITE } from '@data/constants';
 
