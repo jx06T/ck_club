@@ -2,7 +2,9 @@ import type { APIRoute } from 'astro';
 import { toString as qrCodeToString } from 'qrcode';
 
 import { satori } from "@cf-wasm/satori";
+import { Resvg } from "@cf-wasm/resvg";
 // import { satori } from "@cf-wasm/satori/node";
+// import { Resvg } from "@cf-wasm/resvg/node";
 
 import { clubMappings } from '@data/clubFair';
 import { getCollection } from 'astro:content';
@@ -30,26 +32,6 @@ const stamps = [null, s1, s2, s3, s4, s5].map(svg => svg ? toBase64Uri(svg) : nu
 
 let fontBoldData: ArrayBuffer | null = null;
 let fontRegularData: ArrayBuffer | null = null;
-
-const getWeightedSliceIndex = (text: string, maxWeight: number): number => {
-    const chineseCharRegex = /[\u4e00-\u9fa5]/;
-    let currentWeight = 0;
-
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        if (chineseCharRegex.test(char)) {
-            currentWeight += 1;
-        } else {
-            currentWeight += 0.60;
-        }
-
-        if (currentWeight > maxWeight) {
-            return i;
-        }
-    }
-
-    return text.length;
-};
 
 export const GET: APIRoute = async ({ request, locals }) => {
     try {
@@ -94,19 +76,6 @@ export const GET: APIRoute = async ({ request, locals }) => {
             }
         });
         const qrCodeDataURL = toBase64Uri(qrCodeSvgString);
-
-        const line1MaxWeight = 42;
-        const breakIndex1 = getWeightedSliceIndex(summary, line1MaxWeight);
-        const summaryLine1 = summary.slice(0, breakIndex1);
-
-        const restOfSummary = summary.slice(breakIndex1);
-        const line2MaxWeight = 130 - 42;
-        const breakIndex2 = getWeightedSliceIndex(restOfSummary, line2MaxWeight);
-        let summaryLine2 = restOfSummary.slice(0, breakIndex2);
-
-        if (restOfSummary.length > breakIndex2) {
-            summaryLine2 += '...';
-        }
 
         const html = {
             type: 'div',
@@ -236,7 +205,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
                     {
                         type: 'div',
                         props: {
-                            children: summaryLine1,
+                            children: summary.slice(0, 42),
                             style: {
                                 position: 'absolute',
                                 top: `${mmToPx(247.5)}px`,
@@ -253,7 +222,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
                     {
                         type: 'div',
                         props: {
-                            children: summaryLine2,
+                            children: summary.slice(42, 130) + (summary.length > 130 ? '...' : ''),
                             style: {
                                 position: 'absolute',
                                 top: `${mmToPx(263.8)}px`,
@@ -313,9 +282,18 @@ export const GET: APIRoute = async ({ request, locals }) => {
         const scale = outputWidth / a4_width_px;
         const outputHeight = a4_height_px * scale;
 
-        return new Response(svg, {
+        const resvg = new Resvg(svg, {
+            fitTo: {
+                mode: 'width',
+                value: outputWidth,
+            },
+        });
+        const pngData = resvg.render();
+        const pngBuffer = pngData.asPng();
+
+        return new Response(pngBuffer, {
             headers: {
-                'Content-Type': 'image/svg+xml',
+                'Content-Type': 'image/png',
                 'Cache-Control': 'public, max-age=31536000, immutable',
             },
         });

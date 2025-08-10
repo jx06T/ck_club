@@ -98,6 +98,33 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
         setIsShareModalOpen(true);
     };
 
+    async function handleShareCard() {
+        const url = `/api/share-card.png?clubCode=${clubCode}&width=768`;
+        try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('圖片取得失敗');
+            const blob = await res.blob();
+
+            const file = new File([blob], 'share-card.png', { type: blob.type });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: '社團分享卡片',
+                    text: '來看看這個社團的分享卡片！',
+                });
+            } else {
+                console.error('您的瀏覽器不支援分享圖片檔案，請手動下載');
+                // alert('您的瀏覽器不支援分享圖片檔案，請手動下載');
+                // 你可以在這裡提供下載連結作 fallback
+            }
+        } catch (error) {
+            console.error('分享失敗', error);
+            // alert('分享失敗，請稍後再試');
+        }
+    }
+
+
     const handleAuth = async () => {
         if (isLoggedIn) {
             console.log("已經登入");
@@ -229,10 +256,10 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                     <div
                         className=" p-4 relative h-full flex flex-col items-center"
                     >
-                        <div onClick={(e) => e.stopPropagation()} className=' flex flex-col md:flex-row justify-center space-y-2 md:space-x-3 mb-3 md:mb-3 items-center w-full'>
-                            <h3 className="text-center text-sm md:text-base text-gray-100 ">長按或右鍵點擊圖片分享</h3>
-                            <h3 className="hidden md:inline-block text-center font-bold -mt-[1px]">|</h3>
-                            <h3 onClick={handleShare} className=" text-sm md:text-base cursor-pointer bg-accent-500 hover:bg-accent-400 text-gray-900 transition-colors duration-100 rounded-full py-1 text-center w-fit px-3 -mt-1.5">僅分享此網頁<Send className=' inline-block ml-1 w-4 -mt-0.5' /></h3>
+                        <div onClick={(e) => e.stopPropagation()} className=' flex justify-center space-x-5 mb-3 items-center w-full'>
+                            <h3 onClick={handleShareCard} className=" text-sm md:text-base cursor-pointer bg-accent-500 hover:bg-accent-400 text-gray-900 transition-colors duration-100 rounded-full pb-1 pt-1.5 text-center w-fit px-3">分享圖片<Send className=' inline-block ml-1 w-4 -mt-0.5' /></h3>
+                            <div className=' bg-white w-0.5 h-8 rounded-full'></div>
+                            <h3 onClick={handleShare} className=" text-sm md:text-base cursor-pointer bg-accent-500 hover:bg-accent-400 text-gray-900 transition-colors duration-100 rounded-full pb-1 pt-1.5 text-center w-fit px-3">分享網址<Send className=' inline-block ml-1 w-4 -mt-0.5' /></h3>
                         </div>
                         {isShareCardLoading && (
                             <div onClick={(e) => e.stopPropagation()} className="text-white flex flex-col items-center gap-2">
@@ -243,11 +270,10 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                         <img
                             src={`/api/share-card.svg?clubCode=${clubCode}`}
                             alt={`分享卡片-${clubName}`}
-                            className=" max-w-full w-fit max-h-[calc(100%-3rem)] object-contain object-center rounded-2xl overflow-hidden"
+                            className="/hidden max-w-full w-fit max-h-[calc(100%-3rem)] object-contain object-center rounded-2xl overflow-hidden"
                             onLoad={() => setIsShareCardLoading(false)}
                             onClick={(e) => e.stopPropagation()}
                         />
-
                         <button
                             onClick={() => setIsShareModalOpen(false)}
                             className="absolute cursor-pointer -top-0 -right-0 w-8 h-8 bg-accent-500 hover:bg-accent-400 rounded-full flex items-center justify-center text-gray-900 shadow-lg"
