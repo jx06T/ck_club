@@ -1,9 +1,0 @@
-name = "ck-club"
-compatibility_date = "2024-03-01" 
-
-[pages_build_output]
-dir = "./dist"
-
-[[wasm_modules]]
-name = "RESVG_WASM"
-path = "./node_modules/@resvg/resvg-wasm/index_bg.wasm"
