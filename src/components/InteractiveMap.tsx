@@ -363,7 +363,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                         items={clubs}
                         searchKeys={['name', 'summary', 'tags', 'clubCode','mapId']}
                         onSelect={handleSelectClubFromSearch}
-                        placeholder="搜尋社團名稱或簡介..."
+                        placeholder="輸入關鍵字或攤位編號"
                         className="  md:flex-1 pointer-events-auto"
                         displayRender={(club) => (
                             <>

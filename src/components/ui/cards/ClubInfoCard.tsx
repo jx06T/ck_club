@@ -26,6 +26,7 @@ function ClubInfoCard({
                     className="font-bold text-xl text-black hover:text-gray-700 transition-colors"
                 >
                     {name}
+                    <span className=' text-sm text-gray-700 ml-2'>{mapId.slice(5,mapId.length)}</span>
                 </h4>
                 <span className="text-sm w-10 h-10 text-center pt-2.5  rounded-full bg-primary-50 text-primary-800">{clubCode}</span>
             </div>

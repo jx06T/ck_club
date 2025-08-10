@@ -31,11 +31,14 @@ export default function FuzzySearch<T>({
         }
 
         const keywords = trimmed.toLowerCase().split(/\s+/);
-        
+
         const filteredResults = items.filter(item => {
             const mergedText = searchKeys
                 .map(key => {
                     const value = item[key];
+                    if (key === "mapId") {
+                        return value + " " + (value as string).slice(5,(value as string).length).replace('-','')
+                    }
                     if (typeof value === 'string') return value;
                     if (Array.isArray(value)) return value.join(' ');
                     return '';
