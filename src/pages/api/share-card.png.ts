@@ -1,10 +1,10 @@
 import type { APIRoute } from 'astro';
 import { toString as qrCodeToString } from 'qrcode';
 
-// import { satori } from "@cf-wasm/satori";
-// import { Resvg } from "@cf-wasm/resvg";
-import { satori } from "@cf-wasm/satori/node";
-import { Resvg } from "@cf-wasm/resvg/node";
+import { satori } from "@cf-wasm/satori";
+import { Resvg } from "@cf-wasm/resvg";
+// import { satori } from "@cf-wasm/satori/node";
+// import { Resvg } from "@cf-wasm/resvg/node";
 
 import { clubMappings } from '@data/clubFair';
 import { getCollection } from 'astro:content';

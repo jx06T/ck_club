@@ -35,9 +35,6 @@ importers:
       '@panzoom/panzoom':
         specifier: ^4.6.0
         version: 4.6.0
-      '@resvg/resvg-wasm':
-        specifier: ^2.6.2
-        version: 2.6.2
       '@studio-freight/lenis':
         specifier: ^1.0.42
         version: 1.0.42
