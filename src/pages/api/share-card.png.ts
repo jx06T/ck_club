@@ -40,6 +40,10 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
         const outputWidth = parseInt(requestUrl.searchParams.get('width') || '768', 10);
 
+        if (outputWidth > 1980) {
+            return new Response('Size exceeds limit ', { status: 400 });
+        }
+
         if (!clubCode) {
             return new Response('Missing clubCode parameter', { status: 400 });
         }
