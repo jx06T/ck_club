@@ -241,7 +241,7 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                             </div>
                         )}
                         <img
-                            src={`/api/share-card?clubCode=${clubCode}&width=${768}`}
+                            src={`/api/share-card.svg?clubCode=${clubCode}`}
                             alt={`分享卡片-${clubName}`}
                             className=" max-w-full w-fit max-h-[calc(100%-3rem)] object-contain object-center rounded-2xl overflow-hidden"
                             onLoad={() => setIsShareCardLoading(false)}

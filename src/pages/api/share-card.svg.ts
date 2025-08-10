@@ -2,10 +2,6 @@ import type { APIRoute } from 'astro';
 import satori from 'satori';
 import { toString as qrCodeToString } from 'qrcode';
 
-import { initWasm, Resvg } from '@resvg/resvg-wasm';
-// import wasmModule from '@resvg/resvg-wasm/index_bg.wasm';
-// import wasmModule from '@assets/index_bg.wasm';
-
 import { clubMappings } from '@data/clubFair';
 import { getCollection } from 'astro:content';
 import { SITE } from '@data/constants';
@@ -35,34 +31,9 @@ const stamps = [null, s1, s2, s3, s4, s5].map(svg => svg ? toBase64Uri(svg) : nu
 // const cachedStamps: (string | null)[] = [null, null, null, null, null];
 let fontBoldData: ArrayBuffer | null = null;
 let fontRegularData: ArrayBuffer | null = null;
-let wasmInitialized = false;
 
-async function initializeWasmWithBinding(context: any) {
-    if (wasmInitialized) return;
-
-    try {
-        // 在 Cloudflare 環境中，WASM 模組會被注入為全域變數
-        // 這個名稱對應 wrangler.toml 中的 binding 名稱
-        const wasmModule = (context.env || globalThis).RESVG_WASM;
-
-        if (!wasmModule) {
-            throw new Error('WASM module not found. Make sure wrangler.toml is configured correctly.');
-        }
-
-        await initWasm(wasmModule);
-        wasmInitialized = true;
-        console.log('WASM initialized successfully with binding');
-
-    } catch (error) {
-        console.error('WASM initialization failed:', error);
-        throw error;
-    }
-}
 export const GET: APIRoute = async ({ request, locals }) => {
     try {
-        await initializeWasmWithBinding(locals || {});
-
-
         const requestUrl = new URL(request.url);
         const clubCode = requestUrl.searchParams.get('clubCode');
 
@@ -287,6 +258,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
         const a4_width_px = mmToPx(210);
         const a4_height_px = mmToPx(297);
+        // @ts-ignore
         const svg = await satori(html, {
             width: a4_width_px,
             height: a4_height_px,
@@ -309,18 +281,9 @@ export const GET: APIRoute = async ({ request, locals }) => {
         const scale = outputWidth / a4_width_px;
         const outputHeight = a4_height_px * scale;
 
-        const resvg = new Resvg(svg, {
-            fitTo: {
-                mode: 'width',
-                value: outputWidth,
-            },
-        });
-        const pngData = resvg.render();
-        const pngBuffer = pngData.asPng();
-
-        return new Response(pngBuffer, {
+        return new Response(svg, {
             headers: {
-                'Content-Type': 'image/png',
+                'Content-Type': 'image/svg+xml',
                 'Cache-Control': 'public, max-age=31536000, immutable',
             },
         });
