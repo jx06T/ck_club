@@ -39,7 +39,6 @@ export default defineConfig({
         "react-dom/server": "react-dom/server.edge",
       } : {},
     },
-    assetsInclude: ['**/*.wasm?module'],
     plugins: [
       tailwindcss(),
       svgr({
