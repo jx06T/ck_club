@@ -29,6 +29,8 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isShareCardLoading, setIsShareCardLoading] = useState(true);
 
+    const [isLoadingShareImg, setIsLoadingShareImg] = useState(false)
+
     useEffect(() => {
         setIsClient(true);
         setIsFavorite(favorites.has(clubCode));
@@ -84,17 +86,14 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                 await navigator.share(shareData);
             } catch (err) {
                 console.error("Share failed:", err);
-                createMsgDialog("分享失敗", "請嘗試手動複製連結", async () => {
-                }, "了解")
+                // createMsgDialog("分享失敗", "請嘗試手動複製連結", async () => {}, "了解")
             }
         } else {
             try {
                 await navigator.clipboard.writeText(window.location.href);
             } catch (err) {
                 console.error('Failed to copy: ', err);
-
-                createMsgDialog("分享失敗", "請嘗試手動複製連結", async () => {
-                }, "了解")
+                // createMsgDialog("分享失敗", "請嘗試手動複製連結", async () => {}, "了解")
             }
         }
     };
@@ -105,14 +104,15 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
     };
 
     async function handleShareCard() {
+        setIsLoadingShareImg(true)
         const url = `/api/share-card.png?clubCode=${clubCode}&width=768`;
         try {
             const res = await fetch(url);
             if (!res.ok) throw new Error('圖片取得失敗');
             const blob = await res.blob();
-
+            
             const file = new File([blob], `share-card-${clubCode}.png`, { type: blob.type });
-
+            
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
                     files: [file],
@@ -121,14 +121,13 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                 });
             } else {
                 console.error('您的瀏覽器環境不支援分享圖片檔案，請手動下載');
-                createMsgDialog("分享失敗", "您的瀏覽器環境不支援分享圖片檔案，請嘗試直接下載圖片", async () => {
-                }, "了解")
+                createMsgDialog("分享失敗", "您的瀏覽器環境不支援分享圖片檔案，請嘗試直接下載圖片", async () => { }, "了解")
             }
         } catch (error) {
             console.error('分享失敗', error);
-            createMsgDialog("分享失敗", "請嘗試直接下載圖片", async () => {
-            }, "了解")
+            // createMsgDialog("分享失敗", "請嘗試直接下載圖片", async () => {}, "了解")
         }
+        setIsLoadingShareImg(false)
     }
 
 
@@ -265,7 +264,7 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                         className=" p-4 relative h-full flex flex-col items-center"
                     >
                         <div onClick={(e) => e.stopPropagation()} className=' flex justify-center space-x-5 mb-3 items-center w-full'>
-                            <h3 onClick={handleShareCard} className=" text-sm md:text-base cursor-pointer bg-accent-500 hover:bg-accent-400 text-gray-900 transition-colors duration-100 rounded-full pb-1 pt-1.5 text-center w-fit px-3">分享圖片<Send className=' inline-block ml-1 w-4 -mt-0.5' /></h3>
+                            <h3 onClick={handleShareCard} className=" text-sm md:text-base cursor-pointer bg-accent-500 hover:bg-accent-400 text-gray-900 transition-colors duration-100 rounded-full pb-1 pt-1.5 text-center w-fit px-3">{isLoadingShareImg ? "請稍等..." : "分享圖片"}<Send className=' inline-block ml-1 w-4 -mt-0.5' /></h3>
                             <div className=' bg-white w-0.5 h-8 rounded-full'></div>
                             <h3 onClick={handleShare} className=" text-sm md:text-base cursor-pointer bg-accent-500 hover:bg-accent-400 text-gray-900 transition-colors duration-100 rounded-full pb-1 pt-1.5 text-center w-fit px-3">分享網址<Send className=' inline-block ml-1 w-4 -mt-0.5' /></h3>
                         </div>
