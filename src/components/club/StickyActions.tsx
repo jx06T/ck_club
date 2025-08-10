@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Star, Share2, MapPin, Bookmark, Heart, X, Send } from 'lucide-react';
+import createMsgDialog from '@components/MsgDialog';
 
 import { useLocalStorage } from '@/scripts/useLocalStorage';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -83,12 +84,17 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                 await navigator.share(shareData);
             } catch (err) {
                 console.error("Share failed:", err);
+                createMsgDialog("分享失敗", "請嘗試手動複製連結", async () => {
+                }, "了解")
             }
         } else {
             try {
                 await navigator.clipboard.writeText(window.location.href);
             } catch (err) {
                 console.error('Failed to copy: ', err);
+
+                createMsgDialog("分享失敗", "請嘗試手動複製連結", async () => {
+                }, "了解")
             }
         }
     };
@@ -114,13 +120,14 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                     text: '來看看這個社團的分享卡片！',
                 });
             } else {
-                console.error('您的瀏覽器不支援分享圖片檔案，請手動下載');
-                // alert('您的瀏覽器不支援分享圖片檔案，請手動下載');
-                // 你可以在這裡提供下載連結作 fallback
+                console.error('您的瀏覽器環境不支援分享圖片檔案，請手動下載');
+                createMsgDialog("分享失敗", "您的瀏覽器環境不支援分享圖片檔案，請嘗試直接下載圖片", async () => {
+                }, "了解")
             }
         } catch (error) {
             console.error('分享失敗', error);
-            // alert('分享失敗，請稍後再試');
+            createMsgDialog("分享失敗", "請嘗試直接下載圖片", async () => {
+            }, "了解")
         }
     }
 
@@ -172,6 +179,7 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
     if (!isClient || isLoading) {
         return null;
     }
+
 
     return (
         <>
@@ -277,7 +285,7 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                         <a
                             href={`/api/share-card.png?clubCode=${clubCode}&width=768`}
                             download={`share-card-${clubCode}.png`}
-                            className="text-gray-50 underline decoration-accent-50"
+                            className="text-gray-50 underline decoration-accent-500 mt-1"
                         >
                             下載圖片
                         </a>

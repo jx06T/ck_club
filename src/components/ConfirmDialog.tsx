@@ -22,7 +22,7 @@ function createConfirmDialog(title: string, message: string, onConfirm: Function
 
         return (
             <div className="z-50 confirm-dialog-overlay flex justify-center fixed w-full top-36 left-1 right-1 px-4 pl-2">
-                <div className="confirm-dialog max-w-[92%] min-w-96 bg-neutral-100 p-6 rounded-lg">
+                <div className="confirm-dialog max-w-[92%] min-w-96 bg-neutral-100 p-6 rounded-lg shadow shadow-primary-100" >
                     <h1 className='text-xl'>{title}</h1>
                     <pre className=' text-wrap whitespace-pre-wrap mt-3  min-h-28'>{message}</pre>
                     <div className=' w-full flex justify-end space-x-6'>
@@ -32,9 +32,9 @@ function createConfirmDialog(title: string, message: string, onConfirm: Function
                 </div>
             </div>
         );
-};
+    };
 
-root.render(<ConfirmDialog />);
+    root.render(<ConfirmDialog />);
 };
 
 export default createConfirmDialog
