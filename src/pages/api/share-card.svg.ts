@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
-import satori from 'satori';
 import { toString as qrCodeToString } from 'qrcode';
+
+import { satori } from "@cf-wasm/satori";
+// import { satori } from "@cf-wasm/satori/node";
 
 import { clubMappings } from '@data/clubFair';
 import { getCollection } from 'astro:content';
