@@ -98,7 +98,7 @@ const testTabs = [
   },
   {
     name: "徽章",
-    description: "專屬於社團博覽會的獨一無二徽章，金屬材質自帶高級感，是集章活東的紀念品之一",
+    description: "專屬於社團博覽會的獨一無二徽章，金屬材質自帶高級感，是集章活動的紀念品之一",
     image: Badge,
   },
   {
@@ -112,7 +112,7 @@ const testTabs = [
 <Padding>
   <Hero
     title='建中出才子，才子躍<span class="text-accent-300 ">社團</span>！'
-    subTitle="探索超過 60 個精彩社團"
+    subTitle="探索超過 50 個精彩社團"
     imgAlt="建中紅樓"
     imgSrc={CKRed}
     SectionId="hero"
@@ -155,7 +155,7 @@ const testTabs = [
         slot="icon"
         className=" text-primary-600 dark:text-primary-900 w-6 h-6"
       />
-      今年相較於往年單純的博覽會，新增了集章卡的活動。新生們會拿到一張有六個空格的集章卡，參展的社團也會依照攤位位置或性質分別保管六種印章中的其中一種。新生只需要持集章卡分別蒐集到六種印章後即可至班聯會攤位兌換限量紀念品！
+      今年相較於往年單純的博覽會，新增了集章卡的活動。新生們會拿到一張有五個空格的集章卡，參展的社團也會依照攤位位置或性質分別保管五種印章中的其中一種。新生只需要持集章卡分別蒐集到五種印章後即可至班聯會攤位兌換限量紀念品！
     </BasicCard>
 
     <BasicCard title="集章卡">
@@ -165,9 +165,10 @@ const testTabs = [
       />
       <Image
         src={CollectionCard}
-        alt={"集章卡"}
+        alt={"集章卡（正面與背面）"}
         class="rounded-md overflow-hidden"
       />
+      <div class=" mt-1">集章卡的正面與背面</div>
     </BasicCard>
 
     <BasicCard title="社團分類地圖">
@@ -181,7 +182,7 @@ const testTabs = [
       </div>
     </BasicCard>
 
-    <BasicCard title="六種印章">
+    <BasicCard title="印章示意圖">
       <Stamp
         slot="icon"
         className=" text-primary-600 dark:text-primary-900 w-6 h-6"
