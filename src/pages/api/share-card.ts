@@ -3,6 +3,8 @@ import satori from 'satori';
 import { toString as qrCodeToString } from 'qrcode';
 
 import { initWasm, Resvg } from '@resvg/resvg-wasm';
+// import wasmModule from '@resvg/resvg-wasm/index_bg.wasm';
+// import wasmModule from '@assets/index_bg.wasm';
 
 import { clubMappings } from '@/data/clubFair';
 import { getCollection } from 'astro:content';
@@ -20,14 +22,6 @@ import fontRegularUrl from '@/assets/NotoSansTC-Regular.ttf?url';
 
 export const prerender = false;
 
-let wasmInitialized: Promise<void> | null = null;
-const initializeWasm = async (fetchable: any) => {
-    if (wasmInitialized) {
-        return wasmInitialized;
-    }
-    wasmInitialized = initWasm(fetchable);
-    return wasmInitialized;
-};
 const mmToPx = (mm: number) => mm * 3.78;
 const toBase64Uri = (svgString: string) => {
     const base64 = btoa(unescape(encodeURIComponent(svgString)));
@@ -41,9 +35,34 @@ const stamps = [null, s1, s2, s3, s4, s5].map(svg => svg ? toBase64Uri(svg) : nu
 // const cachedStamps: (string | null)[] = [null, null, null, null, null];
 let fontBoldData: ArrayBuffer | null = null;
 let fontRegularData: ArrayBuffer | null = null;
+let wasmInitialized = false;
 
-export const GET: APIRoute = async ({ request }) => {
+async function initializeWasmWithBinding(context: any) {
+    if (wasmInitialized) return;
+
     try {
+        // 在 Cloudflare 環境中，WASM 模組會被注入為全域變數
+        // 這個名稱對應 wrangler.toml 中的 binding 名稱
+        const wasmModule = (context.env || globalThis).RESVG_WASM;
+
+        if (!wasmModule) {
+            throw new Error('WASM module not found. Make sure wrangler.toml is configured correctly.');
+        }
+
+        await initWasm(wasmModule);
+        wasmInitialized = true;
+        console.log('WASM initialized successfully with binding');
+
+    } catch (error) {
+        console.error('WASM initialization failed:', error);
+        throw error;
+    }
+}
+export const GET: APIRoute = async ({ request, locals }) => {
+    try {
+        await initializeWasmWithBinding(locals || {});
+
+
         const requestUrl = new URL(request.url);
         const clubCode = requestUrl.searchParams.get('clubCode');
 
@@ -85,9 +104,6 @@ export const GET: APIRoute = async ({ request }) => {
             }
         });
         const qrCodeDataURL = toBase64Uri(qrCodeSvgString);
-
-        const wasmUrl = new URL('/wasm/index_bg.wasm', requestUrl.origin);
-        await initializeWasm(fetch(wasmUrl));
 
         const html = {
             type: 'div',

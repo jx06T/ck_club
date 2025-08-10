@@ -1,0 +1,19 @@
+name = "ck-club"
+main = "./dist/index.js"
+compatibility_date = "2024-08-10"
+
+# WebAssembly 模組綁定
+[[wasm_modules]]
+binding = "RESVG_WASM"
+source = "./src/assets/index_bg.wasm"
+
+# 如果你有其他環境變數
+[vars]
+# 你的其他環境變數
+
+# Pages 專用配置
+[env.production]
+name = "ck-club-production"
+
+[env.preview]
+name = "ck-club-preview"
