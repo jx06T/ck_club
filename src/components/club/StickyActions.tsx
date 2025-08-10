@@ -115,12 +115,12 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                 });
             } else {
                 console.error('您的瀏覽器不支援分享圖片檔案，請手動下載');
-                // alert('您的瀏覽器不支援分享圖片檔案，請手動下載');
+                alert('您的瀏覽器不支援分享圖片檔案，請手動下載');
                 // 你可以在這裡提供下載連結作 fallback
             }
         } catch (error) {
-            console.error('分享失敗', error);
-            // alert('分享失敗，請稍後再試');
+            // console.error('分享失敗', error);
+            alert('分享失敗，請稍後再試');
         }
     }
 
