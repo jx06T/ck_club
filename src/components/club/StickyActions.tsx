@@ -116,8 +116,8 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
                     files: [file],
-                    title: '社團分享卡片',
-                    text: '來看看這個社團的分享卡片！',
+                    title: `社團分享卡片-${clubCode}`,
+                    text: window.location.href,
                 });
             } else {
                 console.error('您的瀏覽器環境不支援分享圖片檔案，請手動下載');
