@@ -1,11 +1,14 @@
 import type { APIRoute } from 'astro';
 import satori from 'satori';
-import QRCode from 'qrcode';
 import { toString as qrCodeToString } from 'qrcode';
 
 import { initWasm, Resvg } from '@resvg/resvg-wasm';
-import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm?module';
+// import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm?module';
+declare global {
+    const RESVG_WASM: WebAssembly.Module;
+}
 
+const wasmInitialized = initWasm(RESVG_WASM);
 // import fs from 'node:fs/promises';
 // import { fileURLToPath } from 'node:url';
 // import { dirname, join } from 'node:path';
@@ -24,7 +27,6 @@ import s5 from '@/assets/stamps/s5.svg?raw';
 import fontBoldUrl from '@/assets/NotoSansTC-Bold.ttf?url';
 import fontRegularUrl from '@/assets/NotoSansTC-Regular.ttf?url';
 
-await initWasm(resvgWasm);
 export const prerender = false;
 
 const mmToPx = (mm: number) => mm * 3.78;
@@ -76,7 +78,7 @@ export const GET: APIRoute = async ({ request }) => {
 
 
         const qrCodeSvgString = await qrCodeToString(shareUrl, {
-            type: 'svg', 
+            type: 'svg',
             width: 768,
             margin: 0,
             color: {
@@ -85,6 +87,12 @@ export const GET: APIRoute = async ({ request }) => {
             }
         });
         const qrCodeDataURL = toBase64Uri(qrCodeSvgString);
+
+        if (!wasmInitialized) {
+            wasmInitialized = initWasm(RESVG_WASM);
+        }
+
+        await wasmInitialized;
 
         const html = {
             type: 'div',
