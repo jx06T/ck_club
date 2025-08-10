@@ -3,7 +3,6 @@ import satori from 'satori';
 import { toString as qrCodeToString } from 'qrcode';
 
 import { initWasm, Resvg } from '@resvg/resvg-wasm';
-import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm?raw';
 
 import { clubMappings } from '@/data/clubFair';
 import { getCollection } from 'astro:content';
@@ -20,27 +19,16 @@ import fontBoldUrl from '@/assets/NotoSansTC-Bold.ttf?url';
 import fontRegularUrl from '@/assets/NotoSansTC-Regular.ttf?url';
 
 export const prerender = false;
-function base64ToUint8Array(base64: string) {
-    const binaryString = atob(base64);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes;
-}
 
-const wasmBuffer = base64ToUint8Array(resvgWasm).buffer;
 let wasmInitialized: Promise<void> | null = null;
-const initializeWasm = () => {
-    if (!wasmInitialized) {
-        wasmInitialized = initWasm(wasmBuffer);
+const initializeWasm = async (fetchable: any) => {
+    if (wasmInitialized) {
+        return wasmInitialized;
     }
+    wasmInitialized = initWasm(fetchable);
     return wasmInitialized;
 };
-
 const mmToPx = (mm: number) => mm * 3.78;
-
 const toBase64Uri = (svgString: string) => {
     const base64 = btoa(unescape(encodeURIComponent(svgString)));
     return `data:image/svg+xml;base64,${base64}`;
@@ -98,7 +86,8 @@ export const GET: APIRoute = async ({ request }) => {
         });
         const qrCodeDataURL = toBase64Uri(qrCodeSvgString);
 
-        await initializeWasm();
+        const wasmUrl = new URL('/wasm/index_bg.wasm', requestUrl.origin);
+        await initializeWasm(fetch(wasmUrl));
 
         const html = {
             type: 'div',
