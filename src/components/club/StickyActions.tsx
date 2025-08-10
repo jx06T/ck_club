@@ -105,7 +105,7 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
             if (!res.ok) throw new Error('圖片取得失敗');
             const blob = await res.blob();
 
-            const file = new File([blob], 'share-card.png', { type: blob.type });
+            const file = new File([blob], `share-card-${clubCode}.png`, { type: blob.type });
 
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
@@ -115,12 +115,12 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                 });
             } else {
                 console.error('您的瀏覽器不支援分享圖片檔案，請手動下載');
-                alert('您的瀏覽器不支援分享圖片檔案，請手動下載');
+                // alert('您的瀏覽器不支援分享圖片檔案，請手動下載');
                 // 你可以在這裡提供下載連結作 fallback
             }
         } catch (error) {
-            // console.error('分享失敗', error);
-            alert('分享失敗，請稍後再試');
+            console.error('分享失敗', error);
+            // alert('分享失敗，請稍後再試');
         }
     }
 
@@ -274,6 +274,13 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
                             onLoad={() => setIsShareCardLoading(false)}
                             onClick={(e) => e.stopPropagation()}
                         />
+                        <a
+                            href={`/api/share-card.png?clubCode=${clubCode}&width=768`}
+                            download={`share-card-${clubCode}.png`}
+                            className="text-gray-50 underline decoration-accent-50"
+                        >
+                            下載圖片
+                        </a>
                         <button
                             onClick={() => setIsShareModalOpen(false)}
                             className="absolute cursor-pointer -top-0 -right-0 w-8 h-8 bg-accent-500 hover:bg-accent-400 rounded-full flex items-center justify-center text-gray-900 shadow-lg"
