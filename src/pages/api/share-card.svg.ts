@@ -100,7 +100,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
         const summaryLine1 = summary.slice(0, breakIndex1);
 
         const restOfSummary = summary.slice(breakIndex1);
-        const line2MaxWeight = 130 - 42 + 22;
+        const line2MaxWeight = 130 - 46 ;
         const breakIndex2 = getWeightedSliceIndex(restOfSummary, line2MaxWeight);
         let summaryLine2 = restOfSummary.slice(0, breakIndex2);
 
