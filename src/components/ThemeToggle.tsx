@@ -5,7 +5,7 @@ import { Snowflake } from 'lucide-react';
 import { Sun } from 'lucide-react';
 
 function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -13,6 +13,7 @@ function ThemeToggle() {
     const saved = localStorage.getItem('theme');
     const savedTheme = (saved === 'light' || saved === 'dark') ? saved : null;
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // const prefersDark = true;
     const finalTheme: ('light' | 'dark') = (savedTheme ?? (prefersDark ? 'dark' : 'light'));
     setTheme(finalTheme);
     document.documentElement.classList.toggle('dark', finalTheme === 'dark');
