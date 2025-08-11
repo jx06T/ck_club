@@ -66,13 +66,13 @@ export const GET: APIRoute = async ({ request, locals }) => {
         const clubContent = allClubs.find(club => club.slug.startsWith(clubCode.toLowerCase()));
         const clubMapInfo = clubMappings[clubCode.toUpperCase()];
 
-        if (!clubContent) {
+        if (!clubContent && !clubMapInfo) {
             return new Response(`Club data not found for ${clubCode}`, { status: 404 });
         }
 
-        const { name: clubName, summary } = clubContent.data;
+        const { name: clubName, summary } = clubContent ? clubContent.data : { name: clubMapInfo.name, summary: clubCode.toUpperCase() != "CK0" ? "此社團尚未提供詳細資訊。" : "建中班聯是建中最高學生自治組織，處理學生相關大小事。我們自己有厚達 189 頁的法規系統，有憲章、法律、命令的法位階概念；大家各司其職，依法行政，有的人負責爭取學權，也有人主責活動辦理，更有人專研司法律的裁決或審判。因為我們獨特的三權分立系統，有行政、立法、司法部門，所以運作之完善。廣義的建中班聯，範圍其實就是建中全校同學，而全校同學統一稱為班聯會「會員」，也就是說大家都是班聯會的一份子。" };
         const { mapId, stampId } = clubMapInfo ? clubMapInfo : { mapId: "club-無", stampId: 0 };
-        const shareUrl = `${SITE.url}/clubs/${clubContent.slug}`;
+        const shareUrl = clubContent ? `${SITE.url}clubs/${clubContent.slug}` : (clubCode.toUpperCase() != "CK0" ? (`${SITE.url}map?club=${clubCode}`) : `${SITE.url}cksc`);
 
         if (!fontBoldData) {
             const fullFontUrl = new URL(fontBoldUrl, requestUrl.origin);
@@ -100,7 +100,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
         const summaryLine1 = summary.slice(0, breakIndex1);
 
         const restOfSummary = summary.slice(breakIndex1);
-        const line2MaxWeight = 130 - 42;
+        const line2MaxWeight = 130 - 42 + 22;
         const breakIndex2 = getWeightedSliceIndex(restOfSummary, line2MaxWeight);
         let summaryLine2 = restOfSummary.slice(0, breakIndex2);
 

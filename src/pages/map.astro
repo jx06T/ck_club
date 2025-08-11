@@ -14,9 +14,21 @@ const clubsDataByCode = new globalThis.Map(
 const clubsForMap = Object.entries(clubMappings).map(
   ([clubCode, mappingInfo]): ClubInfoForMap => {
     if (clubCode.endsWith("_")) {
-      clubCode = clubCode.slice(0,-1)
+      clubCode = clubCode.slice(0, -1);
     }
     const clubData = clubsDataByCode.get(clubCode);
+    if (clubCode === "CK0") {
+      return {
+        clubCode: clubCode,
+        mapId: mappingInfo.mapId,
+        stampId: mappingInfo.stampId,
+        name: mappingInfo.name,
+        summary: "班聯會為建中學生自治組織",
+        slug: "/cksc",
+        tags: [],
+        isPlaceholder: true,
+      };
+    }
     if (clubData) {
       return {
         clubCode: clubCode,
