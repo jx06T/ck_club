@@ -293,8 +293,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
                             children: shareUrl,
                             style: {
                                 position: 'absolute',
-                                top: `${mmToPx(46)}px`,
-                                left: `${mmToPx(10)}px`,
+                                top: `${mmToPx(44)}px`,
+                                left: `${mmToPx(4)}px`,
                                 fontSize: '17.5px',
                                 fontWeight: '300',
                                 color: '#4e5580',
