@@ -34,8 +34,7 @@ workshops:
 activities:
 - 期末同樂會
 
-summary: 想要輕鬆水學分的同學，加入Minecraft 邏輯研究社就對了！我們的上課內容非常輕鬆，學長也都很友善，期末還有同樂會喔！對Minecraft很了解的同學，也歡迎上臺向大家分享！歡迎對Minecraft
-  有興趣的同學加入！
+summary: 想要輕鬆水學分的同學，加入 Minecraft 邏輯研究社就對了！我們的上課內容非常輕鬆，學長也都很友善，期末還有同樂會喔！對Minecraft很了解的同學，也歡迎上臺向大家分享！歡迎對 Minecraft 有興趣的同學加入！
 
 profileImage: ./images/A33-Minecraft 邏輯研究社/A33-Minecraft 邏輯研究社-profileImage.jpg
 

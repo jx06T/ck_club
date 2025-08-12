@@ -32,15 +32,26 @@ let fontBoldData: ArrayBuffer | null = null;
 let fontRegularData: ArrayBuffer | null = null;
 
 const getWeightedSliceIndex = (text: string, maxWeight: number): number => {
+    const charWeights: { [key: string]: number } = {
+        '.': 0.375, ',': 0.375, ';': 0.375, ':': 0.375, '/': 0.46, '\\': 0.46,
+        '?': 0.54, '!': 0.415, '+': 0, " ": 0.375, '(': 0.42, ')': 0.42,'”':1.5,'“':1.5
+    };
+    // 一排+應該是0.6但一個不知道為啥寫0是好的
+
     const chineseCharRegex = /[\u4e00-\u9fa5]/;
+    const fullWidthPunctuationRegex = /[\u3000-\u303f\uff00-\uffef]/;
+
     let currentWeight = 0;
 
     for (let i = 0; i < text.length; i++) {
         const char = text[i];
-        if (chineseCharRegex.test(char)) {
+
+        if (chineseCharRegex.test(char) || fullWidthPunctuationRegex.test(char)) {
             currentWeight += 1;
+        } else if (charWeights[char] !== undefined) {
+            currentWeight += charWeights[char];
         } else {
-            currentWeight += 0.60;
+            currentWeight += 0.57;
         }
 
         if (currentWeight > maxWeight) {
@@ -50,7 +61,6 @@ const getWeightedSliceIndex = (text: string, maxWeight: number): number => {
 
     return text.length;
 };
-
 export const GET: APIRoute = async ({ request, locals }) => {
     try {
         const requestUrl = new URL(request.url);
@@ -95,7 +105,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
         });
         const qrCodeDataURL = toBase64Uri(qrCodeSvgString);
 
-        const line1MaxWeight = 42;
+        const line1MaxWeight = 42.4;
         const breakIndex1 = getWeightedSliceIndex(summary, line1MaxWeight);
         const summaryLine1 = summary.slice(0, breakIndex1);
 

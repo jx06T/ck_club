@@ -34,15 +34,26 @@ let fontBoldData: ArrayBuffer | null = null;
 let fontRegularData: ArrayBuffer | null = null;
 
 const getWeightedSliceIndex = (text: string, maxWeight: number): number => {
+    const charWeights: { [key: string]: number } = {
+        '.': 0.375, ',': 0.375, ';': 0.375, ':': 0.375, '/': 0.46, '\\': 0.46,
+        '?': 0.54, '!': 0.415, '+': 0, " ": 0.375, '(': 0.42, ')': 0.42,'”':1.5,'“':1.5
+    };
+    // 一排+應該是0.6但一個不知道為啥寫0是好的
+
     const chineseCharRegex = /[\u4e00-\u9fa5]/;
+    const fullWidthPunctuationRegex = /[\u3000-\u303f\uff00-\uffef]/;
+
     let currentWeight = 0;
 
     for (let i = 0; i < text.length; i++) {
         const char = text[i];
-        if (chineseCharRegex.test(char)) {
+
+        if (chineseCharRegex.test(char) || fullWidthPunctuationRegex.test(char)) {
             currentWeight += 1;
+        } else if (charWeights[char] !== undefined) {
+            currentWeight += charWeights[char];
         } else {
-            currentWeight += 0.60;
+            currentWeight += 0.57;
         }
 
         if (currentWeight > maxWeight) {
@@ -77,6 +88,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
         }
 
         const { name: clubName, summary } = clubContent ? clubContent.data : { name: clubMapInfo.name, summary: clubCode.toUpperCase() != "CK0" ? "此社團尚未提供詳細資訊。" : "建中班聯是建中最高學生自治組織，處理學生相關大小事。我們自己有厚達 189 頁的法規系統，有憲章、法律、命令的法位階概念；大家各司其職，依法行政，有的人負責爭取學權，也有人主責活動辦理，更有人專研司法律的裁決或審判。因為我們獨特的三權分立系統，有行政、立法、司法部門，所以運作之完善。廣義的建中班聯，範圍其實就是建中全校同學，而全校同學統一稱為班聯會「會員」，也就是說大家都是班聯會的一份子。" };
+
         const { mapId, stampId } = clubMapInfo ? clubMapInfo : { mapId: "club-無", stampId: 0 };
         const shareUrl = clubContent ? `${SITE.url}clubs/${clubContent.slug}` : (clubCode.toUpperCase() != "CK0" ? (`${SITE.url}map?club=${clubCode}`) : `${SITE.url}cksc`);
 
@@ -101,12 +113,12 @@ export const GET: APIRoute = async ({ request, locals }) => {
         });
         const qrCodeDataURL = toBase64Uri(qrCodeSvgString);
 
-        const line1MaxWeight = 42;
+        const line1MaxWeight = 42.4;
         const breakIndex1 = getWeightedSliceIndex(summary, line1MaxWeight);
         const summaryLine1 = summary.slice(0, breakIndex1);
 
         const restOfSummary = summary.slice(breakIndex1);
-        const line2MaxWeight = 130 - 46 ;
+        const line2MaxWeight = 130 - 46;
         const breakIndex2 = getWeightedSliceIndex(restOfSummary, line2MaxWeight);
         let summaryLine2 = restOfSummary.slice(0, breakIndex2);
 
@@ -239,7 +251,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
                             },
                         },
                     },
-                  {
+                    {
                         type: 'div',
                         props: {
                             children: summaryLine1,
@@ -252,7 +264,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
                                 fontWeight: '300',
                                 color: 'white',
                                 letterSpacing: `${mmToPx(0.9)}px`,
-                                lineHeight: 1.5
+                                lineHeight: 1.5,
+                                wordBreak: 'break-all'
                             }
                         }
                     },
@@ -269,7 +282,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
                                 fontWeight: '300',
                                 color: 'white',
                                 letterSpacing: `${mmToPx(0.9)}px`,
-                                lineHeight: 1.5
+                                lineHeight: 1.5,
+                                wordBreak: 'break-all'
                             }
                         }
                     },
@@ -279,8 +293,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
                             children: shareUrl,
                             style: {
                                 position: 'absolute',
-                                top: `${mmToPx(44)}px`,
-                                left: `${mmToPx(4)}px`,
+                                top: `${mmToPx(46)}px`,
+                                left: `${mmToPx(10)}px`,
                                 fontSize: '17.5px',
                                 fontWeight: '300',
                                 color: '#4e5580',
