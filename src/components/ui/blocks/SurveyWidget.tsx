@@ -321,7 +321,7 @@ function SurveyForm({ onComplete, onDismiss, onRemindLater }: {
                             {currentStep === 3 && (
                                 <div className="space-y-3">
                                     <div className=' grid grid-cols-2 gap-x-3 gap-y-3'>
-                                        {['集章卡 QR code', '其他社群媒體帳號', '攤位 QR code', '班聯會哀居', '朋友分享'].map(source => (
+                                        {['集章卡 QR code', '社群媒體帳號', '攤位 QR code', '網路搜尋', '朋友分享'].map(source => (
                                             <label key={source} className={`flex items-center p-3 rounded-md border hover:border-accent-500 ${formData.source.includes(source) ? " bg-primary-50 border-accent-500" : " border-primary-50"} cursor-pointer transition-colors`}><input type="checkbox" name="source" value={source} checked={formData.source.includes(source)} onChange={handleInputChange} className="hidden" /><span className="ml-3 text-primary-800 font-medium">{source}</span></label>
                                         ))}
                                     </div>
