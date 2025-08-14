@@ -131,7 +131,7 @@ function News({ id }: Props) {
                                             rel="noopener noreferrer"
                                             className="inline-flex items-center gap-1 text-accent-700 hover:text-accent-600 text-base mt-1 hover:underline"
                                         >
-                                            詳細訊息
+                                            相關連結
                                             <ExternalLink className="w-3.5 h-3.5" />
                                         </a>
                                     )}
