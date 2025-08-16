@@ -3,17 +3,20 @@ import type { APIRoute } from 'astro';
 
 const robotsTxt = `
 User-agent: Googlebot
-Disallow:
 Allow: /
-Crawl-delay: 10
+Crawl-delay: 5
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Facebot
+Allow: /
 
 User-agent: Yandex
-Disallow:
 Allow: /
 Crawl-delay: 2
 
 User-agent: archive.org_bot
-Disallow:
 Allow: /
 Crawl-delay: 2
 
