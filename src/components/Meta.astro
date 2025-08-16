@@ -43,8 +43,8 @@ const basePath = Astro.url.pathname;
 
 const socialImageRes = await getImage({
   src: imageSource,
-  width: 768,
-  height: 768,
+  width: 1080,
+  height: 1080,
   fit: "cover",
   format:"png",
 });
@@ -138,8 +138,8 @@ const maskableIcon = await getImage({
 <meta property="og:description" content={ogDescription} />
 <meta property="og:image" content={socialImage} />
 <link rel="image_src" href={socialImage} />
-<meta property="og:image:width" content="768" />
-<meta property="og:image:height" content="768" />
+<meta property="og:image:width" content="1080" />
+<meta property="og:image:height" content="1080" />
 <meta property="og:image:type" content="image/png" />
 
 {/* Twitter Meta Tags */}
