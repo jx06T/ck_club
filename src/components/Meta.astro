@@ -46,6 +46,7 @@ const socialImageRes = await getImage({
   width: 768,
   height: 768,
   fit: "cover",
+  format:"png",
 });
 
 const socialImage = Astro.url.origin + socialImageRes.src; 
