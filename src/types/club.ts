@@ -7,7 +7,7 @@ export interface ClubInfoForMap {
     summary: string;
     slug: string | null;
     tags?: string[];
-    isPlaceholder?: boolean,
+    // isPlaceholder?: boolean,
 }
 
 export type Club = {

@@ -5,7 +5,7 @@ interface ClubMappingInfo {
 }
 
 export const clubMappings: Record<string, ClubMappingInfo> = {
-    "A21_": { name: "軍武社", stampId: 3, mapId: "club-y-0" },
+    "_A21": { name: "軍武社", stampId: 3, mapId: "club-y-0" },
     "A21": { name: "軍武社", stampId: 3, mapId: "club-y-1" },
     "A01": { name: "科學研習社", stampId: 4, mapId: "club-y-2" },
     "A28": { name: "物理辯論社", stampId: 4, mapId: "club-y-3" },
@@ -36,7 +36,7 @@ export const clubMappings: Record<string, ClubMappingInfo> = {
     "D10": { name: "合唱團", stampId: 1, mapId: "club-x-11" },
     "A35": { name: "世界地理探索社", stampId: 4, mapId: "club-x-12" },
     "A37": { name: "人工智慧研究社", stampId: 0, mapId: "club-x-13" },
-    "CK0": { name: "班聯會", stampId: 0, mapId: "club-x-14" },
+    "_CK0": { name: "班聯會", stampId: 0, mapId: "club-x-14" },
     "D04": { name: "另類音樂創作社", stampId: 5, mapId: "club-x-15" },
     "B08": { name: "魔術社", stampId: 0, mapId: "club-x-16" },
     "E04": { name: "棒球社", stampId: 0, mapId: "club-x-17" },
@@ -44,12 +44,12 @@ export const clubMappings: Record<string, ClubMappingInfo> = {
     "D11": { name: "嘻哈音樂研究社", stampId: 5, mapId: "club-x-19" },
     "B17": { name: "模型動畫社", stampId: 0, mapId: "club-x-20" },
     "A14": { name: "講演社", stampId: 4, mapId: "club-x-21" },
-    "": { name: "典禮台", stampId: 0, mapId: "club-x-22" },
+    "B01": { name: "熱舞社", stampId: 0, mapId: "club-x-22" },
     "C01": { name: "信望愛社", stampId: 1, mapId: "club-x-23" },
     "CK3": { name: "樂旗隊", stampId: 0, mapId: "club-x-24" },
     "A06": { name: "航空社", stampId: 0, mapId: "club-x-25" },
-    "CK3_": { name: "樂旗隊", stampId: 0, mapId: "club-x-41" },
-    "A06_": { name: "航空社", stampId: 0, mapId: "club-x-40" },
+    "_CK3": { name: "樂旗隊", stampId: 0, mapId: "club-x-41" },
+    "_A06": { name: "航空社", stampId: 0, mapId: "club-x-40" },
     "B13": { name: "美食社", stampId: 2, mapId: "club-x-26" },
     "A22": { name: "小說創作研究社", stampId: 4, mapId: "club-x-27" },
     "A25": { name: "英文辯論社", stampId: 4, mapId: "club-x-28" },
@@ -64,5 +64,6 @@ export const clubMappings: Record<string, ClubMappingInfo> = {
     "A36": { name: "韓國文化研究社", stampId: 5, mapId: "club-x-37" },
     "C06": { name: "戶外探索社", stampId: 1, mapId: "club-x-38" },
     "D02": { name: "熱門音樂社", stampId: 0, mapId: "club-x-39" },
+    "_CK1": { name: "紀念品兌換處", stampId: 0, mapId: "club-y-17" },
 };
 

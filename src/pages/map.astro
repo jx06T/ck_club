@@ -7,50 +7,62 @@ import { clubMappings } from "@data/clubFair";
 import type { ClubInfoForMap } from "@types/club";
 const allClubsData = await getCollection("clubs");
 
+interface OtMapingInfo {
+  summary: string;
+  slug?: string;
+  tags?: string[];
+}
+
+export const OtMapingInfoList: Record<string, OtMapingInfo> = {
+  _CK0: {
+    summary: "班聯會為建中學生自治組織，擁有完整的行政及立法部門...",
+    slug: "/cksc",
+  },
+  _CK3: { summary: "樂旗隊表演場地" },
+  _A06: { summary: "航空社火箭實際發射場地" },
+  _CK1: {
+    summary: "社團博覽會集章活動紀念品兌換處，集章辦法請見下方連結",
+    slug: "/#fair",
+  },
+};
+
+const p = { summary: "此社團尚未提供詳細資訊。", slug: null, tags: [] };
+
 const clubsDataByCode = new globalThis.Map(
   allClubsData.map((club) => [club.data.clubCode, club])
 );
 
 const clubsForMap = Object.entries(clubMappings).map(
   ([clubCode, mappingInfo]): ClubInfoForMap => {
-    if (clubCode.endsWith("_")) {
-      clubCode = clubCode.slice(0, -1);
-    }
-    const clubData = clubsDataByCode.get(clubCode);
-    if (clubCode === "CK0") {
+    if (clubCode.startsWith("_")) {
+      const clubData = clubsDataByCode.get(clubCode.slice(1));
       return {
-        clubCode: clubCode,
-        mapId: mappingInfo.mapId,
-        stampId: mappingInfo.stampId,
-        name: mappingInfo.name,
-        summary: "班聯會為建中學生自治組織",
-        slug: "/cksc",
-        tags: [],
-        isPlaceholder: true,
-      };
-    }
-    if (clubData) {
-      return {
-        clubCode: clubCode,
-        mapId: mappingInfo.mapId,
-        stampId: mappingInfo.stampId,
-        name: clubData.data.name,
-        summary: clubData.data.summary,
-        slug: clubData.slug,
-        tags: clubData.data.tags,
-        isPlaceholder: false,
-      };
+        clubCode: clubCode.slice(1),
+        ...p,
+        ...mappingInfo,
+        ...(clubData && {
+          name: clubData.data.name,
+          summary: clubData.data.summary,
+          slug: clubData.slug,
+          tags: clubData.data.tags,
+        }),
+        ...OtMapingInfoList[clubCode],
+      } as ClubInfoForMap;
     } else {
+      const clubData = clubsDataByCode.get(clubCode);
+      console.log(clubData);
+
       return {
         clubCode: clubCode,
-        mapId: mappingInfo.mapId,
-        stampId: mappingInfo.stampId,
-        name: mappingInfo.name,
-        summary: "此社團尚未提供詳細資訊。",
-        slug: null,
-        tags: [],
-        isPlaceholder: true,
-      };
+        ...p,
+        ...mappingInfo,
+        ...(clubData && {
+          name: clubData.data.name,
+          summary: clubData.data.summary,
+          slug: clubData.slug,
+          tags: clubData.data.tags,
+        }),
+      } as ClubInfoForMap;
     }
   }
 );
