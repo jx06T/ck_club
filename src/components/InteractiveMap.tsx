@@ -76,6 +76,8 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
             setTimeout(() => {
                 const params = new URLSearchParams(window.location.search);
                 const clubCode = params.get("club");
+                const mapP = params.get("p");
+                // console.log(mapP)
                 if (clubCode) {
                     const mapId = clubs.find(c => c.clubCode === clubCode)?.mapId;
                     if (mapId) {
@@ -83,6 +85,11 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                         zoomToClub(mapId);
                         return;
                     }
+                }
+                if (mapP) {
+                    setSelectedClubId(mapP);
+                    zoomToClub(mapP);
+                    return;
                 }
                 panzoomInstance.zoom(2.5, { animate: true, duration: 1000 })
                 panzoomInstance.pan(70, 20, { animate: true, duration: 1000 })
@@ -256,7 +263,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
         const bbox = pathElement.getBBox();
         const targetX = bbox.x + bbox.width / 2;
         const targetY = bbox.y + bbox.height / 2;
-        console.log(bbox)
+        // console.log(bbox)
 
         const targetScale = 6;
 

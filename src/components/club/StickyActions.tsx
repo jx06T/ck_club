@@ -153,7 +153,7 @@ export default function StickyActions({ clubCode, clubName, attendsExpo }: Stick
         // 直接從 hook 提供的 user 物件中獲取 uid
         const likeDocId = `${user.uid}_${clubCode}`;
 
-        console.log(likeDocId)
+        // console.log(likeDocId)
         setIsLiked(newLikedState);
         setLikeCount(prev => newLikedState ? prev + 1 : prev - 1);
         try {
