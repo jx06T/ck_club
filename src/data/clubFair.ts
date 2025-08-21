@@ -36,7 +36,7 @@ export const clubMappings: Record<string, ClubMappingInfo> = {
     "D10": { name: "合唱團", stampId: 1, mapId: "club-x-11" },
     "A35": { name: "世界地理探索社", stampId: 4, mapId: "club-x-12" },
     "A37": { name: "人工智慧研究社", stampId: 0, mapId: "club-x-13" },
-    "_CK0": { name: "班聯會", stampId: 0, mapId: "club-x-14" },
+    "_SC0": { name: "班聯會", stampId: 0, mapId: "club-x-14" },
     "D04": { name: "另類音樂創作社", stampId: 5, mapId: "club-x-15" },
     "B08": { name: "魔術社", stampId: 0, mapId: "club-x-16" },
     "E04": { name: "棒球社", stampId: 0, mapId: "club-x-17" },
@@ -64,6 +64,7 @@ export const clubMappings: Record<string, ClubMappingInfo> = {
     "A36": { name: "韓國文化研究社", stampId: 5, mapId: "club-x-37" },
     "C06": { name: "戶外探索社", stampId: 1, mapId: "club-x-38" },
     "D02": { name: "熱門音樂社", stampId: 0, mapId: "club-x-39" },
-    "_CK1": { name: "紀念品兌換處", stampId: 0, mapId: "club-y-17" },
+    "_SC1": { name: "紀念品兌換處", stampId: 0, mapId: "club-y-17" },
+    "_SC2": { name: "社團聯展展演處", stampId: 0, mapId: "club-y-18" },
 };
 

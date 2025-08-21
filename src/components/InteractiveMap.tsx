@@ -91,8 +91,10 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                     zoomToClub(mapP);
                     return;
                 }
-                panzoomInstance.zoom(2.5, { animate: true, duration: 1000 })
-                panzoomInstance.pan(70, 20, { animate: true, duration: 1000 })
+                setSelectedClubId("club-y-17");
+                zoomToClub("club-y-17");
+                // panzoomInstance.zoom(2.5, { animate: true, duration: 1000 })
+                // panzoomInstance.pan(70, 20, { animate: true, duration: 1000 })
             }, 100);
 
             const parentContainer = node.parentElement;
@@ -368,7 +370,7 @@ function InteractiveMap({ clubs }: InteractiveMapProps) {
                 <div className={`absolute ${isFullScreen ? " h-full " : " h-[80%] md:h-[90%] "}  right-4 top-3 md:right-6 md:top-5 w-72 md:w-[40rem] max-w-[70%] flex flex-col md:flex-row gap-2 md:gap-4 items-start pointer-events-none`}>
                     <FuzzySearch<ClubInfoForMap>
                         items={clubs}
-                        searchKeys={['name', 'summary', 'tags', 'clubCode','mapId']}
+                        searchKeys={['name', 'summary', 'tags', 'clubCode', 'mapId']}
                         onSelect={handleSelectClubFromSearch}
                         placeholder="輸入關鍵字或攤位編號"
                         className="  md:flex-1 pointer-events-auto"

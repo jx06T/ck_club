@@ -1,10 +1,12 @@
 ---
 title: 社團聯展介紹
 layout: ../layouts/MarkdownLayout.astro
-date: "2025-07-23"
+date: "2025-08-22"
 ---
 
 ![Lunar主視覺](../content/events/images/2.jpg)
+
+### [社團聯展官方哀居帳號 @ck_club_exhibition\_\_](https://www.instagram.com/ck_club_exhibition__/)
 
 # 今年社聯的主題：Lunar
 
