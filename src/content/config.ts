@@ -23,6 +23,7 @@ const clubsCollection = defineCollection({
         clubCode: z.string(),
         name: z.string(),
         summary: z.string(),
+        alternateNames: z.array(z.string()).optional(),
 
         profileImage: image(),
         cardImage: image(),

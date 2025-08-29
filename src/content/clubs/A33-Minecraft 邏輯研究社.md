@@ -3,6 +3,10 @@ timestamp: 2025-07-20T22:52:28
 
 name: Minecraft 邏輯研究社
 
+alternateNames:
+  - MC邏輯社
+  - Minecraft社
+
 attendsExpo: true
 
 hasClubStamp: false

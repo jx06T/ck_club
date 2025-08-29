@@ -31,6 +31,17 @@ const { data } = post;
 const stampId = clubMappings[data.clubCode]
   ? clubMappings[data.clubCode].stampId || null
   : null;
+
+const cleanSummary = data.summary.replace(/\s+/g, " ").trim();
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: data.name,
+  description: cleanSummary,
+  alternateName: data.alternateNames || [],
+  url: Astro.url.href,
+};
 ---
 
 <Layout
@@ -38,7 +49,8 @@ const stampId = clubMappings[data.clubCode]
   description={data.summary}
   customOgTitle={`查看 建中${data.name} 在 CKClubHub 建中社團資料庫上的專屬頁面`}
   customOgImage={data.profileImage}
-  customOgDescription={data.summary.slice(0, 30) + "..."}
+  customOgDescription={cleanSummary.slice(0, 30) + "..."}
+  structuredData={schema}
   padding={false}
 >
   <ClubHeader club={data} stampId={stampId} />
@@ -60,10 +72,25 @@ const stampId = clubMappings[data.clubCode]
     >
       <Content />
     </main>
+    {
+      data.alternateNames && data.alternateNames.length > 0 && (
+        <div class="mt-4 text-xs text-gray-600 dark:text-gray-400">
+          <span class="font-semibold">其他名稱（暫由 ai 自動產生）：</span>
+          {data.alternateNames.join("、")}
+        </div>
+      )
+    }
   </article>
 
+  <!-- 這個區塊專門用來餵給 Pagefind 搜尋引擎，使用者看不到但對搜尋很重要 -->
   <div style="display: none;" data-pagefind-body>
     <p data-pagefind-weight="10">{data.name}</p>
+
+    {
+      data.alternateNames && data.alternateNames.length > 0 && (
+        <p data-pagefind-weight="9">{data.alternateNames.join(" ")}</p>
+      )
+    }
 
     <p data-pagefind-weight="8">{data.clubCode}</p>
 

@@ -3,6 +3,12 @@ timestamp: 2025-07-28T00:14:16
 
 name: 建中青年刊物社
 
+alternateNames:
+  - 青年社
+  - 刊物社
+  - 建中青年
+  - 建中刊物社
+
 attendsExpo: true
 
 hasClubStamp: true

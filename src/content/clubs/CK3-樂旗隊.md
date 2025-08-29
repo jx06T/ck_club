@@ -3,6 +3,11 @@ timestamp: 2025-07-26T23:02:58
 
 name: 樂旗隊
 
+alternateNames:
+  - 建中樂旗隊
+  - 樂隊
+  - 旗隊
+
 attendsExpo: true
 
 hasClubStamp: false
