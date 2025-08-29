@@ -4,7 +4,9 @@ import Layout from "../layouts/Layout.astro";
 import { House, List } from "lucide-react";
 
 const allClubs = await getCollection("clubs");
-const sampleClubs = allClubs.slice(0, 7);
+const sampleClubs = allClubs
+  .sort(() => Math.random() - 0.5)
+  .slice(0, 7);
 ---
 
 <Layout title="404 | CKClubHub" padding={false}>
