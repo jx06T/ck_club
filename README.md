@@ -100,7 +100,7 @@
 
 1. **複製儲存庫**
 ```bash
-git clone [https://github.com/your-username/cksc-club-website.git](https://github.com/jx06T/ck_club.git)
+git clone https://github.com/jx06T/ck_club.git
 cd ck_club
 ```
 
