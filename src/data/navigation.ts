@@ -31,7 +31,7 @@ const footerLinks = [
 
 const socialLinks = {
   github: "https://github.com/jx06T/ck_club",
-  instagram1: "https://www.instagram.com/cksc79th/",
+  instagram1: "https://www.instagram.com/cksc.80th/",
   instagram2: "https://www.instagram.com/ck_club_exhibition__/",
 };
 

@@ -19,4 +19,4 @@ date: "2025-07-09"
 # 聯絡管道
 
 - [網站開發人員](https://github.com/jx06T)
-- [建中班聯](https://www.instagram.com/cksc79th/)
+- [建中班聯](https://www.instagram.com/cksc.80th/)
