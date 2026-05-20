@@ -55,7 +55,7 @@ export default function SurveyWidget() {
     useEffect(() => {
         if (hasCompletedSurvey) return;
 
-        const REMIND_LATER_THRESHOLD = 6;
+        const REMIND_LATER_THRESHOLD = 9;
         const shouldShowNow = remindLaterCount > REMIND_LATER_THRESHOLD;
 
         const handleScroll = () => {
