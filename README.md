@@ -1,3 +1,9 @@
+> [!WARNING]
+> ## 專案已轉移
+>
+> 本專案之開發及維護已由個人轉交給建中班聯會共同維護
+>
+> 本頁面已封存，不再更新。最新資訊及欲參與貢獻之開發者請見：**[CKStudentCouncil/ClubHub](https://github.com/CKStudentCouncil/ClubHub)**
 # CK Club Hub 建中社團資料庫
 
 ## 目錄
